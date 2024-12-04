@@ -29,24 +29,32 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import OtpVerification from "@/components/auth/OtpVerification";
 import { useSignup } from "@/hooks/auth/useSignup";
+import { useResendOtp, useVerifyEmail } from "@/hooks/auth";
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-  role: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const formSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+    role: z.string(),
+    devKey: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [formData, setFormData] = useState(null);
   const [email, setEmail] = useState(null);
-  const { loading, handleSignup, showOtpVerification} = useSignup();
+
+  const { loading, handleSignup, showOtpVerification } = useSignup();
+  const { loading: emailVerifyLoading, handleVerify } = useVerifyEmail();
+  const { loading : resendOtpLoading, handleResendOtp } = useResendOtp();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,55 +63,25 @@ export default function SignupPage() {
       password: "",
       confirmPassword: "",
       userType: "",
+      devKey: "",
     },
   });
-
+  const [showDevKeyInput, setShowDevKeyInput] = useState(false);
 
   const handleSignupLocal = async (values) => {
-    handleSignup(values )
+    handleSignup(values);
     setFormData(values);
+    setEmail(values.email);
     setEmail(values.email);
   };
 
   const handleOtpVerifyLocal = async (otp) => {
-    try {
-      console.log("Verifying OTP:", otp);
-      
-      // toast({
-      //   title: "Account created successfully!",
-      //   description: formData.userType === "admin" 
-      //     ? "Please check your email for confirmation."
-      //     : "You can now login with your credentials.",
-      // });
-
-      if (formData.userType === "admin") {
-        router.push("/email-confirmation");
-      } else {
-        router.push("/login");
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Invalid verification code. Please try again.",
-        variant: "destructive",
-      });
-    }
+    console.log("Verifying OTP:", otp);
+    handleVerify(email, otp);
   };
 
   const handleResendOtpLocal = async () => {
-    try {
-      console.log("Resending OTP to:", formData.email);
-      toast({
-        title: "Code resent!",
-        description: "A new verification code has been sent to your email.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to resend code. Please try again.",
-        variant: "destructive",
-      });
-    }
+    handleResendOtp(email);
   };
 
   if (showOtpVerification) {
@@ -112,7 +90,9 @@ export default function SignupPage() {
         <OtpVerification
           email={formData.email}
           onVerify={handleOtpVerifyLocal}
-          resendOtp={handleResendOtpLocal}
+          onResendOtp={handleResendOtpLocal}
+          emailVerifyLoading={emailVerifyLoading}
+          resendOtpLoading={resendOtpLoading}
         />
       </div>
     );
@@ -133,7 +113,10 @@ export default function SignupPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSignupLocal)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(handleSignupLocal)}
+              className="space-y-4"
+            >
               <FormField
                 control={form.control}
                 name="name"
@@ -155,7 +138,11 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Email address</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="john@example.com" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="john@example.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -169,7 +156,11 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -183,17 +174,25 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="role"
-                render={({ field }) => (
+                render={({ field }) => { 
+                  console.log("fields : ", field);
+                  if(field.value == "superadmin") setShowDevKeyInput(true);
+                  else setShowDevKeyInput(false);
+                  return(
                   <FormItem>
                     <FormLabel>User Type</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -209,14 +208,56 @@ export default function SignupPage() {
                     </Select>
                     <FormMessage />
                   </FormItem>
+                )}}
+              /> */}
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>User Type</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value); // Update the form state
+                        setShowDevKeyInput(value === "superadmin"); // Update local state
+                      }}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select user Role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="superadmin">Super Admin</SelectItem>
+                        <SelectItem value="hotelowner">Hotel Owner</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
+              {showDevKeyInput && (
+                <FormField
+                  control={form.control}
+                  name="devKey"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Dev Key</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter key provided by developers"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Creating account..." : "Sign up"}
               </Button>
             </form>

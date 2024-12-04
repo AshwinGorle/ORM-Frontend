@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2 } from "lucide-react";
 
-export default function OtpVerification({ email, onVerify, resendOtp }) {
+export default function OtpVerification({ email, onVerify, onResendOtp, emailVerifyLoading, resendOtpLoading }) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [isVerifying, setIsVerifying] = useState(false);
+
   const inputRefs = useRef([]);
 
   const handleChange = (index, value) => {
@@ -34,13 +34,7 @@ export default function OtpVerification({ email, onVerify, resendOtp }) {
   const handleVerify = async () => {
     const otpString = otp.join("");
     if (otpString.length !== 6) return;
-
-    setIsVerifying(true);
-    try {
-      await onVerify(otpString);
-    } finally {
-      setIsVerifying(false);
-    }
+    await onVerify(otpString);
   };
 
   return (
@@ -72,14 +66,16 @@ export default function OtpVerification({ email, onVerify, resendOtp }) {
           </div>
           <Button
             onClick={handleVerify}
-            disabled={otp.join("").length !== 6 || isVerifying}
+            disabled={otp.join("").length !== 6 || emailVerifyLoading}
             className="w-full"
           >
-            {isVerifying ? "Verifying..." : "Verify Email"}
+            {emailVerifyLoading ? "Verifying..." : "Verify Email"}
           </Button>
+          {resendOtpLoading && <h1>resendloading....</h1>}
           <Button
             variant="ghost"
-            onClick={resendOtp}
+            onClick={onResendOtp}
+            disabled={resendOtpLoading}
             className="text-sm text-muted-foreground"
           >
             Didnt receive the code? Resend

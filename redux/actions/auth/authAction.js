@@ -30,11 +30,65 @@ export const login = (loginData) => async(dispatch)=>{
         }
     }catch(error){
         console.log("action-login-error", error);
-        let errorMessage = getActionErrorMessage();
+        let errorMessage = getActionErrorMessage(error);
         dispatch(authActions.loginFailure(errorMessage));
     }
 }
 
+export const verifyEmail = (verifyEmailData) => async(dispatch)=>{
+    console.log("action-verifyOtp-req : ", verifyEmailData);
+    try{
+        dispatch(authActions.verifyOTPRequest());
+        const response = await axios.post(
+            `${route}/verify`,
+            verifyEmailData,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        )
+        const {status , message , data} = response.data;
+        console.log("action-verifyOtp-res : ", data);
+        if(status == "success"){
+            dispatch(authActions.verifyOTPSuccess(data));
+        }else{
+            dispatch(authActions.verifyOTPFailure(message));
+        }
+    }catch(error){
+        console.log("action-verifyOtp-error", error);
+        let errorMessage = getActionErrorMessage(error);
+        dispatch(authActions.verifyOTPFailure(errorMessage));
+    }
+}
+export const resendOtp = (resendOtpData) => async(dispatch)=>{
+    console.log("action-resendOtp-req : ", resendOtpData);
+    try{
+        dispatch(authActions.verifyOTPRequest());
+        const response = await axios.post(
+            `${route}/resend-otp`,
+            {email : resendOtpData},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        )
+        const {status , message , data} = response.data;
+        console.log("action-resendOtp-res : ", data);
+        if(status == "success"){
+            dispatch(authActions.verifyOTPSuccess(data));
+        }else{
+            dispatch(authActions.verifyOTPFailure(message));
+        }
+    }catch(error){
+        console.log("action-resendOtp-error", error);
+        let errorMessage = getActionErrorMessage(error);
+        dispatch(authActions.verifyOTPFailure(errorMessage));
+    }
+}
 export const signup = (signupData) => async(dispatch)=>{
     console.log("action-signup-req : ", signupData);
     try{

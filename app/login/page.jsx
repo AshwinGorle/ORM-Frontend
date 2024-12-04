@@ -143,6 +143,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLogin } from "@/hooks/auth";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -153,7 +154,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const {loading, handleLogin} = useLogin();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -163,17 +164,8 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (values) => {
-    setIsLoading(true);
-    setError("");
-    try {
-      console.log("Login attempt:", values);
-      // api call to authenticate
-      router.push("/dashboard");
-    } catch (error) {
-      setError("Invalid credentials. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    console.log("hook-login-req : ", values);
+    handleLogin(values)
   };
 
   return (
@@ -237,9 +229,9 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading}
+                disabled={loading}
               >
-                {isLoading ? "Signing in..." : "Sign in"}
+                {loading ? "Signing in..." : "Sign in"}
               </Button>
             </form>
           </Form>
