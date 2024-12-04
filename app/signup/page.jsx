@@ -28,13 +28,14 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import OtpVerification from "@/components/auth/OtpVerification";
+import { useSignup } from "@/hooks/auth/useSignup";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
-  userType: z.string(),
+  role: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -43,10 +44,9 @@ const formSchema = z.object({
 export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [showOtpVerification, setShowOtpVerification] = useState(false);
   const [formData, setFormData] = useState(null);
-
+  const [email, setEmail] = useState(null);
+  const { loading, handleSignup, showOtpVerification} = useSignup();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,39 +58,23 @@ export default function SignupPage() {
     },
   });
 
-  const handleSignup = async (values) => {
-    setIsLoading(true);
-    try {
-      console.log("Initiating signup:", values);
-      
-      setFormData(values);
-      setShowOtpVerification(true);
-      
-      toast({
-        title: "Verification code sent!",
-        description: "Please check your email for the verification code.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send verification code. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+
+  const handleSignupLocal = async (values) => {
+    handleSignup(values )
+    setFormData(values);
+    setEmail(values.email);
   };
 
-  const handleOtpVerify = async (otp) => {
+  const handleOtpVerifyLocal = async (otp) => {
     try {
       console.log("Verifying OTP:", otp);
       
-      toast({
-        title: "Account created successfully!",
-        description: formData.userType === "admin" 
-          ? "Please check your email for confirmation."
-          : "You can now login with your credentials.",
-      });
+      // toast({
+      //   title: "Account created successfully!",
+      //   description: formData.userType === "admin" 
+      //     ? "Please check your email for confirmation."
+      //     : "You can now login with your credentials.",
+      // });
 
       if (formData.userType === "admin") {
         router.push("/email-confirmation");
@@ -106,10 +90,9 @@ export default function SignupPage() {
     }
   };
 
-  const handleResendOtp = async () => {
+  const handleResendOtpLocal = async () => {
     try {
       console.log("Resending OTP to:", formData.email);
-      
       toast({
         title: "Code resent!",
         description: "A new verification code has been sent to your email.",
@@ -128,8 +111,8 @@ export default function SignupPage() {
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <OtpVerification
           email={formData.email}
-          onVerify={handleOtpVerify}
-          resendOtp={handleResendOtp}
+          onVerify={handleOtpVerifyLocal}
+          resendOtp={handleResendOtpLocal}
         />
       </div>
     );
@@ -150,7 +133,7 @@ export default function SignupPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSignup)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(handleSignupLocal)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -209,19 +192,19 @@ export default function SignupPage() {
 
               <FormField
                 control={form.control}
-                name="userType"
+                name="role"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>User Type</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select user type" />
+                          <SelectValue placeholder="Select user Role" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="admin">Admin</SelectItem>
                         <SelectItem value="superadmin">Super Admin</SelectItem>
+                        <SelectItem value="hotelowner">Hotel Owner</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -232,9 +215,9 @@ export default function SignupPage() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading}
+                disabled={loading}
               >
-                {isLoading ? "Creating account..." : "Sign up"}
+                {loading ? "Creating account..." : "Sign up"}
               </Button>
             </form>
           </Form>
