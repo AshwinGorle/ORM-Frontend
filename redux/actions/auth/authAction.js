@@ -90,7 +90,7 @@ export const resendOtp = (resendOtpData) => async(dispatch)=>{
     }
 }
 export const signup = (signupData) => async(dispatch)=>{
-    console.log("action-signup-req : ", signupData);
+    console.log("action-signup-req : ",`${route}/signup` ,signupData)
     try{
         dispatch(authActions.signupRequest());
         const response = await axios.post(
