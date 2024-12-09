@@ -3,7 +3,7 @@ import { authActions } from "@/redux/slices/authSlice"
 import { getActionErrorMessage } from "@/utils";
 import axios from "axios";
 
-const route = `${serverUrl}/auth`
+const route = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth`
 
 export const login = (loginData) => async(dispatch)=>{
     console.log("action-login-req : ", loginData);

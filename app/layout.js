@@ -1,9 +1,10 @@
 import "./globals.css";
 import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster";
-import {store} from "../redux/store.js"
 import StoreProvider from "@/redux/AuthProvider";
 const inter = Inter({subsets:["latin"]});
+import { configDotenv } from "dotenv";
+configDotenv();
 
 export const metadata = {
   title: "Create Next App",

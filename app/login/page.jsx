@@ -150,6 +150,7 @@ const formSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+console.log("server URl", process.env.NEXT_PUBLIC_SERVER_URL)
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
