@@ -134,6 +134,13 @@ import { Building2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Form,
   FormControl,
   FormField,
@@ -145,9 +152,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLogin } from "@/hooks/auth";
 
+
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
+  role: z.enum(["hotelowner", "superadmin"]),
 });
 
 console.log("server URl", process.env.NEXT_PUBLIC_SERVER_URL)
@@ -217,6 +226,34 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>User Type</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value); // Update the form state
+                      }}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select user Role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="superadmin">Super Admin</SelectItem>
+                        <SelectItem value="hotelowner">Hotel Owner</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
 
               <div className="text-right">
                 <Link
