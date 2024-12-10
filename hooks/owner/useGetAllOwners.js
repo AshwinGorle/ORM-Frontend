@@ -17,12 +17,14 @@ export const useGetAllOwners = (params = {}) => {
   const fetchAllOwners = useCallback(() => {
     if (!data || refresh) {
       dispatch(getAllHotelOwners());
+  
     }
   }, [dispatch, data, refresh]);
 
   // Fetch owners on mount or when refresh is triggered
   useEffect(() => {
     fetchAllOwners();
+
   }, [fetchAllOwners]);
 
   // Handle status changes
@@ -30,6 +32,7 @@ export const useGetAllOwners = (params = {}) => {
     if (status === "pending") {
       setLoading(true);
     } else if (status === "success" && data?.status === "success") {
+      console.log("in line 34",data);
       setOwners(data?.data);
       setLoading(false);
       setRefresh && setRefresh(false);
@@ -53,6 +56,7 @@ export const useGetAllOwners = (params = {}) => {
 
   // Transform owners data for easier usage in components
   const transformedOwners = useMemo(() => {
+    console.log(owners);
     return owners?.map(({ _id, name, email }) => ({
       value: _id,
       label: `${name} (${email})`,

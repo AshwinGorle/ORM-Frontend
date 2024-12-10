@@ -24,7 +24,6 @@ export default function UserList() {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [extendDays, setExtendDays] = useState(null);
 
-  
 
   const handleApprove = async (id) => {
     setLoadingApprove(id);
