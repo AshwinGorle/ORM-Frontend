@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { QrCode, UtensilsCrossed, Table2, ChefHat} from "lucide-react";
+import { QrCode, UtensilsCrossed, Table2 , NotepadText} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -25,10 +25,10 @@ const configItems = [
     href: "/dashboard/configuration/qr-codes",
   },
   {
-    title : "Ingredients",
-    icon : ChefHat,
-    description : "Manage restaurant ingredients",
-    href : "/dashboard/configuration/ingredients"
+    title: "Ingredients",
+    icon: NotepadText,
+    description: "Add and Manage ingredients for dishes",
+    href: "/dashboard/configuration/ingredients",
   },
 ];
 
