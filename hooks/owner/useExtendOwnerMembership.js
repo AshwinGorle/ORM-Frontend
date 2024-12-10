@@ -4,10 +4,10 @@ import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
 import { approveHotelOwner } from "@/redux/actions/owner";
 import { ownerActions } from "@/redux/slices/ownerSlice";
 
-export const useApproveOwner = (setApprovingItemId) => {
+export const useExtendOwnerMembership = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error, data } = useSelector((state) => state.owner.approveOwner);
+    const { status, error, data } = useSelector((state) => state.owner.extendOwnerMembership);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -17,11 +17,10 @@ export const useApproveOwner = (setApprovingItemId) => {
             setLoading(false);
             toast({
                 title: "Success",
-                description: "Hotel Owner approved successfully.",
+                description: "Membership Extended successfully.",
                 variant: "success", // Optional, for success styling
             });
-            dispatch(ownerActions.clearApproveOwnerStats());
-            setApprovingItemId(null);
+            dispatch(ownerActions.clearExtendOwnerMembershipStats());
         } else if (status === "failed") {
             setLoading(false);
             toast({

@@ -6,8 +6,11 @@ export const approveHotelOwner = (hotelOwnerId) => async (dispatch) => {
     console.log("action-approve-owner-req:", hotelOwnerId);
     try {
         dispatch(ownerActions.approveOwnerRequest());
-        const response = await axios.put(
+        const response = await axios.patch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/users/approve-hotel-owner/${hotelOwnerId}`,
+            {
+
+            },
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -57,6 +60,37 @@ export const getAllHotelOwners = () => async (dispatch) => {
         console.log("action-get-all-owner-error:", error);
         let errorMessage = getActionErrorMessage(error);
         dispatch(ownerActions.getAllOwnersFailure(errorMessage));
+    }
+};
+
+export const extendOwnerMembership = (ownerId, numberOfDays) => async (dispatch) => {
+    console.log("action-extend-owner-membership-req:",ownerId , numberOfDays  );
+    try {
+        dispatch(ownerActions.extendOwnerMembershipRequest());
+        const response = await axios.patch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/users/membership-extender/${ownerId}`,
+            {
+                days : numberOfDays
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        const { status, message, data } = response.data;
+        console.log("action-extend-owner-membership-res:", data);
+        if (status === "success") {
+            dispatch(ownerActions.extendOwnerMembershipSuccesse(data));
+        } else {
+            dispatch(ownerActions.extendOwnerMembershipFailure(message));
+        }
+    } catch (error) {
+        console.log("action-extend-owner-membership-error:", error);
+        let errorMessage = getActionErrorMessage(error);
+        dispatch(ownerActions.extendOwnerMembershipFailure(errorMessage));
     }
 };
 

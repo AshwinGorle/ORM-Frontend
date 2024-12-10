@@ -16,23 +16,26 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter } from
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner"; // Assuming Spinner for loading indication
 import { useGetAllOwners } from "@/hooks/owner/useGetAllOwners";
+import { useApproveOwner } from "@/hooks/owner/useApproveOwner";
 
 export default function UserList() {
-  const { loading, owners , fetchAllOwners } = useGetAllOwners();
-  const [loadingApprove, setLoadingApprove] = useState(null);
+  const { loading, owners } = useGetAllOwners();
+
+  const [approvingItemId, setApprovingItemId] = useState(null);
+  const {loading : approveLoading, handleApproveOwner} = useApproveOwner(setApprovingItemId);
   const [loadingExtend, setLoadingExtend] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [extendDays, setExtendDays] = useState(null);
 
+   console.log("owners in the comp ", owners
+    )
   
 
   const handleApprove = async (id) => {
-    setLoadingApprove(id);
-    // Simulated API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setLoadingApprove(null);
+    setApprovingItemId(id);
+    handleApproveOwner(id);    
   };
-
+ 
   const handleExtendMembership = async () => {
     if (!selectedUserId || !extendDays) return;
     setLoadingExtend(selectedUserId);
@@ -63,7 +66,8 @@ export default function UserList() {
               <Spinner size="lg" />
             </TableCell>
           </TableRow>
-        ) : owners?.length ? (
+        ) : owners
+        ?.length ? (
           owners.map((user) => (
             <TableRow key={user._id}>
               <TableCell>{user.name}</TableCell>
@@ -75,9 +79,10 @@ export default function UserList() {
                 <div className="flex space-x-2">
                   <Button
                     onClick={() => handleApprove(user._id)}
-                    disabled={loadingApprove === user._id}
+                    disabled={approvingItemId == user._id.toString()}
+                    
                   >
-                    {loadingApprove === user._id ? <Spinner size="sm" /> : "Approve Owner"}
+                    {approvingItemId == user._id.toString() ? <Spinner size="sm" /> : "Approve Owner"}
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>

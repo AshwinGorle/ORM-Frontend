@@ -9,28 +9,23 @@ export const useGetAllOwners = (params = {}) => {
   const dispatch = useDispatch();
   const { refresh = false, setRefresh = null } = params;
 
-  const { status, error, data } = useSelector((state) => state.owner.getAllOwners);
-  const [owners, setOwners] = useState(data?.data);
+  const { status, error, data } = useSelector((state) => state.owner.getAllOwners); // Directly use this
   const { toast } = useToast();
 
-  // Fetch all owners if required
   const fetchAllOwners = useCallback(() => {
     if (!data || refresh) {
       dispatch(getAllHotelOwners());
     }
   }, [dispatch, data, refresh]);
 
-  // Fetch owners on mount or when refresh is triggered
   useEffect(() => {
     fetchAllOwners();
   }, [fetchAllOwners]);
 
-  // Handle status changes
   useEffect(() => {
     if (status === "pending") {
       setLoading(true);
-    } else if (status === "success" && data?.status === "success") {
-      setOwners(data?.data);
+    } else if (status === "success") {
       setLoading(false);
       setRefresh && setRefresh(false);
       toast({
@@ -39,6 +34,7 @@ export const useGetAllOwners = (params = {}) => {
         variant: "success",
       });
       dispatch(ownerActions.clearGetAllOwnersStatus());
+      dispatch(ownerActions.clearGetAllOwnersError());
     } else if (status === "failed") {
       setLoading(false);
       toast({
@@ -51,13 +47,9 @@ export const useGetAllOwners = (params = {}) => {
     }
   }, [status, data, error, dispatch, toast, setRefresh]);
 
-  // Transform owners data for easier usage in components
   const transformedOwners = useMemo(() => {
-    return owners?.map(({ _id, name, email }) => ({
-      value: _id,
-      label: `${name} (${email})`,
-    }));
-  }, [owners]);
+    return data?.hotelOwners
+  }, [data]);
 
-  return { owners: transformedOwners ?? [], loading, fetchAllOwners };
+  return { owners: transformedOwners ?? [], loading };
 };

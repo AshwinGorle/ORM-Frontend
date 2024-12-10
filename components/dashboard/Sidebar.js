@@ -25,6 +25,11 @@ const menuItems = [
     href: "/dashboard",
   },
   {
+    title: "Admin Dashboard",
+    icon: BarChart3,
+    href: "/admin-dashboard",
+  },
+  {
     title: "Reservations",
     icon: Calendar,
     href: "/dashboard/reservations",

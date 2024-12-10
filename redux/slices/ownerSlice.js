@@ -12,6 +12,12 @@ const initialUser = {
         error: null,
         data: null,
     },
+
+    extendOwnerMembership: {
+        status: null,
+        error: null,
+        data: null,
+    },
 };
 
 const ownerSlice = createSlice({
@@ -24,6 +30,10 @@ const ownerSlice = createSlice({
         approveOwnerSuccess: (state, action) => {
             state.approveOwner.status = "success";
             state.approveOwner.data = action.payload;
+            // state.getAllOwners.data.hotelOwners =  state.getAllOwners.data.hotelOwners.map((owner)=>{
+            //     if(owner._id == action.payload.hotelOwner._id) return action.payload.hotelOwner;
+            //     else return owner; 
+            // })
         },
         approveOwnerFailure: (state, action) => {
             state.approveOwner.status = "failed";
@@ -42,6 +52,19 @@ const ownerSlice = createSlice({
             state.getAllOwners.status = "failed";
             state.getAllOwners.error = action.payload;
         },
+        
+        //extendOwnerMembership
+        extendOwnerMembershipRequest: (state) => {
+            state.extendOwnerMembership.status = "pending";
+        },
+        extendOwnerMembershipSuccess: (state, action) => {
+            state.extendOwnerMembership.status = "success";
+            state.extendOwnerMembership.data = action.payload;
+        },
+        extendOwnerMembershipFailure: (state, action) => {
+            state.extendOwnerMembership.status = "failed";
+            state.extendOwnerMembership.error = action.payload;
+        },
 
         // Manual state cleaners
         clearApproveOwnerStats: (state) => {
@@ -49,6 +72,13 @@ const ownerSlice = createSlice({
             state.approveOwner.error = null;
             state.approveOwner.data = null;
         },
+        
+        clearExtendOwnerMembershipStats: (state) => {
+            state.extendOwnerMembership.status = null;
+            state.extendOwnerMembership.error = null;
+            state.extendOwnerMembership.data = null;
+        },
+
         //getAllOwners
         clearGetAllOwnersStatus: (state) => {
             state.getAllOwners.status = null;
