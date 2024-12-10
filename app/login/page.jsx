@@ -131,8 +131,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
 import { Building2 } from "lucide-react";
-
+import { parseCookies } from "nookies";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -151,7 +152,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLogin } from "@/hooks/auth";
-
+import { parseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -160,11 +161,20 @@ const formSchema = z.object({
 });
 
 console.log("server URl", process.env.NEXT_PUBLIC_SERVER_URL)
+
 export default function LoginPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const {loading, handleLogin} = useLogin();
+
+  useEffect(() => {
+    const cookies = parseCookies();
+    console.log("cookies check ", cookies);
+    if (cookies.token) {
+      router.push("/dashboard/owners");
+    }
+  }, [router]);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {

@@ -6,6 +6,12 @@ const initialUser = {
         error: null,
         data: null,
     },
+
+    getAllOwners: {
+        status: null,
+        error: null,
+        data: null,
+    },
 };
 
 const ownerSlice = createSlice({
@@ -24,15 +30,34 @@ const ownerSlice = createSlice({
             state.approveOwner.error = action.payload;
         },
 
+        //getAllOwners
+        getAllOwnersRequest: (state) => {
+            state.getAllOwners.status = "pending";
+        },
+        getAllOwnersSuccess: (state, action) => {
+            state.getAllOwners.status = "success";
+            state.getAllOwners.data = action.payload;
+        },
+        getAllOwnersFailure: (state, action) => {
+            state.getAllOwners.status = "failed";
+            state.getAllOwners.error = action.payload;
+        },
+
         // Manual state cleaners
-        clearApproveOwnerStatus: (state) => {
+        clearApproveOwnerStats: (state) => {
             state.approveOwner.status = null;
-        },
-        clearApproveOwnerError: (state) => {
             state.approveOwner.error = null;
-        },
-        clearApproveOwnerData: (state) => {
             state.approveOwner.data = null;
+        },
+        //getAllOwners
+        clearGetAllOwnersStatus: (state) => {
+            state.getAllOwners.status = null;
+        },
+        clearGetAllOwnersData: (state) => {
+            state.getAllOwners.data = null;
+        },
+        clearGetAllOwnersError: (state) => {
+            state.getAllOwners.error = null;
         },
     },
 });

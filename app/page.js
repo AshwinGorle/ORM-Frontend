@@ -1,8 +1,12 @@
+"use client"; 
 import Link from "next/link";
 import { Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import { parseCookies } from "nookies"
+
 export default function Home() {
+  
   return (
     <div className="min-h-screen flex items-center justify-center ">
       <div className="max-w-md w-full space-y-8 p-6">

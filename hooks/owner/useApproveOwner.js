@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
 import { approveHotelOwner } from "@/redux/actions/owner";
+import { ownerActions } from "@/redux/slices/ownerSlice";
 
 export const useApproveOwner = () => {
     const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ export const useApproveOwner = () => {
                 description: "Hotel Owner approved successfully.",
                 variant: "success", // Optional, for success styling
             });
-            dispatch(ownerActions.clearApproveOwnerStatus());
+            dispatch(ownerActions.clearApproveOwnerStats());
         } else if (status === "failed") {
             setLoading(false);
             toast({
@@ -27,8 +28,8 @@ export const useApproveOwner = () => {
                 description: error || "Failed to approve Hotel Owner.",
                 variant: "destructive", // Optional, for error styling
             });
-            dispatch(ownerActions.clearApproveOwnerError());
-            dispatch(ownerActions.clearApproveOwnerStatus());
+            dispatch(ownerActions.clearApproveOwnerStats());
+
         }
     }, [status, error, dispatch, toast]);
 
