@@ -15,11 +15,13 @@ export const useGetAllOwners = (params = {}) => {
   const fetchAllOwners = useCallback(() => {
     if (!data || refresh) {
       dispatch(getAllHotelOwners());
+  
     }
   }, [dispatch, data, refresh]);
 
   useEffect(() => {
     fetchAllOwners();
+
   }, [fetchAllOwners]);
 
   useEffect(() => {
