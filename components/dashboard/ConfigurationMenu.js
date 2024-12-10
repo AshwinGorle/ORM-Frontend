@@ -5,6 +5,8 @@ import { QrCode, UtensilsCrossed, Table2 , NotepadText} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+
+// configyration tab ke saare items idhr aayenge bhai
 const configItems = [
   {
     title: "Dishes",

@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import SidebarNav from "./SidebarNav";
 
-// yaha par menu items aayenge bhaii
+// yaha par menu items aayenge bhaii , side bar ke items yaha add krdena
 const menuItems = [
   {
     title: "Dashboard",
