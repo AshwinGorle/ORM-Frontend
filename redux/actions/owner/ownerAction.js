@@ -8,7 +8,6 @@ export const approveHotelOwner = (hotelOwnerId) => async (dispatch) => {
         dispatch(ownerActions.approveOwnerRequest());
         const response = await axios.put(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/users/approve-hotel-owner/${hotelOwnerId}`,
-            {},
             {
                 headers: {
                     "Content-Type": "application/json",
