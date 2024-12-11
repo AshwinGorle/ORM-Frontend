@@ -7,12 +7,11 @@ import {
   Menu,
   X,
   Settings,
-  Users,
-  Calendar,
   BarChart3,  
-  MessagesSquare,
   LogOut,
-  ChartBarBig
+  ChartBarBig,
+  UserCircle,
+  UserRoundCog
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -31,24 +30,14 @@ const menuItems = [
     href: "/admin-dashboard",
   },
   {
-    title: "Reservations",
-    icon: Calendar,
-    href: "/dashboard/reservations",
-  },
-  {
-    title: "Customers",
-    icon: Users,
-    href: "/dashboard/customers",
-  },
-  {
     title: "Configuration",
     icon: Settings,
     href: "/dashboard/configuration",
   },
   {
-    title: "Messages",
-    icon: MessagesSquare,
-    href: "/dashboard/messages",
+    title: "Profile",
+    icon: UserRoundCog,
+    href: "/dashboard/profile",
   },
 ];
 

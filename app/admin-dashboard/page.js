@@ -47,7 +47,7 @@ export default function AdminConfigurationMenu() {
                 variant="outline"
                 onClick={() => router.push(item.href)}
               >
-                Manage {item.title}
+                {item.title}
               </Button>
             </div>
           </CardContent>

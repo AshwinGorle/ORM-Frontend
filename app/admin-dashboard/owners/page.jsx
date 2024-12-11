@@ -34,8 +34,7 @@ export default function UserList() {
 
   // const [extendOwnerMembershipLoading, setLoadingExtend] = useState(null);
 
-   console.log("owners in the comp ", owners
-    )
+   console.log("owners in the comp ", owners)
   
 
   const handleApprove = async (id) => {
@@ -80,7 +79,7 @@ export default function UserList() {
               <TableCell>{getExpiryTimeInWords(user.membershipExpires) || "N/A"}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
-                  <Button
+                  <Button 
                     onClick={() => handleApprove(user._id)}
                     disabled={approvingItemId == user._id.toString()}
                     
