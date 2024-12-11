@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ingredientActions } from "@/redux/slices/ingredientsSlice";
 import { getActionErrorMessage } from "@/utils";
+
 // Action to get all ingredients
 export const getAllIngredients = () => async (dispatch) => {
     console.log("action-get-all-ingredients-req:");
@@ -31,13 +32,13 @@ export const getAllIngredients = () => async (dispatch) => {
 };
 
 // Action to update an ingredient
-export const updateIngredient = (ingredientId) => async (dispatch) => {
+export const updateIngredient = (ingredientId, ingredientData) => async (dispatch) => {
     console.log("action-update-ingredient-req:", ingredientId);
     try {
         dispatch(ingredientActions.updateIngredientRequest());
         const response = await axios.patch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/ingredients/${ingredientId}`,
-            {},
+            { name : ingredientData.name, description : ingredientData.description},
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -98,7 +99,6 @@ export const deleteIngredient = (ingredientId) => async (dispatch) => {
         dispatch(ingredientActions.deleteIngredientRequest());
         const response = await axios.delete(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/ingredients/${ingredientId}`,
-            {},
             {
                 headers: {
                     "Content-Type": "application/json",

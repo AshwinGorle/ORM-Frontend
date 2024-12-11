@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateIngredient } from "@/hooks/ingredient/useUpdateIngredient";
+import { Spinner } from "../ui/spinner";
 
 export function EditIngredientDialog({ open, onOpenChange, ingredient, onEdit }) {
   const [name, setName] = useState("");
@@ -57,7 +58,7 @@ export function EditIngredientDialog({ open, onOpenChange, ingredient, onEdit })
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit">{loading? <Spinner/> : "Save Changes"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

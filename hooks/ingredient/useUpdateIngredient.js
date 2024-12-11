@@ -38,7 +38,7 @@ export const useUpdateIngredient = (setDialog) => {
     }, [status, error, dispatch, toast]);
 
     const handleUpdateIngredient = (ingredientId, data) => {
-        console.log("hook-update-ingredient-req:", data);
+        console.log("hook-update-ingredient-req:" , ingredientId , data);
         dispatch(updateIngredient(ingredientId, data));
     };
 
