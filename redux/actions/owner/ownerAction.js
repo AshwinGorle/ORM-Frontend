@@ -83,7 +83,7 @@ export const extendOwnerMembership = (ownerId, numberOfDays) => async (dispatch)
         const { status, message, data } = response.data;
         console.log("action-extend-owner-membership-res:", data);
         if (status === "success") {
-            dispatch(ownerActions.extendOwnerMembershipSuccesse(data));
+            dispatch(ownerActions.extendOwnerMembershipSuccess(data));
         } else {
             dispatch(ownerActions.extendOwnerMembershipFailure(message));
         }

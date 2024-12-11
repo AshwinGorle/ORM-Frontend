@@ -17,15 +17,22 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner"; // Assuming Spinner for loading indication
 import { useGetAllOwners } from "@/hooks/owner/useGetAllOwners";
 import { useApproveOwner } from "@/hooks/owner/useApproveOwner";
+import { useExtendOwnerMembership } from "@/hooks/owner/useExtendOwnerMembership";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import getExpiryTimeInWords from "@/utils/getExpiryInWords";
 
 export default function UserList() {
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [extendDays, setExtendDays] = useState(null);
+  
   const { loading, owners } = useGetAllOwners();
 
   const [approvingItemId, setApprovingItemId] = useState(null);
   const {loading : approveLoading, handleApproveOwner} = useApproveOwner(setApprovingItemId);
-  const [loadingExtend, setLoadingExtend] = useState(null);
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [extendDays, setExtendDays] = useState(null);
+  
+  const {loading : extendOwnerMembershipLoading, handleExtendOwnerMembership} = useExtendOwnerMembership(setSelectedUserId);
+
+  // const [extendOwnerMembershipLoading, setLoadingExtend] = useState(null);
 
    console.log("owners in the comp ", owners
     )
@@ -37,13 +44,9 @@ export default function UserList() {
   };
  
   const handleExtendMembership = async () => {
-    if (!selectedUserId || !extendDays) return;
-    setLoadingExtend(selectedUserId);
-    // Simulated API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setLoadingExtend(null);
-    setSelectedUserId(null);
-    setExtendDays(null);
+    if (!selectedUserId || !extendDays)  return;
+    handleExtendOwnerMembership(selectedUserId,extendDays);
+    // setExtendDays(null);
   };
 
   return (
@@ -74,7 +77,7 @@ export default function UserList() {
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
               <TableCell>{user.isApproved ? "Yes" : "No"}</TableCell>
-              <TableCell>{user.membershipExpires || "N/A"}</TableCell>
+              <TableCell>{getExpiryTimeInWords(user.membershipExpires) || "N/A"}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button
@@ -84,7 +87,7 @@ export default function UserList() {
                   >
                     {approvingItemId == user._id.toString() ? <Spinner size="sm" /> : "Approve Owner"}
                   </Button>
-                  <Dialog>
+                  <Dialog open={selectedUserId ? true : false}>
                     <DialogTrigger asChild>
                       <Button onClick={() => setSelectedUserId(user._id)}>
                         Extend Membership
@@ -92,7 +95,8 @@ export default function UserList() {
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <h2 className="text-xl font-bold">Extend Membership</h2>
+                        <DialogTitle>Extend Membership header</DialogTitle>
+                        <h2 className="text-xl font-bold">Extend Membership---</h2>
                       </DialogHeader>
                       <div className="space-y-4">
                         <Input
@@ -108,9 +112,9 @@ export default function UserList() {
                         </Button>
                         <Button
                           onClick={handleExtendMembership}
-                          disabled={loadingExtend === user._id}
+                          disabled={extendOwnerMembershipLoading}
                         >
-                          {loadingExtend === user._id ? <Spinner size="sm" /> : "Extend Membership"}
+                          {extendOwnerMembershipLoading ? <Spinner size="sm" /> : "Submit"}
                         </Button>
                       </DialogFooter>
                     </DialogContent>

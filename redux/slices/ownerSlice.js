@@ -30,10 +30,10 @@ const ownerSlice = createSlice({
         approveOwnerSuccess: (state, action) => {
             state.approveOwner.status = "success";
             state.approveOwner.data = action.payload;
-            // state.getAllOwners.data.hotelOwners =  state.getAllOwners.data.hotelOwners.map((owner)=>{
-            //     if(owner._id == action.payload.hotelOwner._id) return action.payload.hotelOwner;
-            //     else return owner; 
-            // })
+            state.getAllOwners.data.hotelOwners =  state.getAllOwners.data.hotelOwners.map((owner)=>{
+                if(owner._id == action.payload.hotelOwner._id) return action.payload.hotelOwner;
+                else return owner; 
+            })
         },
         approveOwnerFailure: (state, action) => {
             state.approveOwner.status = "failed";
@@ -60,6 +60,11 @@ const ownerSlice = createSlice({
         extendOwnerMembershipSuccess: (state, action) => {
             state.extendOwnerMembership.status = "success";
             state.extendOwnerMembership.data = action.payload;
+            state.getAllOwners.data.hotelOwners =  state.getAllOwners.data.hotelOwners.map((owner)=>{
+                if(owner._id == action.payload.updatedHotelOwner._id) return action.payload.updatedHotelOwner;
+                else return owner; 
+            })
+            
         },
         extendOwnerMembershipFailure: (state, action) => {
             state.extendOwnerMembership.status = "failed";

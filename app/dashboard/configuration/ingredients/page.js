@@ -14,6 +14,7 @@ import {
 import { AddIngredientDialog } from "@/components/ingredients/AddIngredientDialog";
 import { DeleteConfirmDialog } from "@/components/ingredients/DeleteConfirmDialog";
 import { EditIngredientDialog } from "@/components/ingredients/EditIngredientDialog";
+import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
 
 export default function IngredientsPage() {
   const [ingredients, setIngredients] = useState([]);
@@ -21,6 +22,8 @@ export default function IngredientsPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
+
+  const {ingredients : myIngredients, loading} = useGetAllIngredients()
 
   const handleAddIngredient = (newIngredient) => {
     setIngredients([...ingredients, { id: Date.now(), ...newIngredient }]);
@@ -73,7 +76,7 @@ export default function IngredientsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {ingredients.map((ingredient) => (
+            {myIngredients?.map((ingredient) => (
               <TableRow key={ingredient.id}>
                 <TableCell className="font-medium">{ingredient.name}</TableCell>
                 <TableCell>{ingredient.description}</TableCell>
