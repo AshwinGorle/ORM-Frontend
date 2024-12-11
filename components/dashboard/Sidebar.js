@@ -12,6 +12,7 @@ import {
   BarChart3,  
   MessagesSquare,
   LogOut,
+  ChartBarBig
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,7 @@ const menuItems = [
   },
   {
     title: "Admin Dashboard",
-    icon: BarChart3,
+    icon: ChartBarBig ,
     href: "/admin-dashboard",
   },
   {
