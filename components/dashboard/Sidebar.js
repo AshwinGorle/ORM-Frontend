@@ -9,7 +9,7 @@ import {
   Settings,
   Users,
   Calendar,
-  BarChart3,
+  BarChart3,  
   MessagesSquare,
   LogOut,
 } from "lucide-react";
