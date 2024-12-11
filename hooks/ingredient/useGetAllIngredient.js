@@ -42,7 +42,8 @@ export const useGetAllIngredients = (params = {}) => {
                 description: error || "Failed to Fetch Ingredients.",
                 variant: "destructive",
             });
-            dispatch(ingredientActions.clearGetAllIngredientsStats());
+            dispatch(ingredientActions.clearGetAllIngredientsStatus());
+            dispatch(ingredientActions.clearGetAllIngredientsError());
         }
     }, [status, data, error, dispatch, toast, setRefresh]);
 
