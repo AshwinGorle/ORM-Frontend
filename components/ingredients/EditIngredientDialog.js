@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useUpdateIngredient } from "@/hooks/ingredient/useUpdateIngredient";
 
 export function EditIngredientDialog({ open, onOpenChange, ingredient, onEdit }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const {loading, handleUpdateIngredient} = useUpdateIngredient(onOpenChange);
 
   useEffect(() => {
     if (ingredient) {
@@ -20,7 +22,8 @@ export function EditIngredientDialog({ open, onOpenChange, ingredient, onEdit })
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onEdit({ ...ingredient, name, description });
+    handleUpdateIngredient(ingredient._id,{name, description});
+    // onEdit({ ...ingredient, name, description });
   };
 
   return (

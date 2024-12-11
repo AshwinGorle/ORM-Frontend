@@ -31,13 +31,13 @@ export const getAllIngredients = () => async (dispatch) => {
 };
 
 // Action to update an ingredient
-export const updateIngredient = (ingredientId, updatedData) => async (dispatch) => {
-    console.log("action-update-ingredient-req:", ingredientId, updatedData);
+export const updateIngredient = (ingredientId) => async (dispatch) => {
+    console.log("action-update-ingredient-req:", ingredientId);
     try {
         dispatch(ingredientActions.updateIngredientRequest());
-        const response = await axios.put(
+        const response = await axios.patch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/ingredients/${ingredientId}`,
-            updatedData,
+            {},
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -98,6 +98,7 @@ export const deleteIngredient = (ingredientId) => async (dispatch) => {
         dispatch(ingredientActions.deleteIngredientRequest());
         const response = await axios.delete(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/ingredients/${ingredientId}`,
+            {},
             {
                 headers: {
                     "Content-Type": "application/json",

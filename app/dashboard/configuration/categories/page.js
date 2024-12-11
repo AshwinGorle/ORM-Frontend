@@ -14,6 +14,7 @@ import {
 import { AddCategoryDialog } from "@/components/categories/AddCategoryDialog";
 import { DeleteConfirmDialog } from "@/components/categories/DeleteConfirmDialog";
 import { EditCategoryDialog } from "@/components/categories/EditCategoryDialog";
+import { useGetAllCategories } from "@/hooks/category/useGetAllCategories";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
@@ -21,7 +22,8 @@ export default function CategoriesPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-
+  
+  const {categories : myCategories , loading} = useGetAllCategories();
   const handleAddCategory = (newCategory) => {
     setCategories([...categories, { id: Date.now(), ...newCategory }]);
     setIsAddDialogOpen(false);
@@ -73,7 +75,7 @@ export default function CategoriesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories.map((category) => (
+            {myCategories?.map((category) => (
               <TableRow key={category.id}>
                 <TableCell className="font-medium">{category.name}</TableCell>
                 <TableCell>{category.description}</TableCell>
@@ -103,7 +105,7 @@ export default function CategoriesPage() {
                 </TableCell>
               </TableRow>
             ))}
-            {categories.length === 0 && (
+            {myCategories?.length === 0 && (
               <TableRow>
                 <TableCell colSpan={3} className="text-center text-muted-foreground">
                   No categories added yet

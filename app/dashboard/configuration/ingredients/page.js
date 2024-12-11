@@ -15,6 +15,7 @@ import { AddIngredientDialog } from "@/components/ingredients/AddIngredientDialo
 import { DeleteConfirmDialog } from "@/components/ingredients/DeleteConfirmDialog";
 import { EditIngredientDialog } from "@/components/ingredients/EditIngredientDialog";
 import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
+import { useDeleteIngredient } from "@/hooks/ingredient/useDeleteIngredient";
 
 export default function IngredientsPage() {
   const [ingredients, setIngredients] = useState([]);
@@ -23,7 +24,8 @@ export default function IngredientsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
 
-  const {ingredients : myIngredients, loading} = useGetAllIngredients()
+  const {ingredients : myIngredients, loading} = useGetAllIngredients();
+  const {loading : deleteLoading, handleDeleteIngredient} = useDeleteIngredient(setIsDeleteDialogOpen);
 
   const handleAddIngredient = (newIngredient) => {
     setIngredients([...ingredients, { id: Date.now(), ...newIngredient }]);
@@ -40,11 +42,8 @@ export default function IngredientsPage() {
     setSelectedIngredient(null);
   };
 
-  const handleDeleteIngredient = () => {
-    setIngredients(
-      ingredients.filter((ing) => ing.id !== selectedIngredient.id)
-    );
-    setIsDeleteDialogOpen(false);
+  const handleDeleteIngredientLocal = () => {
+    handleDeleteIngredient(selectedIngredient._id);
     setSelectedIngredient(null);
   };
 
@@ -69,10 +68,10 @@ export default function IngredientsPage() {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
+            <TableRow key={"7961"}>
+              <TableHead key={"7962"}>Name</TableHead>
+              <TableHead key={"7963"}>Description</TableHead>
+              <TableHead key={"7964"} className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -119,7 +118,7 @@ export default function IngredientsPage() {
 
       <AddIngredientDialog
         open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
+        setOpen={setIsAddDialogOpen}
         onAdd={handleAddIngredient}
       />
 
@@ -133,7 +132,7 @@ export default function IngredientsPage() {
       <DeleteConfirmDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        onConfirm={handleDeleteIngredient}
+        onConfirm={handleDeleteIngredientLocal}
         ingredient={selectedIngredient}
       />
     </div>

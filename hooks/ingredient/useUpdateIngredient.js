@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
 import { approveHotelOwner } from "@/redux/actions/owner";
 import { ownerActions } from "@/redux/slices/ownerSlice";
-import { createIngredient } from "@/redux/actions/ingredient";
+import { createIngredient, updateIngredient } from "@/redux/actions/ingredient";
 import { ingredientActions } from "@/redux/slices/ingredientsSlice";
 
-export const useCreateIngredient = (setOpen) => {
+export const useUpdateIngredient = (setDialog) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error, data } = useSelector((state) => state.ingredient.createIngredient);
+    const { status, error, data } = useSelector((state) => state.ingredient.updateIngredient);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -19,28 +19,28 @@ export const useCreateIngredient = (setOpen) => {
             setLoading(false);
             toast({
                 title: "Success",
-                description: "Ingredient added successfully.",
+                description: "Ingredient updated successfully.",
                 variant: "success", // Optional, for success styling
             });
-            dispatch(ingredientActions.clearCreateIngredientStats());
-            setOpen(false) // to close dialog
+            dispatch(ingredientActions.clearUpdateIngredientStats());
+            setDialog(false) // to close dialog
         } else if (status === "failed") {
             setLoading(false);
             toast({
                 title: "Error",
-                description: error || "Failed to add Ingredients.",
+                description: error || "Failed to update Ingredients.",
                 variant: "destructive", // Optional, for error styling
             });
-            dispatch(ingredientActions.clearCreateIngredientStats());
-            setOpen(false) // to close dialog
+            dispatch(ingredientActions.clearUpdateIngredientStats());
+            setDialog(false) // to close dialog
 
         }
     }, [status, error, dispatch, toast]);
 
-    const handleCreateIngredient = (data) => {
-        console.log("hook-create-ingredient-req:", data);
-        dispatch(createIngredient(data));
+    const handleUpdateIngredient = (ingredientId, data) => {
+        console.log("hook-update-ingredient-req:", data);
+        dispatch(updateIngredient(ingredientId, data));
     };
 
-    return {loading, handleCreateIngredient};
+    return {loading, handleUpdateIngredient};
 };
