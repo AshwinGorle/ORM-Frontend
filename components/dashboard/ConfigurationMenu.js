@@ -21,12 +21,6 @@ const configItems = [
     href: "/dashboard/configuration/tables",
   },
   {
-    title: "QR Codes",
-    icon: QrCode,
-    description: "Generate and manage QR codes",
-    href: "/dashboard/configuration/qr-codes",
-  },
-  {
     title: "Ingredients",
     icon: NotepadText,
     description: "Add and Manage ingredients for dishes",
