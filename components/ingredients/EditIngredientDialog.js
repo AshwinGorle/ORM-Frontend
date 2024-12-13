@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUpdateIngredient } from "@/hooks/ingredient/useUpdateIngredient";
 import { Spinner } from "../ui/spinner";
 
-export function EditIngredientDialog({ open, onOpenChange, ingredient, onEdit }) {
+export function EditIngredientDialog({ open, onOpenChange, ingredient }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const {loading, handleUpdateIngredient} = useUpdateIngredient(onOpenChange);

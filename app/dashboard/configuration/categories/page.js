@@ -15,6 +15,8 @@ import { AddCategoryDialog } from "@/components/categories/AddCategoryDialog";
 import { DeleteConfirmDialog } from "@/components/categories/DeleteConfirmDialog";
 import { EditCategoryDialog } from "@/components/categories/EditCategoryDialog";
 import { useGetAllCategories } from "@/hooks/category/useGetAllCategories";
+import { useDeleteCategory } from "@/hooks/category/useDeleteCategory";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
@@ -24,27 +26,19 @@ export default function CategoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   
   const {categories : myCategories , loading} = useGetAllCategories();
-  const handleAddCategory = (newCategory) => {
-    setCategories([...categories, { id: Date.now(), ...newCategory }]);
+  const {loading : deletionLoading , handleDeleteCategory} = useDeleteCategory(setIsDeleteDialogOpen);
+
+  const handleAddCategory = () => {
     setIsAddDialogOpen(false);
   };     
 
   const handleEditCategory = (updatedCategory) => {
-    setCategories(
-        categories.map((ctg) =>
-        ctg.id === updatedCategory.id ? updatedCategory : ctg
-      )
-    );
     setIsEditDialogOpen(false);
     setSelectedCategory(null);
   };
 
-  const handleDeleteCategory = () => {
-    setCategories(
-      categories.filter((ctg) => ctg.id !== selectedCategory.id)
-    );
-    setIsDeleteDialogOpen(false);
-    setSelectedCategory(null);
+  const handleDeleteCategoryLocal = () => {
+    handleDeleteCategory(selectedCategory._id);
   };
 
   return (
@@ -64,6 +58,7 @@ export default function CategoriesPage() {
           Add Category
         </Button>
       </div>
+      {loading && <Spinner/>}
 
       <div className="rounded-md border">
         <Table>
@@ -126,13 +121,12 @@ export default function CategoriesPage() {
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         category={selectedCategory}
-        onEdit={handleEditCategory}
       />
 
       <DeleteConfirmDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        onConfirm={handleDeleteCategory}
+        onConfirm={handleDeleteCategoryLocal}
         category={selectedCategory}
       />
     </div>

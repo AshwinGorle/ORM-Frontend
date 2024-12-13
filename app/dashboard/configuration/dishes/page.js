@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import DishCard from "@/components/dishes/DishCard";
 import { EditDishDialog } from "@/components/dishes/EditDishDialog";
 import { AddDishDialog } from "@/components/dishes/AddDishDialog";
+import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function DishesPage() {
   const [dishes, setDishes] = useState([
@@ -46,6 +48,10 @@ export default function DishesPage() {
       },
   ]);
 
+  const {dishes : myDishes , loading} = useGetAllDishes();
+  console.log("my dishes ", myDishes);
+
+
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedDish, setSelectedDish] = useState(null);
@@ -55,18 +61,6 @@ export default function DishesPage() {
     setIsEditDialogOpen(true);
   };
 
-  const handleAddDish = (newDish) => {
-    setDishes([...dishes, { id: Date.now(), ...newDish }]);
-    setIsAddDialogOpen(false);
-  };
-
-  const handleUpdateDish = (updatedDish) => {
-    setDishes(dishes.map((dish) => 
-      dish.id === updatedDish.id ? updatedDish : dish
-    ));
-    setIsEditDialogOpen(false);
-    setSelectedDish(null);
-  };
 
   return (
     <div className="p-6">
@@ -86,10 +80,12 @@ export default function DishesPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dishes.map((dish) => (
+      {loading && <Spinner/> }
+
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {myDishes?.map((dish) => (
           <DishCard 
-            key={dish.id} 
+            key={dish._id} 
             dish={dish} 
             onEdit={() => handleEdit(dish)}
           />
@@ -99,14 +95,12 @@ export default function DishesPage() {
       <AddDishDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
-        onAdd={handleAddDish}
       />
 
       <EditDishDialog
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         dish={selectedDish}
-        onEdit={handleUpdateDish}
       />
     </div>
   );

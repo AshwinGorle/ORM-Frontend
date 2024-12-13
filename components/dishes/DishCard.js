@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+const defaultDishLogo = "https://static.vecteezy.com/system/resources/previews/010/354/788/original/main-dish-icon-colorful-flat-design-illustration-graphics-free-vector.jpg"
 
 export default function DishCard({ dish, onEdit }) {
   const formatPrice = (price) => {
@@ -25,7 +26,7 @@ export default function DishCard({ dish, onEdit }) {
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative h-48 w-full">
         <Image
-          src={dish.image}
+          src={dish.logo ? dish.logo : defaultDishLogo}
           alt={dish.name}
           fill
           className="object-cover"
@@ -56,7 +57,7 @@ export default function DishCard({ dish, onEdit }) {
             <div className="flex flex-wrap gap-2">
               {dish.ingredients.map((ingredient, index) => (
                 <Badge key={index} variant="secondary">
-                  {ingredient}
+                  {ingredient.name}
                 </Badge>
               ))}
             </div>

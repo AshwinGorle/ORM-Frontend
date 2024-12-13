@@ -16,6 +16,7 @@ import { DeleteConfirmDialog } from "@/components/ingredients/DeleteConfirmDialo
 import { EditIngredientDialog } from "@/components/ingredients/EditIngredientDialog";
 import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
 import { useDeleteIngredient } from "@/hooks/ingredient/useDeleteIngredient";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function IngredientsPage() {
   const [ingredients, setIngredients] = useState([]);
@@ -32,15 +33,7 @@ export default function IngredientsPage() {
     setIsAddDialogOpen(false);
   };
 
-  const handleEditIngredient = (updatedIngredient) => {
-    setIngredients(
-      ingredients.map((ing) =>
-        ing.id === updatedIngredient.id ? updatedIngredient : ing
-      )
-    );
-    setIsEditDialogOpen(false);
-    setSelectedIngredient(null);
-  };
+  
 
   const handleDeleteIngredientLocal = () => {
     handleDeleteIngredient(selectedIngredient._id);
@@ -64,7 +57,7 @@ export default function IngredientsPage() {
           Add Ingredient
         </Button>
       </div>
-
+      {loading && <Spinner></Spinner> }
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -105,7 +98,7 @@ export default function IngredientsPage() {
                 </TableCell>
               </TableRow>
             ))}
-            {ingredients.length === 0 && (
+            {myIngredients.length === 0 && (
               <TableRow>
                 <TableCell colSpan={3} className="text-center text-muted-foreground">
                   No ingredients added yet
@@ -126,7 +119,6 @@ export default function IngredientsPage() {
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         ingredient={selectedIngredient}
-        onEdit={handleEditIngredient}
       />
 
       <DeleteConfirmDialog

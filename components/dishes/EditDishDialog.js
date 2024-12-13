@@ -7,44 +7,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import { useUpdateDish } from "@/hooks/dish/useUpdateDish";
+import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
+import { Spinner } from "../ui/spinner";
+import IngredientInput from "./component/ingredientInput";
 
 export function EditDishDialog({ open, onOpenChange, dish, onEdit }) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
-  const [ingredient, setIngredient] = useState("");
-  const [ingredients, setIngredients] = useState([]);
+  const [logo, setLogo] = useState("");
+
+  const {loading :updateDishLoading, handleUpdateDish} = useUpdateDish(onOpenChange);
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+
 
   useEffect(() => {
     if (dish) {
       setName(dish.name);
       setPrice(dish.price.toString());
-      setImage(dish.image);
-      setIngredients(dish.ingredients);
+      setLogo(dish.logo);
+      setSelectedIngredients(dish.ingredients);
     }
   }, [dish]);
 
-  const handleAddIngredient = (e) => {
-    e.preventDefault();
-    if (ingredient.trim()) {
-      setIngredients([...ingredients, ingredient.trim()]);
-      setIngredient("");
-    }
-  };
-
-  const handleRemoveIngredient = (indexToRemove) => {
-    setIngredients(ingredients.filter((_, index) => index !== indexToRemove));
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    onEdit({
-      ...dish,
-      name,
-      price: parseInt(price),
-      image,
-      ingredients,
-    });
+    const ingredientIds = selectedIngredients.map((ing)=>ing._id.toString());
+    handleUpdateDish(dish._id, {name, price, logo, ingredients : ingredientIds });
   };
 
   return (
@@ -64,9 +53,9 @@ export function EditDishDialog({ open, onOpenChange, dish, onEdit }) {
               required
             />
           </div>
-          
+
           <div className="space-y-2">
-            <Label htmlFor="edit-price">Price (₹)</Label>
+            <Label htmlFor="edit-price">Price</Label>
             <Input
               id="edit-price"
               type="number"
@@ -78,50 +67,30 @@ export function EditDishDialog({ open, onOpenChange, dish, onEdit }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="edit-image">Image URL</Label>
+            <Label htmlFor="edit-logo">Image URL</Label>
             <Input
-              id="edit-image"
+              id="edit-logo"
               type="url"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              placeholder="Enter image URL"
+              value={logo}
+              onChange={(e) => setLogo(e.target.value)}
+              placeholder="Enter logo URL"
               required
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>Ingredients</Label>
-            <div className="flex gap-2">
-              <Input
-                value={ingredient}
-                onChange={(e) => setIngredient(e.target.value)}
-                placeholder="Add ingredient"
-              />
-              <Button type="button" onClick={handleAddIngredient}>
-                Add
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {ingredients.map((ing, index) => (
-                <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                  {ing}
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => handleRemoveIngredient(index)}
-                  />
-                </Badge>
-              ))}
-            </div>
-          </div>
-
+          <IngredientInput selectedIngredients={selectedIngredients} setSelectedIngredients={setSelectedIngredients}/>
+             
+            
+          
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit">{updateDishLoading? <Spinner/>: "Save Changes"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   );
 }
+

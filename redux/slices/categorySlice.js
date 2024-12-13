@@ -84,7 +84,7 @@ const categorySlice = createSlice({
         deleteCategorySuccess: (state, action) => {
             state.deleteCategory.status = "success";
             state.getAllCategories.data.categories = state.getAllCategories.data.categories.filter(
-                (category) => category._id !== action.payload.category
+                (category) => category._id !== action.payload.category._id
             );
         },
         deleteCategoryFailure: (state, action) => {

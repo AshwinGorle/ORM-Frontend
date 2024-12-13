@@ -62,7 +62,7 @@ export const updateCategory = (categoryId, data) => async (dispatch) => {
     console.log("action-update-category-req:", data);
     try {
         dispatch(categoryActions.updateCategoryRequest());
-        const response = await axios.put(
+        const response = await axios.patch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/categories/${categoryId}`,
             data,
             {
@@ -101,10 +101,10 @@ export const deleteCategory = (categoryId) => async (dispatch) => {
             }
         );
 
-        const { status, message } = response.data;
-        console.log("action-delete-category-res:", categoryId);
+        const { status, message, data } = response.data;
+        console.log("action-delete-category-res:", data);
         if (status === "success") {
-            dispatch(categoryActions.deleteCategorySuccess({ categoryId }));
+            dispatch(categoryActions.deleteCategorySuccess(data));
         } else {
             dispatch(categoryActions.deleteCategoryFailure(message));
         }

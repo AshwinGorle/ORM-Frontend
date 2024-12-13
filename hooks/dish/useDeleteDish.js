@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
-import { deleteIngredient} from "@/redux/actions/ingredient";
-import { ingredientActions } from "@/redux/slices/ingredientsSlice";
+import { approveHotelOwner } from "@/redux/actions/owner";
+import { ownerActions } from "@/redux/slices/ownerSlice";
+import { createDish, deleteDish, updateDish } from "@/redux/actions/dish";
+import { dishActions } from "@/redux/slices/dishsSlice";
 
-export const useDeleteIngredient = (setDialog) => {
+export const useDeleteDish = (setDialog) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error } = useSelector((state) => state.ingredient.deleteIngredient);
+    const { status, error } = useSelector((state) => state.dish.deleteDish);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -17,28 +19,28 @@ export const useDeleteIngredient = (setDialog) => {
             setLoading(false);
             toast({
                 title: "Success",
-                description: "Ingredient deleted successfully.",
+                description: "Dish deleted successfully.",
                 variant: "success", // Optional, for success styling
             });
-            dispatch(ingredientActions.clearDeleteIngredientStats());
+            dispatch(dishActions.clearDeleteDishStats());
             setDialog(false) // to close dialog
         } else if (status === "failed") {
             setLoading(false);
             toast({
                 title: "Error",
-                description: error || "Failed to delete Ingredients.",
+                description: error || "Failed to delete Dishs.",
                 variant: "destructive", // Optional, for error styling
             });
-            dispatch(ingredientActions.clearDeleteIngredientStats());
+            dispatch(dishActions.clearDeleteDishStats());
             setDialog(false) // to close dialog
 
         }
     }, [status, error, dispatch, toast]);
 
-    const handleDeleteIngredient = (ingredientId) => {
-        console.log("hook-delete-ingredient-req:" , ingredientId);
-        dispatch(deleteIngredient(ingredientId));
+    const handleDeleteDish = (dishId) => {
+        console.log("hook-delete-dish-req:" , dishId);
+        dispatch(deleteDish(dishId));
     };
 
-    return {loading, handleDeleteIngredient};
+    return {loading, handleDeleteDish};
 };

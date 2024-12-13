@@ -6,16 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useCreateCategory } from "@/hooks/category/useCreateCategory";
+import { Spinner } from "../ui/spinner";
 
 export function AddCategoryDialog({ open, onOpenChange, onAdd }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const {loading, handleCreateCategory} = useCreateCategory(onOpenChange);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAdd({ name, description });
-    setName("");
-    setDescription("");
+    // onAdd({ name, description });
+    handleCreateCategory({name, description});
+    // setTimeout()
+    // setName("");
+    // setDescription("");
   };
 
   return (
@@ -49,7 +54,7 @@ export function AddCategoryDialog({ open, onOpenChange, onAdd }) {
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">Add Category</Button>
+            <Button type="submit">{loading ? <Spinner size={"sm"}/>:"Add Category"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

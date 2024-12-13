@@ -1,0 +1,125 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialDish = {
+    createDish: {
+        status: null,
+        error: null,
+        data: null,
+    },
+
+    getAllDishes: {
+        status: null,
+        error: null,
+        data: null,
+    },
+
+    updateDish: {
+        status: null,
+        error: null,
+        data: null,
+    },
+
+    deleteDish: {
+        status: null,
+        error: null,
+        data: null,
+    },
+};
+
+const dishSlice = createSlice({
+    name: "dish",
+    initialState: initialDish,
+    reducers: {
+        // createDish
+        createDishRequest: (state) => {
+            state.createDish.status = "pending";
+        },
+        createDishSuccess: (state, action) => {
+            state.createDish.status = "success";
+            state.createDish.data = action.payload;
+            state.getAllDishes.data.dishes.push(action.payload.dish);
+        },
+        createDishFailure: (state, action) => {
+            state.createDish.status = "failed";
+            state.createDish.error = action.payload;
+        },
+
+        // getAllDishes
+        getAllDishesRequest: (state) => {
+            state.getAllDishes.status = "pending";
+        },
+        getAllDishesSuccess: (state, action) => {
+            state.getAllDishes.status = "success";
+            state.getAllDishes.data = action.payload;
+        },
+        getAllDishesFailure: (state, action) => {
+            state.getAllDishes.status = "failed";
+            state.getAllDishes.error = action.payload;
+        },
+
+        // updateDish
+        updateDishRequest: (state) => {
+            state.updateDish.status = "pending";
+        },
+        updateDishSuccess: (state, action) => {
+            state.updateDish.status = "success";
+            state.updateDish.data = action.payload;
+            state.getAllDishes.data.dishes = state.getAllDishes.data.dishes.map((dish) => {
+                if (dish._id === action.payload.dish._id) {
+                    return action.payload.dish;
+                } else {
+                    return dish;
+                }
+            });
+        },
+        updateDishFailure: (state, action) => {
+            state.updateDish.status = "failed";
+            state.updateDish.error = action.payload;
+        },
+
+        // deleteDish
+        deleteDishRequest: (state) => {
+            state.deleteDish.status = "pending";
+        },
+        deleteDishSuccess: (state, action) => {
+            state.deleteDish.status = "success";
+            state.getAllDishes.data.dishes = state.getAllDishes.data.dishes.filter(
+                (dish) => dish._id !== action.payload.dish
+            );
+        },
+        deleteDishFailure: (state, action) => {
+            state.deleteDish.status = "failed";
+            state.deleteDish.error = action.payload;
+        },
+
+        // Manual state cleaners
+        clearGetAllDishesStatus : (state)=>{
+            state.getAllDishes.status = null;
+        },
+        clearGetAllDishesError : (state)=>{
+            state.getAllDishes.error = null;
+        },
+
+        clearCreateDishStats: (state) => {
+            state.createDish.status = null;
+            state.createDish.error = null;
+            state.createDish.data = null;
+        },
+
+
+        clearUpdateDishStats: (state) => {
+            state.updateDish.status = null;
+            state.updateDish.error = null;
+            state.updateDish.data = null;
+        },
+
+        clearDeleteDishStats: (state) => {
+            state.deleteDish.status = null;
+            state.deleteDish.error = null;
+            state.deleteDish.data = null;
+        },
+    },
+});
+
+export const dishActions = dishSlice.actions;
+export const dishReducer = dishSlice.reducer;
