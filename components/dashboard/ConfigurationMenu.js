@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { QrCode, UtensilsCrossed, Table2 , NotepadText , HandPlatter} from "lucide-react";
+import { QrCode, UtensilsCrossed, Table2 , NotepadText , HandPlatter , Tag} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -31,6 +31,12 @@ const configItems = [
     icon: HandPlatter,
     description: "Add and Manage categories for dishes",
     href: "/dashboard/configuration/categories",
+  },
+  {
+    title: "Offers",
+    icon: Tag,
+    description: "Manage special offers and discounts",
+    href: "/dashboard/configuration/offers",
   },
 ];
 
