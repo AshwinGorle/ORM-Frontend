@@ -16,7 +16,7 @@ import { X } from "lucide-react";
 import { useUpdateDish } from "@/hooks/dish/useUpdateDish";
 import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
 import { Spinner } from "../ui/spinner";
-import IngredientInput from "./component/ingredientInput";
+import IngredientInput from "./component/SectMultiple";
 import { EditableImage } from "../ImageInput.js";
 
 export function EditDishDialog({ open, onOpenChange, dish, onEdit }) {

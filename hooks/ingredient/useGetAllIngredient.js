@@ -4,7 +4,8 @@ import { useToast } from "@/hooks/use-toast";
 import { ingredientActions } from "@/redux/slices/ingredientsSlice";
 import { getAllIngredients } from "@/redux/actions/ingredient"; // Ensure this matches your action import
 
-export const useGetAllIngredients = (params = {}) => {
+export const useGetAllIngredients = (type) => {
+    const params = {}
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { refresh = false, setRefresh = null } = params;
@@ -13,7 +14,7 @@ export const useGetAllIngredients = (params = {}) => {
     const { toast } = useToast();
 
     const fetchAllIngredients = useCallback(() => {
-        if (!data || refresh) {
+        if (type=='ingredient' && (!data || refresh)) {
             dispatch(getAllIngredients());
         }
     }, [dispatch, data, refresh]);

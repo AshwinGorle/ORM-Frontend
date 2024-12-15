@@ -32,12 +32,12 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { useUpdateDish } from "@/hooks/dish/useUpdateDish";
-import IngredientInput from "@/components/dishes/component/ingredientInput";
 import { EditableImage } from "@/components/ImageInput";
 import { Spinner } from "@/components/ui/spinner";
 import { useParams, useRouter } from "next/navigation";
 import { useGetDish } from "@/hooks/dish/useGetDish";
 import { defaultDishLogo } from "@/config/config";
+import SelectMultiple from "@/components/dishes/component/SectMultiple";
 
 function DishDetails() {
   const { id } = useParams();
@@ -49,27 +49,32 @@ function DishDetails() {
   const [logo, setLogo] = useState("");
   const [uploadFile, setUploadFile] = useState(null);
   const { loading: updateDishLoading, handleUpdateDish } = useUpdateDish();
+
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
     if (dish) {
       setName(dish?.name);
       setPrice(dish?.price?.toString() || "0");
       setLogo(dish?.logo);
-      setSelectedIngredients(dish.ingredients);
+      setSelectedIngredients(dish?.ingredients || []);
+      setSelectedCategories(dish?.categories || [])
     }
   }, [dish]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const ingredientIds = selectedIngredients?.map((ing) => ing._id.toString());
+    const categoryIds = selectedCategories?.map((ing) => ing._id.toString());
 
     // here in this handleUpdateDish function dish unction  
     handleUpdateDish(dish._id, {
       name,
       price,
       logo,
-      ingredients: ingredientIds,
+      ingredients: ingredientIds || [],
+      categories : categoryIds || [],
     });
   };
 
@@ -96,7 +101,6 @@ function DishDetails() {
               <EditableImage
                 imageUrl={logo}
                 size={200}
-                onImageChange={handleImageChange}
                 setImageUrl={setLogo}
                 element={dish}
               />
@@ -137,9 +141,16 @@ function DishDetails() {
               </div>
             </div>
             <div>
-              <IngredientInput
-                selectedIngredients={selectedIngredients || []}
-                setSelectedIngredients={setSelectedIngredients}
+              <SelectMultiple
+                selectedInputs={selectedIngredients || []}
+                setSelectedInputs={setSelectedIngredients}
+                type={"ingredient"}
+              />
+
+              <SelectMultiple
+                selectedInputs={selectedCategories || []}
+                setSelectedInputs={setSelectedCategories}
+                type={"category"}
               />
 
               <DialogFooter>

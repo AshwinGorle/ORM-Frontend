@@ -1,5 +1,5 @@
 import axios from "axios";
-import { offerActions } from "@/redux/slices/offersSlice";
+import { offerActions } from "@/redux/slices/offerSlice";
 import { getActionErrorMessage } from "@/utils";
 
 // Action to get all offers

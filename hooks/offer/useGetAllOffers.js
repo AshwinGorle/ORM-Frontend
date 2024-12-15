@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
-import { offerActions } from "@/redux/slices/offersSlice";
+import { offerActions } from "@/redux/slices/offerSlice";
 import { getAllOffers } from "@/redux/actions/offer"; // Ensure this matches your action import
 
-export const useGetAllOffers = (params = {}) => {
+export const useGetAllOffers = (type) => {
+    const params = {}
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { refresh = false, setRefresh = null } = params;
@@ -13,7 +14,7 @@ export const useGetAllOffers = (params = {}) => {
     const { toast } = useToast();
 
     const fetchAllOffers = useCallback(() => {
-        if (!data || refresh) {
+        if (type == 'offer' && (!data || refresh)) {
             dispatch(getAllOffers());
         }
     }, [dispatch, data, refresh]);
