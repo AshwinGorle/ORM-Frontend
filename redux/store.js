@@ -6,6 +6,7 @@ import { categoryReducer } from "./slices/categorySlice.js";
 import { dishReducer } from "./slices/dishSlice.js";
 import { tableReducer } from "./slices/tableSlice.js";
 import { offerReducer } from "./slices/offerSlice.js";
+import { uploadReducer } from "./slices/uploadSlice.js";
 
 export const store  = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export const store  = configureStore({
         dish : dishReducer,
         table : tableReducer,
         offer : offerReducer,
+        upload : uploadReducer
         
     }
 })

@@ -40,7 +40,7 @@ const IngredientInput = ({
     <div className="flex flex-col justify-items-center ">
       <div className="flex flex-wrap gap-2 mt-2 p-2 my-2 border border-gray-200 rounded-md">
         {selectedIngredients.map((ingredient) => (
-          <Badge key={ingredient.name} className="flex items-center gap-1">
+          <Badge key={ingredient._id} className="flex items-center gap-1">
             {ingredient.name}
             <X
               className="h-4 w-4 cursor-pointer"
@@ -59,7 +59,7 @@ const IngredientInput = ({
             <CommandGroup heading="Suggestions">
               {filteredIngredients?.map((ingredient) => {
                 return (
-                  <CommandItem>
+                  <CommandItem key={ingredient._id}>
                     <Checkbox
                       checked={selectedIngredients?.some(
                         (ing) => ing._id == ingredient._id
