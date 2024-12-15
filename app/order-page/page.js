@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSystemOnline, selectIsSystemOnline } from "../../redux/slices/systemSlice";
 import { 
@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import useAbly from "../../hooks/ably/useAbly";
 import KanbanColumn from "../../components/KanbanColumn";
 import { selectConnectionStatus, selectConnectionError } from "../../redux/slices/connectionSlice";
+import { useGetOrderDetails } from "../../hooks/order/useGetOrderDetails";
 
 export default function OrderPage() {
   const dispatch = useDispatch();
@@ -20,7 +21,8 @@ export default function OrderPage() {
   const isConnected = useSelector(selectConnectionStatus);
   const connectionError = useSelector(selectConnectionError);
   const orders = useSelector(selectOrders);
-  const hotelId = "674cb4bdc72700e0f6dc839c";
+  const [hotelId, setHotelId] = useState("674cb4bdc72700e0f6dc839c");
+  const { selectedServer, toggleServer } = useGetOrderDetails();
 
   const handleSystemToggle = () => {
     const newStatus = !isSystemOnline;
@@ -63,7 +65,62 @@ export default function OrderPage() {
         )}
 
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Order Management</h1>
+          <div className="flex items-center gap-6">
+            <h1 className="text-3xl font-bold text-gray-900">Order Management</h1>
+            
+            <div className="relative group">
+              <label 
+                htmlFor="hotelId" 
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Hotel ID
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  id="hotelId"
+                  type="text"
+                  value={hotelId}
+                  onChange={(e) => setHotelId(e.target.value)}
+                  placeholder="Enter Hotel ID"
+                  className="w-[300px] px-4 py-2 border-2 border-gray-200 rounded-lg text-sm
+                           focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+                           transition-all duration-200 outline-none
+                           hover:border-gray-300"
+                  list="defaultHotelId"
+                />
+                <datalist id="defaultHotelId">
+                  <option value="674cb4bdc72700e0f6dc839c">Default Hotel</option>
+                </datalist>
+              </div>
+            </div>
+
+            <div className="relative group">
+              <label 
+                htmlFor="serverSelect" 
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                API Server
+              </label>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={toggleServer}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                    ${selectedServer === 'deployed' 
+                      ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                    }`}
+                >
+                  {selectedServer === 'deployed' ? '🌐 Deployed Server' : '💻 Local Server'}
+                </button>
+                <div className="text-xs text-gray-500">
+                  {selectedServer === 'deployed' 
+                    ? 'Using: oms-api.vercel.app' 
+                    : 'Using: localhost:5000'}
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <button
             onClick={handleSystemToggle}
             className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl ${
