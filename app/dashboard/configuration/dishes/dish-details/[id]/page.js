@@ -1,3 +1,21 @@
+// 'use client'
+// import { useGetDish } from "@/hooks/dish/useGetDish";
+
+// const { useParams } = require("next/navigation");
+
+//  const DishDetails = ()=>{
+//     const { id } = useParams();
+//     console.log("dish in component" , id)
+//     const {dish, loading} = useGetDish(id);
+
+//     return(
+//         <div>{dish.name}</div>
+//     )
+
+// }
+
+// export default  DishDetails
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,54 +32,63 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { useUpdateDish } from "@/hooks/dish/useUpdateDish";
-import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
-import { Spinner } from "../ui/spinner";
-import IngredientInput from "./component/SectMultiple";
-import { EditableImage } from "../ImageInput.js";
+import { EditableImage } from "@/components/ImageInput";
+import { Spinner } from "@/components/ui/spinner";
+import { useParams, useRouter } from "next/navigation";
+import { useGetDish } from "@/hooks/dish/useGetDish";
+import { defaultDishLogo } from "@/config/config";
+import SelectMultiple from "@/components/dishes/component/SectMultiple";
 
-export function EditDishDialog({ open, onOpenChange, dish, onEdit }) {
+function DishDetails() {
+  const { id } = useParams();
+  console.log("dish in component", id);
+  const { dish, loading } = useGetDish(id);
+  const router = useRouter();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [logo, setLogo] = useState("");
+  const [uploadFile, setUploadFile] = useState(null);
+  const { loading: updateDishLoading, handleUpdateDish } = useUpdateDish();
 
-  const { loading: updateDishLoading, handleUpdateDish } =
-    useUpdateDish(onOpenChange);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
     if (dish) {
-      setName(dish.name);
-      setPrice(dish.price.toString());
-      setLogo(dish.logo);
-      setSelectedIngredients(dish.ingredients);
+      setName(dish?.name);
+      setPrice(dish?.price?.toString() || "0");
+      setLogo(dish?.logo);
+      setSelectedIngredients(dish?.ingredients || []);
+      setSelectedCategories(dish?.categories || [])
     }
   }, [dish]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const ingredientIds = selectedIngredients.map((ing) => ing._id.toString());
+    const ingredientIds = selectedIngredients?.map((ing) => ing._id.toString());
+    const categoryIds = selectedCategories?.map((ing) => ing._id.toString());
+
+    // here in this handleUpdateDish function dish unction  
     handleUpdateDish(dish._id, {
       name,
       price,
       logo,
-      ingredients: ingredientIds,
+      ingredients: ingredientIds || [],
+      categories : categoryIds || [],
     });
   };
 
   const handleImageChange = async (file) => {
     // Simulating an upload delay
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    console.log("file in handle image change ", file);
+    setUploadFile(file);
+    const newImageUrl = URL.createObjectURL(file);
+    // setLogo(newImageUrl);
+  };
 
-    console.log("file : ", file);
-    
-    // In a real application, you would upload the file to your server or a cloud storage service here
-    // and get back the new URL. For this example, we're just using a local object URL.
-    const newImageUrl = URL.createObjectURL(file)
-    // setLogo(newImageUrl)
-  }
-
+  // if(loading) return <Spinner></Spinner>
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={true}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>Edit Dish</DialogTitle>
@@ -72,10 +99,11 @@ export function EditDishDialog({ open, onOpenChange, dish, onEdit }) {
             <div className="flex flex-col">
               {/* <EditableImage imageUrl={dish?.logo} /> */}
               <EditableImage
-                imageUrl={dish?.logo}
-                size={150}
-                onImageChange={handleImageChange}
-                />
+                imageUrl={logo}
+                size={200}
+                setImageUrl={setLogo}
+                element={dish}
+              />
 
               <div className="space-y-2">
                 <Label htmlFor="edit-name">Name</Label>
@@ -113,18 +141,25 @@ export function EditDishDialog({ open, onOpenChange, dish, onEdit }) {
               </div>
             </div>
             <div>
-              <IngredientInput
-                selectedIngredients={selectedIngredients}
-                setSelectedIngredients={setSelectedIngredients}
+              <SelectMultiple
+                selectedInputs={selectedIngredients || []}
+                setSelectedInputs={setSelectedIngredients}
+                type={"ingredient"}
+              />
+
+              <SelectMultiple
+                selectedInputs={selectedCategories || []}
+                setSelectedInputs={setSelectedCategories}
+                type={"category"}
               />
 
               <DialogFooter>
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => onOpenChange(false)}
+                  onClick={() => router.push(`/dashboard/configuration/dishes`)}
                 >
-                  Cancel
+                  Go Back
                 </Button>
                 <Button type="submit">
                   {updateDishLoading ? <Spinner /> : "Save Changes"}
@@ -137,3 +172,5 @@ export function EditDishDialog({ open, onOpenChange, dish, onEdit }) {
     </Dialog>
   );
 }
+
+export default DishDetails;

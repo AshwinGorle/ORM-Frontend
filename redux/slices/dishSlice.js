@@ -13,6 +13,12 @@ const initialDish = {
         data: null,
     },
 
+    getDish: {
+        status: null,
+        error: null,
+        data: null,
+    },
+
     updateDish: {
         status: null,
         error: null,
@@ -57,6 +63,19 @@ const dishSlice = createSlice({
             state.getAllDishes.error = action.payload;
         },
 
+        // getDish
+        getDishRequest: (state) => {
+            state.getDish.status = "pending";
+        },
+        getDishSuccess: (state, action) => {
+            state.getDish.stat = "success";
+            state.getDish.data = action.payload;
+        },
+        getDishFailure: (state, action) => {
+            state.getDish.status = "failed";
+            state.getDish.error = action.payload;
+        },
+
         // updateDish
         updateDishRequest: (state) => {
             state.updateDish.status = "pending";
@@ -99,6 +118,14 @@ const dishSlice = createSlice({
         clearGetAllDishesError : (state)=>{
             state.getAllDishes.error = null;
         },
+
+        clearGetDishStatus : (state)=>{
+            state.getAllDishes.status = null;
+        },
+        clearGetDishError : (state)=>{
+            state.getAllDishes.error = null;
+        },
+
 
         clearCreateDishStats: (state) => {
             state.createDish.status = null;

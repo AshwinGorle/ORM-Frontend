@@ -9,6 +9,7 @@ import { offerReducer } from "./slices/offerSlice.js";
 import systemReducer  from "./slices/systemSlice.js";
 import  orderReducer from "./slices/orderSlice.js";
 import connectionReducer from "./slices/connectionSlice.js";
+import { uploadReducer } from "./slices/uploadSlice.js";
 
 export const store  = configureStore({
     reducer: {
@@ -22,6 +23,8 @@ export const store  = configureStore({
         system : systemReducer,
         order : orderReducer,
         connection : connectionReducer,
+        upload : uploadReducer
+        
     }
 })
 
