@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
-import { createDish, updateDish } from "@/redux/actions/dish";
-import { dishActions } from "@/redux/slices/dishSlice";
+import { createUpload } from "@/redux/actions/upload";
+import { uploadActions } from "@/redux/slices/uploadSlice";
 
-export const useUpdateDish = () => {
+export const useCreateUpload = (setImageUrl) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error, data } = useSelector((state) => state.dish.updateDish);
+    const { status, error, data } = useSelector((state) => state.upload.createUpload);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -17,28 +17,28 @@ export const useUpdateDish = () => {
             setLoading(false);
             toast({
                 title: "Success",
-                description: "Dish updated successfully.",
+                description: "Upload added successfully.",
                 variant: "success", // Optional, for success styling
             });
-            dispatch(dishActions.clearUpdateDishStats());
-            // setDialog(false) // to close dialog
+            dispatch(uploadActions.clearCreateUploadStats());
+            setImageUrl(data.url);
+           
         } else if (status === "failed") {
             setLoading(false);
             toast({
                 title: "Error",
-                description: error || "Failed to update Dishs.",
+                description: error || "Failed to add Uploads.",
                 variant: "destructive", // Optional, for error styling
             });
-            dispatch(dishActions.clearUpdateDishStats());
-            // setDialog(false) // to close dialog
+            dispatch(uploadActions.clearCreateUploadStats());
 
         }
     }, [status, error, dispatch, toast]);
 
-    const handleUpdateDish = (dishId, data) => {
-        console.log("hook-update-dish-req:" , dishId , data);
-        dispatch(updateDish(dishId, data));
+    const handleCreateUpload = (data) => {
+        console.log("hook-create-upload-req:", data);
+        dispatch(createUpload(data));
     };
 
-    return {loading, handleUpdateDish};
+    return {data, loading, handleCreateUpload};
 };

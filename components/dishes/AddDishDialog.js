@@ -110,7 +110,7 @@ import { useCreateDish } from "@/hooks/dish/useCreateDish";
 import { Spinner } from "../ui/spinner";
 import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import IngredientInput from "./component/ingredientInput";
+import IngredientInput from "./component/SectMultiple";
 
 export function AddDishDialog({ open, onOpenChange, onAdd }) {
   const [name, setName] = useState("");

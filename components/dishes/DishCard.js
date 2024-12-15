@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 const defaultDishLogo = "https://static.vecteezy.com/system/resources/previews/010/354/788/original/main-dish-icon-colorful-flat-design-illustration-graphics-free-vector.jpg"
+import { useRouter } from "next/navigation";
+
 
 export default function DishCard({ dish, onEdit }) {
   const formatPrice = (price) => {
@@ -21,6 +23,8 @@ export default function DishCard({ dish, onEdit }) {
       maximumFractionDigits: 0,
     }).format(price);
   };
+  
+  const router = useRouter();
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -42,7 +46,7 @@ export default function DishCard({ dish, onEdit }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onEdit(dish)}>
+            <DropdownMenuItem onClick={() => router.push(`/dashboard/configuration/dishes/dish-details/${dish._id}`)}>
               Edit Dish
             </DropdownMenuItem>
           </DropdownMenuContent>
