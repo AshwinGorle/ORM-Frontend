@@ -40,7 +40,7 @@ function KanbanCard({ order, actions }) {
             <p className="text-sm font-medium mb-1">Dishes:</p>
             {order.dishes?.map((dish, index) => (
               <p key={`${order.orderId}-dish-${index}`} className="text-sm text-gray-600">
-                {`1x ${dish.name}`}
+                {`${dish.quantity}x ${dish.name} (₹${dish.price})`}
               </p>
             ))}
           </div>
