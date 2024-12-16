@@ -43,6 +43,7 @@ const dishSlice = createSlice({
         createDishSuccess: (state, action) => {
             state.createDish.status = "success";
             state.createDish.data = action.payload;
+            if(!state?.getAllDishes?.data?.dishes) state.getAllDishes.data = {dishes:[]};
             state.getAllDishes.data.dishes.push(action.payload.dish);
         },
         createDishFailure: (state, action) => {

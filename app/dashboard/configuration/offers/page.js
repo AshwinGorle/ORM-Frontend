@@ -6,18 +6,16 @@ import { Button } from "@/components/ui/button";
 import OfferCard from "@/components/offers/OfferCard";
 import { AddOfferDialog } from "@/components/offers/AddOfferDialog";
 import { EditOfferDialog } from "@/components/offers/EditOfferDialog";
+import { useGetAllOffers } from "@/hooks/offer/useGetAllOffers";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function OffersPage() {
   const [offers, setOffers] = useState([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState(null);
-
-  const handleAddOffer = (newOffer) => {
-    setOffers([...offers, { id: Date.now(), ...newOffer }]);
-    setIsAddDialogOpen(false);
-  };
-
+  const {offers : myOffers , loading} = useGetAllOffers();
+  console.log("offer in comp :", myOffers)
   const handleEditOffer = (updatedOffer) => {
     setOffers(offers.map((offer) => 
       offer.id === updatedOffer.id ? updatedOffer : offer
@@ -47,11 +45,12 @@ export default function OffersPage() {
           Add Offer
         </Button>
       </div>
-
+      
+       {loading && <Spinner/>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {offers.map((offer) => (
+        {myOffers?.map((offer) => (
           <OfferCard
-            key={offer.id}
+            key={offer._id}
             offer={offer}
             onEdit={() => {
               setSelectedOffer(offer);
@@ -70,7 +69,6 @@ export default function OffersPage() {
       <AddOfferDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
-        onAdd={handleAddOffer}
       />
 
       <EditOfferDialog

@@ -7,7 +7,7 @@ import { Pencil, Loader2 } from 'lucide-react'
 import { defaultDishLogo } from '@/config/config'
 import { useCreateUpload } from '@/hooks/upload/useCreateUpload'
 
-export function EditableImage({ imageUrl = null, size = 100, setImageUrl, element }) {
+export function EditableImage({ imageUrl = null, size = 200, setImageUrl, element }) {
   const [loading, setLoading] = useState(false)
   // const [previewUrl, setPreviewUrl] = useState(imageUrl)
   const fileInputRef = useRef(null)
@@ -22,8 +22,8 @@ export function EditableImage({ imageUrl = null, size = 100, setImageUrl, elemen
     console.log("file in handle image change ", file);
     const uploadData = {
       file, 
-      fileName : element._id,
-      folderName : `Dishes/${element.hotelId}` 
+      fileName : element?._id || Math.random() * 1000,
+      folderName : `Dishes/${element?.hotelId || "newOMSFolder"}` 
     }
     handleCreateUpload(uploadData);
     // const newImageUrl = URL.createObjectURL(file);
@@ -61,7 +61,7 @@ export function EditableImage({ imageUrl = null, size = 100, setImageUrl, elemen
           </div>
         ) : (
           <Image
-            src={imageUrl}
+            src={imageUrl || defaultDishLogo}
             alt="image"
             layout="fill"
             objectFit="cover"

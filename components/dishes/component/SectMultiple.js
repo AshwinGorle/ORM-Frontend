@@ -15,6 +15,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
 import { useGetAllCategories } from "@/hooks/category/useGetAllCategories";
 import { useGetAllOffers } from "@/hooks/offer/useGetAllOffers";
+import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
 const { useState, useEffect } = require("react");
 
 
@@ -33,6 +34,7 @@ const SelectMultiple = ({
   const { loading: ingredientsLoading, ingredients = [] } = useGetAllIngredients(type);
   const { loading : categoryLoading, categories = []} = useGetAllCategories(type);
   const { loading : offerLoading, offers = []} = useGetAllOffers(type);
+  const { loading : dishLoading, dishes = []} = useGetAllDishes(type);
   
   switch(type){
     case "ingredient" : 
@@ -48,6 +50,11 @@ const SelectMultiple = ({
     case "offer" : 
     inputs = offers
     loading = offerLoading
+    break
+
+    case "dish" : 
+    inputs = dishes
+    loading = dishLoading
     break
     
   }

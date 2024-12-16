@@ -41,6 +41,7 @@ const ingredientSlice = createSlice({
             //     if(ingredient._id == action.payload.ingredient._id) return action.payload.ingredient
             //     else return ingredient
             // })
+            if(!state?.getAllIngredients?.data?.ingredients) state.getAllIngredients.data = {ingredients:[]};
             state.getAllIngredients.data.ingredients.push(action.payload.ingredient);
 
         },

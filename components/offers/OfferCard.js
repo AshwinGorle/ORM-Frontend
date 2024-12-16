@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatDate } from "@/lib/utils";
+import getExpiryTimeInWords from "@/utils/getExpiryInWords";
 
 export default function OfferCard({ offer, onEdit, onDelete }) {
   const getDiscountText = () => {
@@ -22,7 +22,17 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-xl font-bold">{offer.title}</CardTitle>
+        <div className="flex items-center gap-3">
+          {/* Image on the left side of the title */}
+          {offer.logo && (
+            <img
+              src={offer.logo}
+              alt={`${offer.title} logo`}
+              className="w-10 h-10 rounded-md border border-black"
+            />
+          )}
+          <CardTitle className="text-xl font-bold">{offer.title}</CardTitle>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -63,7 +73,7 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span>
-              {formatDate(offer.startDate)} - {formatDate(offer.endDate)}
+              {getExpiryTimeInWords(offer.endDate) + " remaining"}
             </span>
           </div>
         </div>
@@ -75,5 +85,5 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
         )}
       </CardContent>
     </Card>
-  );
+  ); 
 }

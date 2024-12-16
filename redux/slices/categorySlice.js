@@ -37,6 +37,7 @@ const categorySlice = createSlice({
         createCategorySuccess: (state, action) => {
             state.createCategory.status = "success";
             state.createCategory.data = action.payload;
+            if(!state?.getAllCategories?.data?.categories) state.getAllCategories.data = {categories:[]};
             state.getAllCategories.data.categories.push(action.payload.category);
         },
         createCategoryFailure: (state, action) => {

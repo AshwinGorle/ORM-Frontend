@@ -37,6 +37,7 @@ const offerSlice = createSlice({
         createOfferSuccess: (state, action) => {
             state.createOffer.status = "success";
             state.createOffer.data = action.payload;
+            if(!state?.getAllOffers?.data?.offers) state.getAllOffers.data = {offers:[]};
             state.getAllOffers.data.offers.push(action.payload.offer);
 
         },
