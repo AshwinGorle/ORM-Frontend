@@ -5,10 +5,11 @@ import axios from "axios";
 
 const route = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth`
 
-export const login = (loginData) => async(dispatch)=>{
-    console.log("action-login-req : ", loginData);
-    try{
+export const login = (loginData) => async(dispatch) => {
+    try {
         dispatch(authActions.loginRequest());
+        console.log("Login request to:", `${route}/login`);
+        
         const response = await axios.post(
             `${route}/login`,
             loginData,
@@ -18,22 +19,34 @@ export const login = (loginData) => async(dispatch)=>{
                 },
                 withCredentials: true,
             }
-        )
-        const {status , message , data} = response.data;
-        console.log("action-login-res : ", data);
-        if(status == "success"){
-            localStorage.setItem('user', JSON.stringify(data));
-            localStorage.setItem('isAuthenticated', true);
-            dispatch(authActions.loginSuccess(data));
-        }else{
-            dispatch(authActions.loginFailure(message));
+        );
+        
+        const { status, message, data } = response.data;
+        console.log("Login response:", response.data);
+        
+        if (status === "success" && data) {
+            // Set token from the nested data object
+            if (data.token) {
+                document.cookie = `authToken=${data.token}; path=/;`;
+            }
+            dispatch(authActions.loginSuccess({
+                id: data.id,
+                name: data.name,
+                role: data.role,
+                email: data.email
+            }));
+            return true;
+        } else {
+            dispatch(authActions.loginFailure(message || "Login failed"));
+            return false;
         }
-    }catch(error){
-        console.log("action-login-error", error);
-        let errorMessage = getActionErrorMessage(error);
+    } catch (error) {
+        console.error("Login error:", error.response?.data || error.message);
+        const errorMessage = getActionErrorMessage(error);
         dispatch(authActions.loginFailure(errorMessage));
+        return false;
     }
-}
+};
 
 export const verifyEmail = (verifyEmailData) => async(dispatch)=>{
     console.log("action-verifyOtp-req : ", verifyEmailData);
@@ -123,10 +136,10 @@ export const signup = (signupData) => async(dispatch)=>{
 
 export const logout = () => async (dispatch) => {
     try {
-        console.log("action-logout-req");
         dispatch(authActions.logoutRequest());
-        const response = await axios.get(
+        const response = await axios.post(
             `${route}/logout`,
+            {},
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -134,14 +147,17 @@ export const logout = () => async (dispatch) => {
                 withCredentials: true,
             }
         );
-        localStorage.removeItem("user");
-        localStorage.removeItem('isAuthenticated');
-        console.log('action-logout-res:');
-        dispatch(authActions.logoutSuccess(response));
+        
+        // Remove auth cookie
+        document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        
+        dispatch(authActions.logoutSuccess());
+        return true;
     } catch (error) {
-        console.log('action-registration-error', error);
-        let errorMessage = getActionErrorMessage(error);
+        console.error('Logout error:', error);
+        const errorMessage = getActionErrorMessage(error);
         dispatch(authActions.logoutFailure(errorMessage));
+        return false;
     }
 };
 

@@ -8,39 +8,43 @@ export const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-  const { status, error, data } = useSelector((state) => state.auth.authDetails);
-  const { toast } = useToast(); // Access ShadCN's toast
+  const { status, error, isAuthenticated } = useSelector((state) => state.auth.authDetails);
+  const { toast } = useToast();
+
+  const handleLogin = async (loginData) => {
+    try {
+      const success = await dispatch(login(loginData));
+      if (success) {
+        toast({
+          title: "Success",
+          description: "Login successful",
+          variant: "success",
+        });
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to connect to server",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     if (status === "pending") {
       setLoading(true);
-    } else if (status === "success") {
-      setLoading(false);
-      localStorage.setItem("user", data);
-      localStorage.setItem("isAuthenticated", true);
-      router.push("/");
-      toast({
-        title: "Success",
-        description: "Login successfully.",
-        variant: "success", // Optional, depending on toast styling
-      });
-      dispatch(authActions.clearAuthDetailsStatus());
-      router.push('/dashboard')
     } else if (status === "failed") {
       setLoading(false);
       toast({
         title: "Error",
-        description: error || "Failed to Login.",
-        variant: "destructive", // Optional, for error styling
+        description: error || "Failed to login",
+        variant: "destructive",
       });
-      dispatch(authActions.clearAuthDetailsError());
       dispatch(authActions.clearAuthDetailsStatus());
     }
-  }, [status, error, dispatch, router, toast, data]);
+  }, [status, error, dispatch, toast]);
 
-  const handleLogin = (loginData) => {
-    console.log('hook-login-req : ', loginData)
-    dispatch(login(loginData));
-  };
   return { loading, handleLogin };
 };

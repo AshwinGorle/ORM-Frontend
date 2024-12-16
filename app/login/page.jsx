@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -46,9 +45,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     const cookies = parseCookies();
-    console.log("cookies check ", cookies);
-    if (cookies.token) {
-      router.push("/dashboard/owners");
+    if (cookies.authToken) {
+      router.push('/dashboard');
+      return;
     }
   }, [router]);
 

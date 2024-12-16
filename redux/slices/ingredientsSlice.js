@@ -37,12 +37,9 @@ const ingredientSlice = createSlice({
         createIngredientSuccess: (state, action) => {
             state.createIngredient.status = "success";
             state.createIngredient.data = action.payload;
-            // state.getAllIngredients.data.ingredients =  state.getAllIngredients.data.ingredients.map((ingredient)=>{
-            //     if(ingredient._id == action.payload.ingredient._id) return action.payload.ingredient
-            //     else return ingredient
-            // })
-            state.getAllIngredients.data.ingredients.push(action.payload.ingredient);
-
+            if (state.getAllIngredients.data && state.getAllIngredients.data.ingredients) {
+                state.getAllIngredients.data.ingredients.push(action.payload.ingredient);
+            }
         },
         createIngredientFailure: (state, action) => {
             state.createIngredient.status = "failed";
@@ -88,9 +85,11 @@ const ingredientSlice = createSlice({
         },
         deleteIngredientSuccess: (state, action) => {
             state.deleteIngredient.status = "success";
-            state.getAllIngredients.data.ingredients = state.getAllIngredients.data.ingredients.filter(
-                (ingredient) => ingredient._id !== action.payload.ingredient
-            );
+            if (state.getAllIngredients.data && state.getAllIngredients.data.ingredients) {
+                state.getAllIngredients.data.ingredients = state.getAllIngredients.data.ingredients.filter(
+                    (ingredient) => ingredient._id !== action.payload.ingredient
+                );
+            }
         },
         deleteIngredientFailure: (state, action) => {
             state.deleteIngredient.status = "failed";

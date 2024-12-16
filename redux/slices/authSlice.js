@@ -1,125 +1,98 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialUser = {
+const initialState = {
     authDetails: {
         status: null,
         error: null,
         data: null,
+        currentUser: null,
+        isAuthenticated: false
     },
-
-    verifyOTP: {
+    signup: {
         status: null,
         error: null,
-        data: null,
+        data: null
     },
-
-    changePassword: {
+    logout: {
+        status: null,
+        error: null
+    },
+    forgotPassword: {
         status: null,
         error: null,
-        data: null,
+        data: null
     }
-}
+};
 
 const authSlice = createSlice({
-    name : "auth",
-    initialState: initialUser,
+    name: "auth",
+    initialState,
     reducers: {
-        loginRequest : (state, action)=>{
-            state.authDetails.status = "pending"
-        },
-        loginSuccess : (state, action) => {
-            state.authDetails.status = "success"
-            state.authDetails.data = action.payload
-        },
-        loginFailure : (state, action) => {
-            state.authDetails.status = "failed"
-            state.authDetails.error = action.payload;
-        },
-
-        signupRequest : (state, action) => {
-            state.authDetails.status = "pending"
-        },
-        signupSuccess : (state, action) => {
-            state.authDetails.status = "success"
-            state.authDetails.data = action.payload
-        },
-        signupFailure : (state, action) => {
-            state.authDetails.status = "failed"
-            state.authDetails.data = null;
-            state.authDetails.error = action.payload;
-        },
-
-        logoutRequest: (state, action) => {
+        // Login actions
+        loginRequest: (state) => {
             state.authDetails.status = "pending";
         },
-        logoutSuccess: (state, action) => {
-            state.authDetails.status = 'success'
-            state.authDetails.data = null
+        loginSuccess: (state, action) => {
+            state.authDetails.status = "success";
+            state.authDetails.data = action.payload;
+            state.authDetails.currentUser = action.payload;
+            state.authDetails.isAuthenticated = true;
+            state.authDetails.error = null;
+        },
+        loginFailure: (state, action) => {
+            state.authDetails.status = "failed";
+            state.authDetails.error = action.payload;
+            state.authDetails.isAuthenticated = false;
+        },
+
+        // Signup actions
+        signupRequest: (state) => {
+            state.signup.status = "pending";
+        },
+        signupSuccess: (state, action) => {
+            state.signup.status = "success";
+            state.signup.data = action.payload;
+            state.signup.error = null;
+        },
+        signupFailure: (state, action) => {
+            state.signup.status = "failed";
+            state.signup.error = action.payload;
+        },
+
+        // Logout actions
+        logoutRequest: (state) => {
+            state.logout.status = "pending";
+        },
+        logoutSuccess: (state) => {
+            state.logout.status = "success";
+            state.authDetails = initialState.authDetails;
+            state.signup = initialState.signup;
+            state.forgotPassword = initialState.forgotPassword;
         },
         logoutFailure: (state, action) => {
-            state.authDetails.status = 'failed';
+            state.logout.status = "failed";
+            state.logout.error = action.payload;
         },
 
-        forgotPasswordRequest: (state, action) => {
-            state.authDetails.status = 'pending'
-        },
-        forgotPasswordSuccess: (state, action) => {
-            state.authDetails.status = 'success'
-            state.authDetails.data = action.payload
-        },
-        forgotPasswordFailure: (state, action) => {
-            state.authDetails.status = 'failed'
-            state.authDetails.error = action.payload
-        },
-
-        verifyOTPRequest: (state) => {
-            state.verifyOTP.status = 'pending'
-        },
-        verifyOTPSuccess: (state, action) => {
-            state.verifyOTP.status = 'success'
-            state.verifyOTP.data = action.payload
-        },
-        verifyOTPFailure: (state, action) => {
-            state.verifyOTP.status = 'failed'
-            state.verifyOTP.error = action.payload
-        },
-
-        changePasswordRequest: (state) => {
-            state.changePassword.status = 'pending'
-        },
-        changePasswordSuccess: (state, action) => {
-            state.changePassword.status = 'success'
-            state.changePassword.data = action.payload
-        },
-        changePasswordFailure: (state, action) => {
-            state.changePassword.status = 'failed'
-            state.changePassword.error = action.payload
-        },
-
-        // Manual state cleaners-----------------------------------------------------------
-
+        // Clear states
         clearAuthDetailsStatus: (state) => {
             state.authDetails.status = null;
         },
         clearAuthDetailsError: (state) => {
             state.authDetails.error = null;
         },
-        clearAuthDetailsData: (state) => {
-            state.authDetails.data = null;
+        clearSignupStatus: (state) => {
+            state.signup.status = null;
         },
-
-        clearVerifyOTPStatus: (state) => {
-            state.verifyOTP.status = null;
+        clearSignupError: (state) => {
+            state.signup.error = null;
         },
-        clearVerifyOTPError: (state) => {
-            state.verifyOTP.error = null;
-        },  
-
-        clearChangePasswordStatus: (state) => {
-            state.changePassword.status = null;
+        clearLogoutStatus: (state) => {
+            state.logout.status = null;
         },
-        clearChangePasswordError: (state) => {
-            state.changePassword.error = null;
+        clearCurrentUser: (state) => {
+            state.authDetails.currentUser = null;
+            state.authDetails.isAuthenticated = false;
         }
     }
 });

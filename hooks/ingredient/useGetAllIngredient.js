@@ -1,56 +1,32 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
+import { getAllIngredients } from "@/redux/actions/ingredient";
 import { ingredientActions } from "@/redux/slices/ingredientsSlice";
-import { getAllIngredients } from "@/redux/actions/ingredient"; // Ensure this matches your action import
 
-export const useGetAllIngredients = (type) => {
-    const params = {}
-    const [loading, setLoading] = useState(false);
+export const useGetAllIngredients = () => {
     const dispatch = useDispatch();
-    const { refresh = false, setRefresh = null } = params;
-
-    const { status, error, data } = useSelector((state) => state.ingredient.getAllIngredients); // Directly use this
+    const { status, error, data } = useSelector((state) => state.ingredient.getAllIngredients);
     const { toast } = useToast();
 
-    const fetchAllIngredients = useCallback(() => {
-        if (type=='ingredient' && (!data || refresh)) {
-            dispatch(getAllIngredients());
-        }
-    }, [dispatch, data, refresh]);
+    const fetchIngredients = useCallback(() => {
+        dispatch(getAllIngredients());
+    }, [dispatch]);
 
     useEffect(() => {
-        fetchAllIngredients();
-    }, [fetchAllIngredients]);
-
-    useEffect(() => {
-        if (status === "pending") {
-            setLoading(true);
-        } else if (status === "success") {
-            setLoading(false);
-            setRefresh && setRefresh(false);
-            toast({
-                title: "Success",
-                description: "Ingredients fetched successfully.",
-                variant: "success",
-            });
-            dispatch(ingredientActions.clearGetAllIngredientsStatus());
-            dispatch(ingredientActions.clearGetAllIngredientsError());
-        } else if (status === "failed") {
-            setLoading(false);
+        if (status === "failed") {
             toast({
                 title: "Error",
-                description: error || "Failed to Fetch Ingredients.",
+                description: error || "Failed to fetch ingredients.",
                 variant: "destructive",
             });
-            dispatch(ingredientActions.clearGetAllIngredientsStatus());
             dispatch(ingredientActions.clearGetAllIngredientsError());
         }
-    }, [status, data, error, dispatch, toast, setRefresh]);
+    }, [status, error, dispatch, toast]);
 
-    const transformedIngredients = useMemo(() => {
-        return data?.ingredients || [];
-    }, [data]);
-
-    return { ingredients: transformedIngredients, loading };
+    return {
+        ingredients: data?.ingredients || [],
+        loading: status === "pending",
+        getAllIngredients: fetchIngredients
+    };
 };
