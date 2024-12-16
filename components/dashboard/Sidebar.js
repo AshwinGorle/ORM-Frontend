@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import SidebarNav from "./SidebarNav";
+import { useLogout } from "@/hooks/auth";
 
 // yaha par menu items aayenge bhaii , side bar ke items yaha add krdena
 const menuItems = [
@@ -44,6 +45,7 @@ const menuItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { loading, handleLogout } = useLogout();
 
   const sidebarContent = (
     <>
@@ -68,12 +70,11 @@ export default function Sidebar() {
         <Button
           variant="ghost"
           className="w-full justify-start gap-2"
-          onClick={() => {
-            console.log("Logout clicked");
-          }}
+          onClick={handleLogout}
+          disabled={loading}
         >
           <LogOut className="h-5 w-5" />
-          <span>Logout</span>
+          <span>{loading ? "Logging out..." : "Logout"}</span>
         </Button>
       </div>
     </>

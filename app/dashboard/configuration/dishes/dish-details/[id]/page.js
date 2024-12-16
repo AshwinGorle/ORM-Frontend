@@ -1,21 +1,3 @@
-// 'use client'
-// import { useGetDish } from "@/hooks/dish/useGetDish";
-
-// const { useParams } = require("next/navigation");
-
-//  const DishDetails = ()=>{
-//     const { id } = useParams();
-//     console.log("dish in component" , id)
-//     const {dish, loading} = useGetDish(id);
-
-//     return(
-//         <div>{dish.name}</div>
-//     )
-
-// }
-
-// export default  DishDetails
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -38,6 +20,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useGetDish } from "@/hooks/dish/useGetDish";
 import { defaultDishLogo } from "@/config/config";
 import SelectMultiple from "@/components/dishes/component/SectMultiple";
+import { AddDishDialog } from "@/components/dishes/AddDishDialog";
 
 function DishDetails() {
   const { id } = useParams();

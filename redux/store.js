@@ -6,6 +6,9 @@ import { categoryReducer } from "./slices/categorySlice.js";
 import { dishReducer } from "./slices/dishSlice.js";
 import { tableReducer } from "./slices/tableSlice.js";
 import { offerReducer } from "./slices/offerSlice.js";
+import systemReducer  from "./slices/systemSlice.js";
+import  orderReducer from "./slices/orderSlice.js";
+import connectionReducer from "./slices/connectionSlice.js";
 import { uploadReducer } from "./slices/uploadSlice.js";
 
 export const store  = configureStore({
@@ -17,8 +20,12 @@ export const store  = configureStore({
         dish : dishReducer,
         table : tableReducer,
         offer : offerReducer,
+        system : systemReducer,
+        order : orderReducer,
+        connection : connectionReducer,
         upload : uploadReducer
         
     }
 })
+
 

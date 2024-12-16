@@ -89,9 +89,11 @@ const ingredientSlice = createSlice({
         },
         deleteIngredientSuccess: (state, action) => {
             state.deleteIngredient.status = "success";
-            state.getAllIngredients.data.ingredients = state.getAllIngredients.data.ingredients.filter(
-                (ingredient) => ingredient._id !== action.payload.ingredient
-            );
+            if (state.getAllIngredients.data && state.getAllIngredients.data.ingredients) {
+                state.getAllIngredients.data.ingredients = state.getAllIngredients.data.ingredients.filter(
+                    (ingredient) => ingredient._id !== action.payload.ingredient
+                );
+            }
         },
         deleteIngredientFailure: (state, action) => {
             state.deleteIngredient.status = "failed";
