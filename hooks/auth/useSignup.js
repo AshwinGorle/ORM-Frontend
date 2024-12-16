@@ -2,28 +2,34 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { authActions } from "@/redux/slices/authSlice";
-import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
+import { useToast } from "@/hooks/use-toast";
 import { signup } from "@/redux/actions/auth";
+import { parseCookies, setCookie } from 'nookies';
 
 export const useSignup = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const { status, error, data } = useSelector((state) => state.auth.authDetails);
-  const { toast } = useToast(); // Access ShadCN's toast
-  const  [showOtpVerification, setShowOtpVerification] = useState(false);
+  const { toast } = useToast();
+  const [showOtpVerification, setShowOtpVerification] = useState(false);
+
   useEffect(() => {
     if (status === "pending") {
       setLoading(true);
     } else if (status === "success") {
-      console.log("inside-hook-success")
       setLoading(false);
-      localStorage.setItem("user", data);
-      localStorage.setItem("isAuthenticated", true);
-       toast({
+      const cookies = parseCookies();
+      if (cookies.token && data) {
+        setCookie(null, 'user', JSON.stringify(data), {
+          maxAge: 10 * 24 * 60 * 60, // 10 days
+          path: '/',
+        });
+      }
+      toast({
         title: "Success",
-        description: "Account created successfully---.",
-        variant: "success", // Optional, dxepending on toast styling
+        description: "Account created successfully.",
+        variant: "success",
       });
       dispatch(authActions.clearAuthDetailsStatus());
       setShowOtpVerification(true);
@@ -32,16 +38,16 @@ export const useSignup = () => {
       toast({
         title: "Error",
         description: error || "Failed to Signup.",
-        variant: "destructive", // Optional, for error styling
+        variant: "destructive",
       });
       dispatch(authActions.clearAuthDetailsError());
       dispatch(authActions.clearAuthDetailsStatus());
     }
-  }, [status, error, dispatch, router, toast, data, showOtpVerification]);
+  }, [status, error, dispatch, router, toast, data]);
 
   const handleSignup = (signupData) => {
-    console.log('hook-signup-req : ', signupData)
     dispatch(signup(signupData));
   };
-  return { loading, handleSignup, showOtpVerification};
+
+  return { loading, handleSignup, showOtpVerification };
 };

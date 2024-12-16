@@ -51,6 +51,7 @@ const SignupContent = () => {
   const [error, setError] = useState("");
   const { loading, handleSignup, showOtpVerification } = useSignup();
   const [email, setEmail] = useState("");
+  const [selectedRole, setSelectedRole] = useState("hotelowner");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -67,6 +68,11 @@ const SignupContent = () => {
   const onSubmit = async (values) => {
     setEmail(values.email);
     handleSignup(values);
+  };
+
+  const handleRoleChange = (value) => {
+    setSelectedRole(value);
+    form.setValue("role", value);
   };
 
   if (showOtpVerification) {
@@ -152,7 +158,10 @@ const SignupContent = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Role</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select 
+                      onValueChange={(value) => handleRoleChange(value)} 
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a role" />
@@ -167,19 +176,23 @@ const SignupContent = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="devKey"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Developer Key</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+              {selectedRole === "superadmin" && (
+                <FormField
+                  control={form.control}
+                  name="devKey"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Developer Key</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Creating account..." : "Create account"}
               </Button>

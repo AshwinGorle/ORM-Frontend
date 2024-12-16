@@ -102,9 +102,8 @@ export const resendOtp = (resendOtpData) => async(dispatch)=>{
         dispatch(authActions.verifyOTPFailure(errorMessage));
     }
 }
-export const signup = (signupData) => async(dispatch)=>{
-    console.log("action-signup-req : ",`${route}/signup` ,signupData)
-    try{
+export const signup = (signupData) => async(dispatch) => {
+    try {
         dispatch(authActions.signupRequest());
         const response = await axios.post(
             `${route}/signup`,
@@ -115,18 +114,15 @@ export const signup = (signupData) => async(dispatch)=>{
                 },
                 withCredentials: true,
             }
-        )
-        const {status , message , data} = response.data;
-        console.log("action-signup-res : ", data);
-        if(status == "success"){
-            localStorage.setItem('user', JSON.stringify(data));
-            localStorage.setItem('isAuthenticated', true);
+        );
+        const { status, message, data } = response.data;
+        
+        if(status === "success") {
             dispatch(authActions.signupSuccess(data));
-           
-        }else{
+        } else {
             dispatch(authActions.signupFailure(message));
         }
-    }catch(error){
+    } catch(error) {
         console.log("action-signup-error", error);
         let errorMessage = getActionErrorMessage(error);
         dispatch(authActions.signupFailure(errorMessage));
