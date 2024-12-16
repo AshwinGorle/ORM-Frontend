@@ -2,8 +2,8 @@
 const API_CONFIG = {
   currentServer: 'deployed',
   servers: {
-    local: "http://localhost:5000/api/v1",
-    deployed: "https://oms-api.vercel.app/api/v1"
+    local: process.env.NEXT_PUBLIC_LOCAL_API_URL || "http://localhost:5000/api/v1",
+    deployed: process.env.NEXT_PUBLIC_DEPLOYED_API_URL || "https://oms-api.vercel.app/api/v1"
   }
 };
 
