@@ -119,15 +119,17 @@ export const signup = (signupData) => async(dispatch) => {
         
         if(status === "success") {
             dispatch(authActions.signupSuccess(data));
+            return true;
         } else {
             dispatch(authActions.signupFailure(message));
+            return false;
         }
     } catch(error) {
-        console.log("action-signup-error", error);
-        let errorMessage = getActionErrorMessage(error);
+        const errorMessage = getActionErrorMessage(error);
         dispatch(authActions.signupFailure(errorMessage));
+        return false;
     }
-}
+};
 
 
 export const logout = () => async (dispatch) => {

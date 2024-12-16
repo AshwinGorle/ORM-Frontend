@@ -31,6 +31,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import OtpVerification from "@/components/auth/OtpVerification";
 import { useSignup } from "@/hooks/auth";
+import { useVerifyEmail } from "@/hooks/auth";
+import { useResendOtp } from "@/hooks/auth";
 
 const formSchema = z
   .object({
@@ -49,8 +51,10 @@ const formSchema = z
 const SignupContent = () => {
   const router = useRouter();
   const [error, setError] = useState("");
-  const { loading, handleSignup, showOtpVerification } = useSignup();
   const [email, setEmail] = useState("");
+  const { loading, handleSignup, showOtpVerification, userEmail } = useSignup();
+  const { loading: verifyLoading, handleVerify } = useVerifyEmail();
+  const { loading: resendLoading, handleResendOtp } = useResendOtp();
   const [selectedRole, setSelectedRole] = useState("hotelowner");
 
   const form = useForm({
@@ -76,7 +80,15 @@ const SignupContent = () => {
   };
 
   if (showOtpVerification) {
-    return <OtpVerification email={email} />;
+    return (
+      <OtpVerification 
+        email={email}
+        onVerify={handleVerify}
+        onResendOtp={() => handleResendOtp(email)}
+        emailVerifyLoading={verifyLoading}
+        resendOtpLoading={resendLoading}
+      />
+    );
   }
 
   return (

@@ -13,6 +13,11 @@ const initialState = {
         error: null,
         data: null
     },
+    verifyOTP: {
+        status: null,
+        error: null,
+        data: null
+    },
     logout: {
         status: null,
         error: null
@@ -67,6 +72,7 @@ const authSlice = createSlice({
             state.logout.status = "success";
             state.authDetails = initialState.authDetails;
             state.signup = initialState.signup;
+            state.verifyOTP = initialState.verifyOTP;
             state.forgotPassword = initialState.forgotPassword;
         },
         logoutFailure: (state, action) => {
@@ -93,6 +99,26 @@ const authSlice = createSlice({
         clearCurrentUser: (state) => {
             state.authDetails.currentUser = null;
             state.authDetails.isAuthenticated = false;
+        },
+
+        // Verify OTP actions
+        verifyOTPRequest: (state) => {
+            state.verifyOTP.status = "pending";
+        },
+        verifyOTPSuccess: (state, action) => {
+            state.verifyOTP.status = "success";
+            state.verifyOTP.data = action.payload;
+            state.verifyOTP.error = null;
+        },
+        verifyOTPFailure: (state, action) => {
+            state.verifyOTP.status = "failed";
+            state.verifyOTP.error = action.payload;
+        },
+        clearVerifyOTPStatus: (state) => {
+            state.verifyOTP.status = null;
+        },
+        clearVerifyOTPError: (state) => {
+            state.verifyOTP.error = null;
         }
     }
 });
