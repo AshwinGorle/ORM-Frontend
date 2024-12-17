@@ -61,7 +61,7 @@ export function DatePicker({ value, onChange }) {
   }
 
   return (
-    <Popover>
+    <Popover className="z-[95] w-auto p-0" align="start">
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
@@ -74,7 +74,7 @@ export function DatePicker({ value, onChange }) {
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="z-[110] w-auto p-0" align="start" align="start">
         <Calendar
           mode="single"
           selected={date}

@@ -230,3 +230,33 @@ export const changePassword = (data) => async (dispatch) => {
 };
 
 
+export const getUser = () => async (dispatch) => {
+    try {
+        console.log('getUser req')
+        dispatch(authActions.getUserRequest());
+
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/users/profile`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials : true
+            }
+        );
+        const { status, message, data: responseData } = response.data;
+        console.log("action-get-user-res:", responseData);
+        dispatch(authActions.getUserSuccess(responseData));
+    } catch (error) {
+        console.log("error", error.response.data.message)
+        let errorMessage = "An error occurred";
+        if (error.response) {
+            errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+            errorMessage = "Network error";
+        } else {
+            errorMessage = error.message || "Unknown error";
+        }
+        dispatch(authActions.getUserFailure(errorMessage));
+    }
+};

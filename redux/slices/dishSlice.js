@@ -84,13 +84,18 @@ const dishSlice = createSlice({
         updateDishSuccess: (state, action) => {
             state.updateDish.status = "success";
             state.updateDish.data = action.payload;
-            state.getAllDishes.data.dishes = state.getAllDishes.data.dishes.map((dish) => {
-                if (dish._id === action.payload.dish._id) {
-                    return action.payload.dish;
-                } else {
-                    return dish;
-                }
-            });
+            if(!state?.getAllDishes?.data?.dishes){
+                state.getAllDishes.data = {dishes :[]};
+                state.getAllDishes.data.dishes.push(action.payload.dish)
+            } else{
+                state.getAllDishes.data.dishes = state.getAllDishes.data.dishes.map((dish) => {
+                    if (dish._id === action.payload.dish._id) {
+                        return action.payload.dish;
+                    } else {
+                        return dish;
+                    }
+                });
+            }
         },
         updateDishFailure: (state, action) => {
             state.updateDish.status = "failed";

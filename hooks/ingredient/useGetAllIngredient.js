@@ -1,32 +1,57 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { getAllIngredients } from "@/redux/actions/ingredient";
 import { ingredientActions } from "@/redux/slices/ingredientsSlice";
 
-export const useGetAllIngredients = () => {
+
+export const useGetAllIngredients = (type="ingredient") => {
+    const params = {}
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error, data } = useSelector((state) => state.ingredient.getAllIngredients);
+    const { refresh = false, setRefresh = null } = params;
+
+    const { status, error, data } = useSelector((state) => state.ingredient.getAllIngredients); // Directly use this
     const { toast } = useToast();
 
-    const fetchIngredients = useCallback(() => {
-        dispatch(getAllIngredients());
-    }, [dispatch]);
+    const fetchAllIngredients = useCallback(() => {
+        if (type == 'ingredient' && (!data || refresh)) {
+            dispatch(getAllIngredients());
+        }
+    }, [dispatch, data, refresh]);
 
     useEffect(() => {
-        if (status === "failed") {
+        fetchAllIngredients();
+    }, [fetchAllIngredients]);
+
+    useEffect(() => {
+        if (status === "pending") {
+            setLoading(true);
+        } else if (status === "success") {
+            setLoading(false);
+            setRefresh && setRefresh(false);
+            toast({
+                title: "Success",
+                description: "Ingredients fetched successfully.",
+                variant: "success",
+            });
+            dispatch(ingredientActions.clearGetAllIngredientsStatus());
+            dispatch(ingredientActions.clearGetAllIngredientsError());
+        } else if (status === "failed") {
+            setLoading(false);
             toast({
                 title: "Error",
-                description: error || "Failed to fetch ingredients.",
+                description: error || "Failed to Fetch Ingredients.",
                 variant: "destructive",
             });
+            dispatch(ingredientActions.clearGetAllIngredientsStatus());
             dispatch(ingredientActions.clearGetAllIngredientsError());
         }
-    }, [status, error, dispatch, toast]);
+    }, [status, data, error, dispatch, toast, setRefresh]);
 
-    return {
-        ingredients: data?.ingredients || [],
-        loading: status === "pending",
-        getAllIngredients: fetchIngredients
-    };
+    const transformedIngredients = useMemo(() => {
+        return data?.ingredients || [];
+    }, [data]);
+
+    return { ingredients: transformedIngredients, loading };
 };

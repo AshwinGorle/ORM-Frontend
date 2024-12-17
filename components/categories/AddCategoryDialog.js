@@ -8,16 +8,18 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateCategory } from "@/hooks/category/useCreateCategory";
 import { Spinner } from "../ui/spinner";
+import { EditableImage } from "../ImageInput";
 
 export function AddCategoryDialog({ open, onOpenChange, onAdd }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const {loading, handleCreateCategory} = useCreateCategory(onOpenChange);
-
+  const [logo , setLogo] = useState(null);
   const handleSubmit = (e) => {
     e.preventDefault();
-    // onAdd({ name, description });
-    handleCreateCategory({name, description});
+    const categoryData = {name, description}
+    if(logo) categoryData["logo"] = logo; 
+    handleCreateCategory(categoryData);
     // setTimeout()
     // setName("");
     // setDescription("");
@@ -29,6 +31,7 @@ export function AddCategoryDialog({ open, onOpenChange, onAdd }) {
         <DialogHeader>
           <DialogTitle>Add New Category</DialogTitle>
         </DialogHeader>
+        <EditableImage imageUrl={logo} setImageUrl={setLogo} size={200}/>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>

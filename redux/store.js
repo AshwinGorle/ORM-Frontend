@@ -24,7 +24,6 @@ export const store  = configureStore({
         order : orderReducer,
         connection : connectionReducer,
         upload : uploadReducer
-        
     }
 })
 

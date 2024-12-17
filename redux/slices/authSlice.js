@@ -26,6 +26,11 @@ const initialState = {
         status: null,
         error: null,
         data: null
+    },
+    getUser: {
+        status: null,
+        error: null,
+        data: null
     }
 };
 
@@ -80,6 +85,18 @@ const authSlice = createSlice({
             state.logout.error = action.payload;
         },
 
+        getUserRequest: (state, action) => {
+            state.getUser.status = 'pending'
+        },
+        getUserSuccess: (state, action) => {
+            state.getUser.status = 'success'
+            state.getUser.data = action.payload;
+        },
+        getUserFailure: (state, action) => {
+            state.getUser.status = 'failed'
+            state.getUser.error = action.payload;
+        },
+
         // Clear states
         clearAuthDetailsStatus: (state) => {
             state.authDetails.status = null;
@@ -119,6 +136,16 @@ const authSlice = createSlice({
         },
         clearVerifyOTPError: (state) => {
             state.verifyOTP.error = null;
+        },
+
+        clearGetUserStatus : (state)=>{
+            state.getUser.status = null
+        },
+        clearGetUserError : (state)=>{
+            state.getUser.error = null
+        },
+        clearGetUserData : (state)=>{
+            state.getUser.data = null
         }
     }
 });

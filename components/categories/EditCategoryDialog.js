@@ -8,22 +8,27 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateCategory } from "@/hooks/category/useUpdateCategory";
 import { Spinner } from "../ui/spinner";
+import { EditableImage } from "../ImageInput";
 
 export function EditCategoryDialog({ open, onOpenChange, category }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const {loading, handleUpdateCategory} = useUpdateCategory(onOpenChange)
+  const [logo, setLogo] = useState(null)
 
   useEffect(() => {
     if (category) {
       setName(category.name);
       setDescription(category.description);
+      setLogo(category.logo);  
     }
   },[category]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleUpdateCategory(category._id, {name, description});
+    const categoryData = {name, description}
+    if(logo) categoryData["logo"] = logo; 
+    handleUpdateCategory(category._id, categoryData);
   };
 
   return (
@@ -32,6 +37,7 @@ export function EditCategoryDialog({ open, onOpenChange, category }) {
         <DialogHeader>
           <DialogTitle>Edit Category</DialogTitle>
         </DialogHeader>
+        <EditableImage imageUrl={logo} setImageUrl={setLogo} size={200} />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="edit-name">Name</Label>

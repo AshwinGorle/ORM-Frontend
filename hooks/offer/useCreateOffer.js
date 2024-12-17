@@ -21,7 +21,6 @@ export const useCreateOffer = (setOpen) => {
                 variant: "success", // Optional, for success styling
             });
             dispatch(offerActions.clearCreateOfferStats());
-            setOpen(false) // to close dialog
         } else if (status === "failed") {
             setLoading(false);
             toast({
@@ -30,8 +29,6 @@ export const useCreateOffer = (setOpen) => {
                 variant: "destructive", // Optional, for error styling
             });
             dispatch(offerActions.clearCreateOfferStats());
-            setOpen(false) // to close dialog
-
         }
     }, [status, error, dispatch, toast]);
 

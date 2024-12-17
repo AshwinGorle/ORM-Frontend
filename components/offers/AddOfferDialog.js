@@ -17,6 +17,7 @@ import { Spinner } from "../ui/spinner";
 import SelectMultiple from "../dishes/component/SectMultiple";
 import { useState } from "react";
 import { EditableImage } from "../ImageInput";
+import { DatePicker } from "../ui/date-picker";
 
 export function AddOfferDialog({ open, onOpenChange }) {
   const { loading, handleCreateOffer } = useCreateOffer(onOpenChange);
@@ -49,6 +50,7 @@ export function AddOfferDialog({ open, onOpenChange }) {
   };
 
   return (
+        <>     
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
@@ -88,5 +90,7 @@ export function AddOfferDialog({ open, onOpenChange }) {
         </div>
       </DialogContent>
     </Dialog>
+    </>
+
   );
 }

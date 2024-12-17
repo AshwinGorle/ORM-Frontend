@@ -13,7 +13,8 @@ export const useGetDish = (dishId) => {
     const { toast } = useToast();
 
     const fetchDish = useCallback(() => {
-        if ( !data || data.dish._id.toString() != dishId ) {
+        console.log( data?.dish?._id?.toString() , "-----------", dishId)
+        if ( !data || data?.dish?._id?.toString() != dishId ) {
             dispatch(getDish(dishId));
         }
     }, [dispatch, data]);

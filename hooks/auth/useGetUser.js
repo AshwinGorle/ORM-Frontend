@@ -2,27 +2,27 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { categoryActions } from "@/redux/slices/categorySlice";
-import { getAllCategories } from "@/redux/actions/category";
+import { getUser } from "@/redux/actions/auth";
+import { authActions } from "@/redux/slices/authSlice";
 
 
-export const useGetAllCategories = (type="category") => {
+export const useGetUser = () => {
     const params = {}
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { refresh = false, setRefresh = null } = params;
-
-    const { status, error, data } = useSelector((state) => state.category.getAllCategories); // Directly use this
+    const { status, error, data } = useSelector((state) => state.auth.getUser); 
     const { toast } = useToast();
 
-    const fetchAllCategories = useCallback(() => {
-        if (type == 'category' && (!data || refresh)) {
-            dispatch(getAllCategories());
+    const fetchUser = useCallback(() => {
+        if (!data || refresh) {
+            dispatch(getUser());
         }
     }, [dispatch, data, refresh]);
 
     useEffect(() => {
-        fetchAllCategories();
-    }, [fetchAllCategories]);
+        fetchUser();
+    }, [fetchUser]);
 
     useEffect(() => {
         if (status === "pending") {
@@ -32,26 +32,26 @@ export const useGetAllCategories = (type="category") => {
             setRefresh && setRefresh(false);
             toast({
                 title: "Success",
-                description: "Categories fetched successfully.",
+                description: "Users fetched successfully.",
                 variant: "success",
             });
-            dispatch(categoryActions.clearGetAllCategoriesStatus());
-            dispatch(categoryActions.clearGetAllCategoriesError());
+            dispatch(authActions.clearGetUserStatus());
+            dispatch(authActions.clearGetUserError());
         } else if (status === "failed") {
             setLoading(false);
             toast({
                 title: "Error",
-                description: error || "Failed to Fetch Categories.",
+                description: error || "Failed to Fetch Users.",
                 variant: "destructive",
             });
-            dispatch(categoryActions.clearGetAllCategoriesStatus());
-            dispatch(categoryActions.clearGetAllCategoriesError());
+            dispatch(authActions.clearGetUserStatus());
+            dispatch(authActions.clearGetUserError());
         }
     }, [status, data, error, dispatch, toast, setRefresh]);
 
-    const transformedCategories = useMemo(() => {
-        return data?.categories || [];
+    const transformedUsers = useMemo(() => {
+        return data?.user || null;
     }, [data]);
 
-    return { categories: transformedCategories, loading };
+    return { user: transformedUsers, loading };
 };

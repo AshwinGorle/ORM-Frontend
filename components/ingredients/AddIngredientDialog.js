@@ -8,15 +8,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateIngredient } from "@/hooks/ingredient/useCreateIngredient";
 import { Spinner } from "../ui/spinner";
+import { EditableImage } from "../ImageInput";
 
 export function AddIngredientDialog({ open, setOpen, onAdd }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const {loading, handleCreateIngredient} = useCreateIngredient(setOpen);
+  const [logo, setLogo] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleCreateIngredient({name, description}, setOpen);
+    let ingredientData = {name, description};
+    if(logo) ingredientData["logo"] = logo;
+    handleCreateIngredient(ingredientData, setOpen);
     // onAdd({ name, description });
     // setName("");
     // setDescription("");
@@ -28,6 +32,7 @@ export function AddIngredientDialog({ open, setOpen, onAdd }) {
         <DialogHeader>
           <DialogTitle>Add New Ingredient</DialogTitle>
         </DialogHeader>
+        <EditableImage imageUrl={logo} setImageUrl={setLogo} size={200} />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>

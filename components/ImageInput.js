@@ -51,7 +51,7 @@ export function EditableImage({ imageUrl = null, size = 200, setImageUrl, elemen
 
   return (
     <div 
-      className="relative border-2 border-black rounded-xl overflow-hidden" 
+      className="relative border-2 border-black rounded-xl overflow-hidden self-center " 
       style={{ width: size, height: size }}
     >
       <div className="w-full h-full overflow-hidden bg-secondary">

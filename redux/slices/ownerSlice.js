@@ -18,6 +18,12 @@ const initialUser = {
         error: null,
         data: null,
     },
+
+    getOwner: {
+        status: null,
+        error: null,
+        data: null,
+    },
 };
 
 const ownerSlice = createSlice({
@@ -39,6 +45,7 @@ const ownerSlice = createSlice({
             state.approveOwner.status = "failed";
             state.approveOwner.error = action.payload;
         },
+        
 
         //getAllOwners
         getAllOwnersRequest: (state) => {
@@ -71,6 +78,8 @@ const ownerSlice = createSlice({
             state.extendOwnerMembership.error = action.payload;
         },
 
+        
+
         // Manual state cleaners
         clearApproveOwnerStats: (state) => {
             state.approveOwner.status = null;
@@ -94,6 +103,17 @@ const ownerSlice = createSlice({
         clearGetAllOwnersError: (state) => {
             state.getAllOwners.error = null;
         },
+
+        // get owner profile
+        clearGetOwnerStatus : (state)=>{
+            state.getOwner.status = null
+        },
+        clearGetOwnerError : (state)=>{
+            state.getOwner.status = null
+        },
+        clearGetOwnerData : (state)=>{
+            state.getOwner.status = null
+        }
     },
 });
 
