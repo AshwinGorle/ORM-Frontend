@@ -14,7 +14,7 @@ import getExpiryTimeInWords from "@/utils/getExpiryInWords";
 import { useRemoveOffer } from "@/hooks/dish/useRemoveOffer";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function RemoveOfferCard({ offer, dishId, onEdit, onDelete }) {
+export default function RemoveOfferCard({ offer, dishId }) {
   const { loading, handleRemoveOffer } = useRemoveOffer();
 
   const getDiscountText = () => {
