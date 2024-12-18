@@ -9,8 +9,6 @@ export default function OfferForm({ form }) {
     <div className="space-y-4 gap-5">
 
       <BasicInfoFields form={form} />
-
-
       <DiscountFields form={form} />
       <StatusField form={form} />
 

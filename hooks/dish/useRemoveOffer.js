@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
-import { updateOffer } from "@/redux/actions/offer";
-import { offerActions } from "@/redux/slices/offerSlice";
+import { removeOffer } from "@/redux/actions/dish";
+import { dishActions } from "@/redux/slices/dishSlice";
 
-export const useUpdateOffer = () => {
+export const useRemoveOffer = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error, data } = useSelector((state) => state.offer.updateOffer);
+    const { status, error, data } = useSelector((state) => state.dish.removeOffer);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -17,26 +17,28 @@ export const useUpdateOffer = () => {
             setLoading(false);
             toast({
                 title: "Success",
-                description: "Offer updated successfully.",
+                description: "offer remove successfully.",
                 variant: "success", // Optional, for success styling
             });
-            dispatch(offerActions.clearUpdateOfferStats());
+            dispatch(dishActions.clearRemoveOfferStats());
+            // setDialog(false) // to close dialog
         } else if (status === "failed") {
             setLoading(false);
             toast({
                 title: "Error",
-                description: error || "Failed to update Offers.",
+                description: error || "Failed to remove offer.",
                 variant: "destructive", // Optional, for error styling
             });
-            dispatch(offerActions.clearUpdateOfferStats());
+            dispatch(dishActions.clearRemoveOfferStats());
+            // setDialog(false) // to close dialog
 
         }
     }, [status, error, dispatch, toast]);
 
-    const handleUpdateOffer = (offerId, data) => {
-        console.log("hook-update-offer-req:" , offerId , data);
-        dispatch(updateOffer(offerId, data));
+    const handleRemoveOffer = (dishId) => {
+        console.log("hook-remove-offer-dish-req:" , dishId );
+        dispatch(removeOffer(dishId));
     };
 
-    return {loading, handleUpdateOffer};
+    return {loading, handleRemoveOffer};
 };

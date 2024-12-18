@@ -11,12 +11,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import getExpiryTimeInWords from "@/utils/getExpiryInWords";
-import { useRouter } from "next/navigation";
+import { useRemoveOffer } from "@/hooks/dish/useRemoveOffer";
+import { Spinner } from "@/components/ui/spinner";
 
-export default function OfferCard({ offer, onEdit, onDelete }) {
-  const router = useRouter();
+export default function RemoveOfferCard({ offer, dishId, onEdit, onDelete }) {
+  const { loading, handleRemoveOffer } = useRemoveOffer();
+
   const getDiscountText = () => {
-    return offer.discountType === 'percentage' 
+    return offer.discountType === "percentage"
       ? `${offer.value}% off`
       : `₹${offer.value} off`;
   };
@@ -42,11 +44,8 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={()=>router.push(`/dashboard/configuration/offers/offer-details/${offer._id}`)}>Edit Offer</DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={onDelete}
-              className="text-red-600 focus:text-red-600"
-            >
+            <DropdownMenuItem>Edit Offer</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600 focus:text-red-600">
               Delete Offer
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -54,7 +53,7 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">{offer.description}</p>
-        
+
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="flex items-center gap-1">
             <Tag className="h-3 w-3" />
@@ -74,18 +73,24 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
           )}
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span>
-              {getExpiryTimeInWords(offer.endDate) + " remaining"}
-            </span>
+            <span>{getExpiryTimeInWords(offer.endDate) + " remaining"}</span>
           </div>
         </div>
-
-        {!offer.disable && (
-          <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
-            Active
-          </Badge>
-        )}
+        <div className="flex justify-between">
+          {!offer.disable && (
+            <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
+              Active
+            </Badge>
+          )}
+          <Button
+            variant="destructive"
+            onClick={() => handleRemoveOffer(dishId)}
+          >
+            {" "}
+            {loading ? <Spinner/> : "Remove"}
+          </Button>
+        </div>
       </CardContent>
     </Card>
-  ); 
+  );
 }

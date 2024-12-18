@@ -36,9 +36,9 @@ export const updateOffer = (offerId, offerData) => async (dispatch) => {
     console.log("action-update-offer-req:", offerId);
     try {
         dispatch(offerActions.updateOfferRequest());
-        const response = await axios.patch(
+        const response = await axios.put(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/offers/${offerId}`,
-            { name : offerData.name, description : offerData.description},
+            offerData,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -56,6 +56,35 @@ export const updateOffer = (offerId, offerData) => async (dispatch) => {
         }
     } catch (error) {
         console.log("action-update-offer-error:", error);
+        const errorMessage = getActionErrorMessage(error);
+        dispatch(offerActions.updateOfferFailure(errorMessage));
+    }
+};
+
+// Action to get an offer
+export const getOffer = (offerId) => async (dispatch) => {
+    console.log("action-get-offer-req:", offerId);
+    try {
+        dispatch(offerActions.getOfferRequest());
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/offers/${offerId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        const { status, message, data } = response.data;
+        console.log("action-get-offer-res:", data);
+        if (status === "success") {
+            dispatch(offerActions.getOfferSuccess(data));
+        } else {
+            dispatch(offerActions.getOfferFailure(message));
+        }
+    } catch (error) {
+        console.log("action-get-offer-error:", error);
         const errorMessage = getActionErrorMessage(error);
         dispatch(offerActions.updateOfferFailure(errorMessage));
     }

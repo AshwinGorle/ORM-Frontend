@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedOffer, setSelectedOffer] = useState(null);
     const {offers : myOffers , loading} = useGetAllOffers();
+    
     console.log("offer in comp :", myOffers)
     const handleEditOffer = (updatedOffer) => {
       setOffers(offers.map((offer) => 

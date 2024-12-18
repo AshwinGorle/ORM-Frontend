@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -8,6 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import OfferForm from "./OfferForm";
+import { EditableImage } from "../ImageInput";
+import { useUpdateOffer } from "@/hooks/offer/useUpdateOffer";
 
 const offerSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -21,7 +23,9 @@ const offerSchema = z.object({
   disable: z.boolean().default(false),
 });
 
-export function EditOfferDialog({ open, onOpenChange, offer, onEdit }) {
+export function EditOfferDialog({ open, onOpenChange, offer }) {
+  const [logo, setLogo] = useState("");
+  const {loading , handleUpdateOffer} = useUpdateOffer(onOpenChange);
   const form = useForm({
     resolver: zodResolver(offerSchema),
     defaultValues: {
@@ -32,6 +36,7 @@ export function EditOfferDialog({ open, onOpenChange, offer, onEdit }) {
       value: 0,
       appliedAbove: 0,
       disable: false,
+      logo: logo || ""
     },
   });
 
@@ -42,7 +47,8 @@ export function EditOfferDialog({ open, onOpenChange, offer, onEdit }) {
   }, [offer, form]);
 
   const onSubmit = (data) => {
-    onEdit({ ...offer, ...data });
+    const updateData = data
+    if(logo) updateData["logo"] = logo
     form.reset();
   };
 
@@ -52,6 +58,7 @@ export function EditOfferDialog({ open, onOpenChange, offer, onEdit }) {
         <DialogHeader>
           <DialogTitle>Edit Offer</DialogTitle>
         </DialogHeader>
+        <EditableImage imageUrl={logo} setImageUrl={setLogo}  size={200}/>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <OfferForm form={form} />
