@@ -8,7 +8,7 @@ import { EditDishDialog } from "@/components/dishes/EditDishDialog";
 import { AddDishDialog } from "@/components/dishes/AddDishDialog";
 import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
 import { Spinner } from "@/components/ui/spinner";
-import { useGetAllOrders } from "@/hooks/order/useGetOrderDetails";
+import { useGetAllOrders } from "@/hooks/order/useGetAllOrders";
 
 export default function DishesPage() {
   const [dishes, setDishes] = useState([
