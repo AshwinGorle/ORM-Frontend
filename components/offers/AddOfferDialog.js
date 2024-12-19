@@ -17,7 +17,7 @@ import { Spinner } from "../ui/spinner";
 import SelectMultiple from "../dishes/component/SectMultiple";
 import { useState } from "react";
 import { EditableImage } from "../ImageInput";
-import { DatePicker } from "../ui/date-picker";
+
 
 export function AddOfferDialog({ open, onOpenChange }) {
   const { loading, handleCreateOffer } = useCreateOffer(onOpenChange);

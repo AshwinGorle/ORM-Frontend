@@ -8,7 +8,6 @@
   import { EditOfferDialog } from "@/components/offers/EditOfferDialog";
   import { useGetAllOffers } from "@/hooks/offer/useGetAllOffers";
   import { Spinner } from "@/components/ui/spinner";
-import { DatePicker } from "@/components/ui/date-picker";
 import { useRouter } from "next/navigation";
 
   export default function OffersPage() {
@@ -71,7 +70,7 @@ import { useRouter } from "next/navigation";
           )}
         </div>
 
-        <DatePicker/>
+   
 
         <AddOfferDialog
           open={isAddDialogOpen}
