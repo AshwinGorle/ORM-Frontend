@@ -23,7 +23,7 @@ function AddOfferPage() {
   const form = useForm({
     resolver: zodResolver(offerSchema),
     defaultValues: {
-      title: "",
+      name: "",
       type: "global",
       appliedAbove: 0,
       disable: false,

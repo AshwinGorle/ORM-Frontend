@@ -38,7 +38,7 @@ export default function BasicInfoFields({ form }) {
 
       <FormField
         control={form.control}
-        name="title"
+        name="name"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Title</FormLabel>

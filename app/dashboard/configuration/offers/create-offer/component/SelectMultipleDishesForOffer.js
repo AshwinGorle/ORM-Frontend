@@ -106,7 +106,7 @@ const SelectMultipleDishesForOffer = ({
                       <div>
                         {input?.name}
                         <div className="text-gray-400">
-                          {input?.offer && `offer : ${input?.offer?.title}`}
+                          {input?.offer && `offer : ${input?.offer?.name}`}
                         </div>
                       </div>
 

@@ -25,15 +25,15 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <div className="flex items-center gap-3">
-          {/* Image on the left side of the title */}
+          {/* Image on the left side of the name */}
           {offer.logo && (
             <img
               src={offer.logo}
-              alt={`${offer.title} logo`}
+              alt={`${offer.name} logo`}
               className="w-10 h-10 rounded-md border border-black"
             />
           )}
-          <CardTitle className="text-xl font-bold">{offer.title}</CardTitle>
+          <CardTitle className="text-xl font-bold">{offer.name}</CardTitle>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

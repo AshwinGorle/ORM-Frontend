@@ -8,6 +8,7 @@ import { EditDishDialog } from "@/components/dishes/EditDishDialog";
 import { AddDishDialog } from "@/components/dishes/AddDishDialog";
 import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
 import { Spinner } from "@/components/ui/spinner";
+import { useGetAllOrders } from "@/hooks/order/useGetOrderDetails";
 
 export default function DishesPage() {
   const [dishes, setDishes] = useState([
@@ -47,10 +48,11 @@ export default function DishesPage() {
         image: "https://images.unsplash.com/photo-1527315662861-42cb0c1c4308?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8b21lbGV0ZXxlbnwwfHwwfHx8MA%3D%3D",
       },
   ]);
-
+  
+  const {loading : ordersLoading , orders } = useGetAllOrders();
   const {dishes : myDishes , loading} = useGetAllDishes();
   console.log("my dishes ", myDishes);
-
+  console.log("my orders", orders)
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
