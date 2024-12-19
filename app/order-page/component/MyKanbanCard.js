@@ -7,14 +7,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Utensils, User, ArrowLeft, ArrowRight, Clock } from "lucide-react";
+import {
+  Utensils,
+  User,
+  ArrowLeft,
+  ArrowRight,
+  Clock,
+  Pencil,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUpdateOrderStatus } from "@/hooks/order/useUpdateOrderStatus";
 import { Spinner } from "@/components/ui/spinner";
+import { useDispatch } from "react-redux";
+import { orderActions } from "@/redux/slices/orderSlice";
 
 export function MyKanbanCard({ order }) {
-  const { loading, updatingOrderId, leftLoading, rightLoading ,handleUpdateOrderStatus } =
-    useUpdateOrderStatus();
+  const dispatch = useDispatch();
+  const {
+    loading,
+    updatingOrderId,
+    leftLoading,
+    rightLoading,
+    handleUpdateOrderStatus,
+  } = useUpdateOrderStatus();
   const totalItems = order.dishes.reduce((sum, dish) => sum + dish.quantity, 0);
   const totalAmount = order.dishes.reduce(
     (sum, dish) => sum + dish.dishId.price * dish.quantity,
@@ -59,16 +74,27 @@ export function MyKanbanCard({ order }) {
     const prevStatus = allStatus[indexOfCurrentStatus - 1];
     handleUpdateOrderStatus(order._id.toString(), prevStatus, "left");
   };
+  
+  const handleEditOrder = ()=>{
+    dispatch(orderActions.setSelectedEditOrder(order));
+       dispatch(orderActions.setOpenEditOrder(true));
+    }
 
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="pb-2">
         <CardTitle className="flex justify-between items-center text-base">
-          <span>Table {order.tableId.sequence}</span>
+          <div className="flex gap-2">
+            <div className=" bg-black p-1 rounded-sm" onClick={()=>handleEditOrder()} >
+              <Pencil color="white" className="h-4 w-4"  />
+            </div>
+
+            <span>Table {order.tableId.sequence}</span>
+          </div>
           <Badge
             variant={
               order.status === "pending"
-                ? "default"
+                ? "secondary"
                 : order.status === "preparing"
                 ? "secondary"
                 : "success"
@@ -117,7 +143,8 @@ export function MyKanbanCard({ order }) {
             size="sm"
           >
             {loading &&
-            updatingOrderId && leftLoading &&
+            updatingOrderId &&
+            leftLoading &&
             updatingOrderId == order._id.toString() ? (
               <Spinner />
             ) : (
@@ -130,7 +157,8 @@ export function MyKanbanCard({ order }) {
             size="sm"
           >
             {loading &&
-            updatingOrderId && rightLoading &&
+            updatingOrderId &&
+            rightLoading &&
             updatingOrderId == order._id.toString() ? (
               <Spinner />
             ) : (

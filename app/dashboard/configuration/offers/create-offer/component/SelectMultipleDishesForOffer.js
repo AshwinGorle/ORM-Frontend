@@ -14,12 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "@/components/ui/spinner";
-import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
-import { useGetAllCategories } from "@/hooks/category/useGetAllCategories";
-import { useGetAllOffers } from "@/hooks/offer/useGetAllOffers";
 import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
 import { Button } from "@/components/ui/button";
-import OfferCard from "@/components/offers/OfferCard";
 import {
   Popover,
   PopoverContent,
@@ -27,6 +23,7 @@ import {
 } from "@radix-ui/react-popover";
 import RemoveOfferCard from "./RemoveOfferCard";
 import { CheckboxDisabled } from "@/components/ui/checkbox-disabled";
+import SelectMultiple from "@/components/dishes/component/SectMultiple";
 const { useState, useEffect } = require("react");
 
 //////////
@@ -78,6 +75,7 @@ const SelectMultipleDishesForOffer = ({
         ))}
       </div>
       <div>
+        
         <ScrollArea className="h-[800px]  rounded-md border p-4">
           {loading && <Spinner></Spinner>}
           <Command>

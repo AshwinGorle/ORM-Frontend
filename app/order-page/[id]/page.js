@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetOrderDetails } from "@/hooks/order/useGetOrderDetails";
 import { useParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { UpdateOrderModal } from "../component/UpdateOrderModel";
 export default function OrderPage() {
   const dispatch = useDispatch();
   const { toast } = useToast();
@@ -193,6 +194,7 @@ export default function OrderPage() {
         </button>
       </div>
       <MyKanbanBoard orders={orders} />
+
     </div>
   );
 }

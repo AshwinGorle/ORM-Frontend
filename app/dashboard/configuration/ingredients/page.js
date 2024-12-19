@@ -24,12 +24,9 @@ export default function IngredientsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
 
-  const { ingredients, loading, getAllIngredients } = useGetAllIngredients();
+  const { ingredients, loading } = useGetAllIngredients();
   const { loading: deleteLoading, handleDeleteIngredient } = useDeleteIngredient(setIsDeleteDialogOpen);
 
-  useEffect(() => {
-    getAllIngredients();
-  }, [getAllIngredients]);
 
   const handleDeleteIngredientLocal = () => {
     handleDeleteIngredient(selectedIngredient._id);

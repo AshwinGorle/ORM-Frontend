@@ -137,6 +137,9 @@ const initialOrder = {
     error: null,
     data: null,
   },
+
+  openEditOrderDialog : false,
+  selectedEditOrder : null
 };
 
 const orderSlice = createSlice({
@@ -166,6 +169,14 @@ const orderSlice = createSlice({
     /////////////////////////////////////////////////////////////////
 
     // getAllOrders
+    setOpenEditOrder: (state, action) => {
+      state.openEditOrderDialog = action.payload;
+    },
+
+    setSelectedEditOrder: (state, action) => {
+      state.selectedEditOrder = action.payload;
+    },
+
     getAllOrdersRequest: (state) => {
       state.getAllOrders.status = "pending";
     },
@@ -256,18 +267,34 @@ const orderSlice = createSlice({
       state.updateOrder.status = "pending";
     },
     updateOrderSuccess: (state, action) => {
-      state.updateOrder.status = "success";
-      state.updateOrder.data = action.payload;
-      state.getAllOrders.data.orders = state.getAllOrders.data.orders.map(
-        (order) => {
-          if (order._id === action.payload.order._id) {
-            return action.payload.order;
-          } else {
-            return order;
-          }
-        }
-      );
+      state.updateOrder.status = "success"
+      const updatedOrder = action.payload.order;
+      if(updatedOrder.status == 'draft'){
+        state.getAllOrders.data.draft = state.getAllOrders.data.draft.map((prevOrder)=> {
+          if(prevOrder._id == updatedOrder._id) return updatedOrder;
+          else return prevOrder;
+        });
+      }
+      if(updatedOrder.status == 'pending'){
+        state.getAllOrders.data.pending = state.getAllOrders.data.pending.map((prevOrder)=> {
+          if(prevOrder._id == updatedOrder._id) return updatedOrder;
+          else return prevOrder;
+        });
+      }
+      if(updatedOrder.status == 'preparing'){
+        state.getAllOrders.data.preparing = state.getAllOrders.data.preparing.map((prevOrder)=> {
+          if(prevOrder._id == updatedOrder._id) return updatedOrder;
+          else return prevOrder;
+        });
+      }
+      if(updatedOrder.status == 'completed'){
+        state.getAllOrders.data.completed = state.getAllOrders.data.completed.map((prevOrder)=> {
+          if(prevOrder._id == updatedOrder._id) return updatedOrder;
+          else return prevOrder;
+        });
+      }
     },
+
     updateOrderFailure: (state, action) => {
       state.updateOrder.status = "failed";
       state.updateOrder.error = action.payload;

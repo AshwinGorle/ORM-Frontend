@@ -60,7 +60,7 @@ const useAbly = (hotelId, isSystemOnline) => {
               try {
                 // Fetch complete order details
                 const response = await axios.get(
-                  `${getBaseUrl()}/orders/details/${orderData.orderId}`,
+                  `${process.env.NEXT_PUBLIC_SERVER_URL}/orders/details/${orderData.orderId}`,
                   {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true,

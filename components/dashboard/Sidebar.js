@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import SidebarNav from "./SidebarNav";
-import { useLogout } from "@/hooks/auth";
+import { useGetUser, useLogout } from "@/hooks/auth";
 
 // yaha par menu items aayenge bhaii , side bar ke items yaha add krdena
 const menuItems = [
@@ -46,6 +46,34 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { loading, handleLogout } = useLogout();
+  const {loading : userLoading, user} = useGetUser();
+  const menuItems = [
+    {
+      title: "Live Orders",
+      icon: BarChart3,
+      href: `/order-page/${user?.hotelId}`,
+    },
+    {
+      title: "Dashboard",
+      icon: BarChart3,
+      href: "/dashboard",
+    },
+    {
+      title: "Admin Dashboard",
+      icon: ChartBarBig ,
+      href: "/admin-dashboard",
+    },
+    {
+      title: "Configuration",
+      icon: Settings,
+      href: "/dashboard/configuration",
+    },
+    {
+      title: "Profile",
+      icon: UserRoundCog,
+      href: "/dashboard/profile",
+    },
+  ];
 
   const sidebarContent = (
     <>

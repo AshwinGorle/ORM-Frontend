@@ -36,8 +36,8 @@ export const updateOrder = (orderId, orderData) => async (dispatch) => {
     console.log("action-update-order-req:", orderId);
     try {
         dispatch(orderActions.updateOrderRequest());
-        const response = await axios.patch(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/orders/${orderId}`,
+        const response = await axios.put(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/orders/owner/${orderId}`,
             orderData,
             {
                 headers: {
