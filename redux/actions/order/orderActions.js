@@ -31,6 +31,35 @@ export const getAllOrders = () => async (dispatch) => {
     }
 };
 
+// Table Orders
+export const getTableOrders = (tableId) => async (dispatch) => {
+    console.log("action-get-table-orders-req:");
+    try {
+        dispatch(orderActions.getTableOrdersRequest());
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/orders/table/${tableId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        const { status, message, data } = response.data;
+        console.log("action-get-table-orders-res:", data);
+        if (status === "success") {
+            dispatch(orderActions.getTableOrderSuccess(data.orders));
+        } else {
+            dispatch(orderActions.getTableOrderFailure(message));
+        }
+    } catch (error) {
+        console.log("action-get-table-orders-error:", error);
+        const errorMessage = getActionErrorMessage(error);
+        dispatch(orderActions.getTableOrderFailure(errorMessage));
+    }
+};
+
 // Action to update an order
 export const updateOrder = (orderId, orderData) => async (dispatch) => {
     console.log("action-update-order-req:", orderId);
@@ -93,12 +122,12 @@ export const updateOrderStatus = (orderId, newStatus) => async (dispatch) => {
 
 
 // Action to create a new order
-export const createOrder = (orderData) => async (dispatch) => {
-    console.log("action-create-order-req:", orderData);
+export const createOrder = (orderData, hotelId, tableId) => async (dispatch) => {
+    console.log("action-create-order-req:", orderData, hotelId, tableId);
     try {
         dispatch(orderActions.createOrderRequest());
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/orders`,
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/orders/${hotelId}/${tableId}`,
             orderData,
             {
                 headers: {

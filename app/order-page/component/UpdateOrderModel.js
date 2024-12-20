@@ -96,37 +96,18 @@ export function UpdateOrderModal({ setOpen }) {
         <DialogHeader>
           <DialogTitle>Update Order</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <ul className="grid gap-4 py-4">
           {selectedDishes?.map((dish, index) => (
-            <div key={dish._id} className="grid grid-cols-2 items-center gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor={`dish-name-${index}`}>Dish Name</Label>
-                <Input
-                  id={`dish-name-${index}`}
-                  value={dish.name}
-                  onChange={(e) =>
-                    handleDishChange(index, "name", e.target.value)
-                  }
-                />
+            <li key={dish._id} className="grid grid-cols-2 items-center gap-2">
+              <div className="">
+                {dish.name}
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor={`dish-quantity-${index}`}>Quantity</Label>
-                <Input
-                  id={`dish-quantity-${index}`}
-                  type="number"
-                  value={dish.orderQuantity}
-                  onChange={(e) =>
-                    handleDishChange(
-                      index,
-                      "quantity",
-                      parseInt(e.target.value, 10)
-                    )
-                  }
-                />
+              <div className="">
+                 {dish.orderQuantity}
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
         <div className="flex gap-4">
 
           <SelectMultipleDishesForOrder

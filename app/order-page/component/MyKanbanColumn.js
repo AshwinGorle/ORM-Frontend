@@ -5,11 +5,12 @@ import { MyKanbanCard } from './MyKanbanCard';
 import { Utensils, CreditCard, Table } from 'lucide-react'
 
 export function MyKanbanColumn({ title, orders }) {
-  const orderCount = orders.length;
-  const totalAmount = orders.reduce((sum, order) => 
-    sum + order.dishes.reduce((dishSum, dish) => dishSum + (dish.dishId.price * dish.quantity), 0), 0
+  const orderCount = orders?.length;
+  let totalAmount = 0;
+  if(orderCount > 0) totalAmount = orders?.reduce((sum, order) => 
+    sum + order?.dishes?.reduce((dishSum, dish) => dishSum + (dish?.dishId?.price * dish?.quantity), 0), 0
   );
-  const uniqueTables = new Set(orders.map(order => order.tableId._id)).size;
+  const uniqueTables = new Set(orders?.map(order => order?.tableId?._id))?.size;
 
   return (
     <Card className="w-full max-w-sm">

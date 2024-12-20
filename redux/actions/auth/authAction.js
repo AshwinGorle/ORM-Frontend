@@ -248,7 +248,7 @@ export const getUser = () => async (dispatch) => {
         console.log("action-get-user-res:", responseData);
         dispatch(authActions.getUserSuccess(responseData));
     } catch (error) {
-        console.log("error", error.response.data.message)
+        console.log("error",error)
         let errorMessage = "An error occurred";
         if (error.response) {
             errorMessage = error.response.data.message || "Server error";

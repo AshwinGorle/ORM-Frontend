@@ -138,6 +138,12 @@ const initialOrder = {
     data: null,
   },
 
+  getTableOrders: {
+    status: null,
+    error: null,
+    data: null,
+  },
+
   openEditOrderDialog : false,
   selectedEditOrder : null
 };
@@ -153,17 +159,35 @@ const orderSlice = createSlice({
     createOrderSuccess: (state, action) => {
       state.createOrder.status = "success";
       state.createOrder.data = action.payload;
-      // state.getAllOrders.data.orders =  state.getAllOrders.data.orders.map((order)=>{
-      //     if(order._id == action.payload.order._id) return action.payload.order
-      //     else return order
-      // })
-      if (!state?.getAllOrders?.data?.orders)
-        state.getAllOrders.data = { orders: [] };
-      state.getAllOrders.data.orders.push(action.payload.order);
+      const order = action.payload.order;
+      state.getAllOrders.data[`${order.status}`].unshift(order);
     },
     createOrderFailure: (state, action) => {
       state.createOrder.status = "failed";
       state.createOrder.error = action.payload;
+    },
+
+    getTableOrdersRequest : (state) => {
+      state.getTableOrders.status = "pending";
+    },
+
+    getTableOrderSuccess : (state, action)=>{
+      state.getTableOrders.status = "success";
+      state.getTableOrders.data = action.payload;
+    },
+    getTableOrderFailure : (state) => {
+      state.getTableOrders.status = "message";
+      state.getTableOrders.message = action.payload;
+    },
+
+    clearGetTableOrderStatus : (state) => {
+      state.getTableOrders.status = null;
+    },
+    clearGetTableOrderData : (state) => {
+      state.getTableOrders.data = null;
+    },
+    clearGetTableOrderError : (state) => {
+      state.getTableOrders.error = null;
     },
 
     /////////////////////////////////////////////////////////////////

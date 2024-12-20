@@ -30,9 +30,9 @@ export function MyKanbanCard({ order }) {
     rightLoading,
     handleUpdateOrderStatus,
   } = useUpdateOrderStatus();
-  const totalItems = order.dishes.reduce((sum, dish) => sum + dish.quantity, 0);
-  const totalAmount = order.dishes.reduce(
-    (sum, dish) => sum + dish.dishId.price * dish.quantity,
+  const totalItems = order?.dishes?.reduce((sum, dish) => sum + dish?.quantity, 0);
+  const totalAmount = order?.dishes?.reduce(
+    (sum, dish) => sum + dish?.dishId?.price * dish?.quantity,
     0
   );
 
@@ -126,13 +126,13 @@ export function MyKanbanCard({ order }) {
           {order.dishes.map((dish) => (
             <div key={dish._id} className="flex items-start">
               <span className="mr-2">•</span>
-              <span className="flex-grow">{dish.dishId.name}</span>
-              <span className="font-medium">x{dish.quantity}</span>
+              <span className="flex-grow">{dish?.dishId?.name}</span>
+              <span className="font-medium">x{dish?.quantity}</span>
             </div>
           ))}
         </div>
-        {order.note && (
-          <div className="mt-2 text-xs italic">Note: {order.note}</div>
+        {order?.note && (
+          <div className="mt-2 text-xs italic">Note: {order?.note}</div>
         )}
       </CardContent>
       <CardFooter className="pt-2">
@@ -145,7 +145,7 @@ export function MyKanbanCard({ order }) {
             {loading &&
             updatingOrderId &&
             leftLoading &&
-            updatingOrderId == order._id.toString() ? (
+            updatingOrderId == order?._id.toString() ? (
               <Spinner />
             ) : (
               <ArrowLeft className="h-4 w-4" />
@@ -159,7 +159,7 @@ export function MyKanbanCard({ order }) {
             {loading &&
             updatingOrderId &&
             rightLoading &&
-            updatingOrderId == order._id.toString() ? (
+            updatingOrderId == order?._id.toString() ? (
               <Spinner />
             ) : (
               <ArrowRight className="h-4 w-4" />
