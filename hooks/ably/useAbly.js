@@ -1,8 +1,12 @@
 import { useEffect, useRef } from 'react';
 import * as Ably from 'ably';
 import { useDispatch } from 'react-redux';
-import { setNewOrder, syncOrders } from '@/redux/slices/orderSlice';
+
+
 import { setConnectionStatus, setConnectionError, clearConnectionError } from '@/redux/slices/connectionSlice';
+import axios from 'axios';
+import { getBaseUrl } from '@/utils/api-config';
+import { orderActions } from '@/redux/slices/orderSlice';
 
 const useAbly = (hotelId, isSystemOnline) => {
   const dispatch = useDispatch();
@@ -11,7 +15,6 @@ const useAbly = (hotelId, isSystemOnline) => {
 
   useEffect(() => {
     let channelName = `hotel-${hotelId}`;
-
     const setupAbly = async () => {
       if (!isSystemOnline || !hotelId) {
         dispatch(setConnectionStatus(false));
@@ -50,18 +53,26 @@ const useAbly = (hotelId, isSystemOnline) => {
         if (!channelRef.current) {
           channelRef.current = ablyRef.current.channels.get(channelName);
           console.log(`Subscribed to channel: ${channelName}`);
-          
-          channelRef.current.subscribe('new-order', (message) => {
-            console.log('New individual order received:', message.data);
+          channelRef.current.subscribe('new-order', async (message) => {
+            console.log('New individual order received :', message.data);
             const orderData = message.data;
-            
             if (orderData && orderData.orderId) {
-              console.log('Dispatching new order:', orderData);
-              dispatch(setNewOrder({
-                orderId: orderData.orderId,
-                status: orderData.status || 'new',
-                ...orderData
-              }));
+              try {
+                // Fetch complete order details
+                const response = await axios.get(
+                  `${process.env.NEXT_PUBLIC_SERVER_URL}/orders/details/${orderData.orderId}`,
+                  {
+                    headers: { "Content-Type": "application/json" },
+                    withCredentials: true,
+                  }
+                );
+                if (response.data.success) {
+                  const completeOrderData = response.data.data.order;
+                  dispatch(orderActions.setNewOrder(completeOrderData));
+                }
+              } catch (error) {
+                console.error('Error fetching complete order details:', error);
+              }
             }
           });
 
@@ -73,7 +84,7 @@ const useAbly = (hotelId, isSystemOnline) => {
                 inProgress: message.data.orders.inProgress || [],
                 completed: message.data.orders.completed || []
               };
-              dispatch(syncOrders(formattedOrders));
+              dispatch(orderActions.syncOrders(formattedOrders));
             }
           });
         }

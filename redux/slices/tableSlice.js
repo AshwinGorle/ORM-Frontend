@@ -41,6 +41,7 @@ const tableSlice = createSlice({
             //     if(table._id == action.payload.table._id) return action.payload.table
             //     else return table
             // })
+            if(!state?.getAllTables?.data?.tables) state.getAllTables.data = {tables:[]};
             state.getAllTables.data.tables.push(action.payload.table);
 
         },

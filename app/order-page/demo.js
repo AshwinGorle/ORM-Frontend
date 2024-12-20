@@ -12,15 +12,16 @@ import { useToast } from "@/hooks/use-toast";
 import useAbly from "../../hooks/ably/useAbly";
 import KanbanColumn from "../../components/KanbanColumn";
 import { selectConnectionStatus, selectConnectionError } from "../../redux/slices/connectionSlice";
-import { useGetOrderDetails } from "../../hooks/order/useGetOrderDetails";
-
+import { useGetOrderDetails } from "@/hooks/order/useGetOrderDetails";
+import { useGetAllOrders } from "@/hooks/order/useGetAllOrders";
 export default function OrderPage() {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const isSystemOnline = useSelector(selectIsSystemOnline);
   const isConnected = useSelector(selectConnectionStatus);
   const connectionError = useSelector(selectConnectionError);
-  const orders = useSelector(selectOrders);
+  // const orders = useSelector(selectOrders);
+  const {orders, loading} = useGetAllOrders();
   const [hotelId, setHotelId] = useState("674cb4bdc72700e0f6dc839c");
   const { selectedServer, toggleServer } = useGetOrderDetails();
 

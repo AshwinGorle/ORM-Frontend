@@ -8,22 +8,28 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateIngredient } from "@/hooks/ingredient/useUpdateIngredient";
 import { Spinner } from "../ui/spinner";
+import { EditableImage } from "../ImageInput";
 
 export function EditIngredientDialog({ open, onOpenChange, ingredient }) {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState("");  
   const {loading, handleUpdateIngredient} = useUpdateIngredient(onOpenChange);
+  const [logo, setLogo] = useState(null);
+
 
   useEffect(() => {
     if (ingredient) {
-      setName(ingredient.name);
-      setDescription(ingredient.description);
+      setName(ingredient?.name);
+      setDescription(ingredient?.description);
+      setLogo(ingredient?.logo);
     }
   }, [ingredient]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleUpdateIngredient(ingredient._id,{name, description});
+    let ingredientData = {name, description};
+    if(logo) ingredientData["logo"] = logo;
+    handleUpdateIngredient(ingredient._id,ingredientData);
     // onEdit({ ...ingredient, name, description });
   };
 
@@ -33,6 +39,7 @@ export function EditIngredientDialog({ open, onOpenChange, ingredient }) {
         <DialogHeader>
           <DialogTitle>Edit Ingredient</DialogTitle>
         </DialogHeader>
+        <EditableImage imageUrl={logo} setImageUrl={setLogo} size={200} element={ingredient} />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="edit-name">Name</Label>

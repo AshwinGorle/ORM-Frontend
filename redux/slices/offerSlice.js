@@ -7,6 +7,12 @@ const initialOffer = {
         data: null,
     },
 
+    getOffer: {
+        status: null,
+        error: null,
+        data: null,
+    },
+
     getAllOffers: {
         status: null,
         error: null,
@@ -37,12 +43,27 @@ const offerSlice = createSlice({
         createOfferSuccess: (state, action) => {
             state.createOffer.status = "success";
             state.createOffer.data = action.payload;
+            if(!state?.getAllOffers?.data?.offers) state.getAllOffers.data = {offers:[]};
             state.getAllOffers.data.offers.push(action.payload.offer);
 
         },
         createOfferFailure: (state, action) => {
             state.createOffer.status = "failed";
             state.createOffer.error = action.payload;
+        },
+
+        // getOffer
+        getOfferRequest: (state) => {
+            state.getOffer.status = "pending";
+        },
+        getOfferSuccess: (state, action) => {
+            state.getOffer.status = "success";
+            state.getOffer.data = action.payload;
+
+        },
+        getOfferFailure: (state, action) => {
+            state.getOffer.status = "failed";
+            state.getOffer.error = action.payload;
         },
 
         // getAllOffers
@@ -119,6 +140,16 @@ const offerSlice = createSlice({
             state.deleteOffer.error = null;
             state.deleteOffer.data = null;
         },
+        
+        clearGetOfferStatus : (state) => {
+            state.getOffer.status = null;
+        },
+        clearGetOfferError : (state) => {
+            state.getOffer.error = null;
+        },
+        clearGetOfferData : (state) => {
+            state.getOffer.data = null;
+        }
     },
 });
 

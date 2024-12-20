@@ -38,7 +38,7 @@ export const updateIngredient = (ingredientId, ingredientData) => async (dispatc
         dispatch(ingredientActions.updateIngredientRequest());
         const response = await axios.patch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/ingredients/${ingredientId}`,
-            { name : ingredientData.name, description : ingredientData.description},
+            ingredientData,
             {
                 headers: {
                     "Content-Type": "application/json",

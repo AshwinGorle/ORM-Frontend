@@ -33,8 +33,6 @@ export const approveHotelOwner = (hotelOwnerId) => async (dispatch) => {
     }
 };
 
-
-
 export const getAllHotelOwners = () => async (dispatch) => {
     console.log("action-get-all-owner-req:");
     try {

@@ -30,6 +30,12 @@ const initialDish = {
         error: null,
         data: null,
     },
+
+    removeOffer : {
+        status: null,
+        error: null,
+        data: null,
+    }
 };
 
 const dishSlice = createSlice({
@@ -43,6 +49,7 @@ const dishSlice = createSlice({
         createDishSuccess: (state, action) => {
             state.createDish.status = "success";
             state.createDish.data = action.payload;
+            if(!state?.getAllDishes?.data?.dishes) state.getAllDishes.data = {dishes:[]};
             state.getAllDishes.data.dishes.push(action.payload.dish);
         },
         createDishFailure: (state, action) => {
@@ -83,17 +90,47 @@ const dishSlice = createSlice({
         updateDishSuccess: (state, action) => {
             state.updateDish.status = "success";
             state.updateDish.data = action.payload;
-            state.getAllDishes.data.dishes = state.getAllDishes.data.dishes.map((dish) => {
-                if (dish._id === action.payload.dish._id) {
-                    return action.payload.dish;
-                } else {
-                    return dish;
-                }
-            });
+            if(!state?.getAllDishes?.data?.dishes){
+                state.getAllDishes.data = {dishes :[]};
+                state.getAllDishes.data.dishes.push(action.payload.dish)
+            } else{
+                state.getAllDishes.data.dishes = state.getAllDishes.data.dishes.map((dish) => {
+                    if (dish._id === action.payload.dish._id) {
+                        return action.payload.dish;
+                    } else {
+                        return dish;
+                    }
+                });
+            }
         },
         updateDishFailure: (state, action) => {
             state.updateDish.status = "failed";
             state.updateDish.error = action.payload;
+        },
+
+        // removeOffer
+        removeOfferRequest: (state) => {
+            state.removeOffer.status = "pending";
+        },
+        removeOfferSuccess: (state, action) => {
+            state.removeOffer.status = "success";
+            state.removeOffer.data = action.payload;
+            if(!state?.getAllDishes?.data?.dishes){
+                state.getAllDishes.data = {dishes :[]};
+                state.getAllDishes.data.dishes.push(action.payload.dish)
+            } else{
+                state.getAllDishes.data.dishes = state.getAllDishes.data.dishes.map((dish) => {
+                    if (dish._id === action.payload.dish._id) {
+                        return action.payload.dish;
+                    } else {
+                        return dish;
+                    }
+                });
+            }
+        },
+        removeOfferFailure: (state, action) => {
+            state.removeOffer.status = "failed";
+            state.removeOffer.error = action.payload;
         },
 
         // deleteDish
@@ -138,6 +175,12 @@ const dishSlice = createSlice({
             state.updateDish.status = null;
             state.updateDish.error = null;
             state.updateDish.data = null;
+        },
+
+        clearRemoveOfferStats: (state) => {
+            state.removeOffer.status = null;
+            state.removeOffer.error = null;
+            state.removeOffer.data = null;
         },
 
         clearDeleteDishStats: (state) => {

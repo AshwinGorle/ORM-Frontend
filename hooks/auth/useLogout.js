@@ -3,40 +3,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { authActions } from "@/redux/slices/authSlice";
 import { logout } from "@/redux/actions/auth";
-import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
+import { useToast } from "@/hooks/use-toast";
 
 export const useLogout = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-  const { status, error } = useSelector((state) => state.auth.logout);
-  const { toast } = useToast(); // Access ShadCN's toast
+  const { status: logoutStatus, error: logoutError } = useSelector((state) => state.auth.logout);
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (status === "pending") {
+    if (logoutStatus === "pending") {
       setLoading(true);
-    } else if (status === "success") {
+    } else if (logoutStatus === "success") {
       setLoading(false);
-      localStorage.removeItem("user");
-      localStorage.removeItem("isAuthenticated");
+      document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       router.push("/login");
       toast({
         title: "Success",
         description: "Logged out successfully.",
-        variant: "success", // Optional, depending on toast styling
+        variant: "success",
       });
       dispatch(authActions.clearLogoutStatus());
-    } else if (status === "failed") {
+    } else if (logoutStatus === "failed") {
       setLoading(false);
       toast({
         title: "Error",
-        description: error || "Failed to logout.",
-        variant: "destructive", // Optional, for error styling
+        description: logoutError || "Failed to logout.",
+        variant: "destructive",
       });
       dispatch(authActions.clearLogoutStatus());
-      dispatch(authActions.clearLogoutError());
     }
-  }, [status, error, dispatch, router, toast]);
+  }, [logoutStatus, logoutError, dispatch, router, toast]);
 
   const handleLogout = () => {
     dispatch(logout());

@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
+import { getAllIngredients } from "@/redux/actions/ingredient";
 import { ingredientActions } from "@/redux/slices/ingredientsSlice";
-import { getAllIngredients } from "@/redux/actions/ingredient"; // Ensure this matches your action import
 
-export const useGetAllIngredients = (type) => {
+
+export const useGetAllIngredients = (type="ingredient") => {
     const params = {}
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export const useGetAllIngredients = (type) => {
     const { toast } = useToast();
 
     const fetchAllIngredients = useCallback(() => {
-        if (type=='ingredient' && (!data || refresh)) {
+        if (type == 'ingredient' && (!data || refresh)) {
             dispatch(getAllIngredients());
         }
     }, [dispatch, data, refresh]);

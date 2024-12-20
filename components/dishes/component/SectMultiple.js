@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Command,
   CommandEmpty,
@@ -15,6 +17,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
 import { useGetAllCategories } from "@/hooks/category/useGetAllCategories";
 import { useGetAllOffers } from "@/hooks/offer/useGetAllOffers";
+import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
 const { useState, useEffect } = require("react");
 
 
@@ -33,6 +36,7 @@ const SelectMultiple = ({
   const { loading: ingredientsLoading, ingredients = [] } = useGetAllIngredients(type);
   const { loading : categoryLoading, categories = []} = useGetAllCategories(type);
   const { loading : offerLoading, offers = []} = useGetAllOffers(type);
+  const { loading : dishLoading, dishes = []} = useGetAllDishes(type);
   
   switch(type){
     case "ingredient" : 
@@ -49,9 +53,14 @@ const SelectMultiple = ({
     inputs = offers
     loading = offerLoading
     break
+
+    case "dish" : 
+    inputs = dishes
+    loading = dishLoading
+    break
     
   }
-  console.log(`${type} in select multiple : `, inputs)
+  console.log(`${type} in select multiple : ${type}`, inputs)
 
   useEffect(() => {
     setFilteredInputs(inputs);
@@ -67,9 +76,9 @@ const SelectMultiple = ({
 
   return (
     <div className="flex flex-col justify-items-center ">
-      <div className="flex flex-wrap gap-2 mt-2 p-2 my-2 border border-gray-200 rounded-md">
-        {selectedInputs.map((input) => (
-          <Badge key={input._id} className="flex items-center gap-1">
+      <div className="flex flex-wrap w-full gap-2 mt-2 p-2 my-2 border border-gray-200 rounded-md">
+        {selectedInputs?.map((input) => (
+          <Badge key={input._id} className=" w-fit text-nowrap items-center gap-1">
             {input.name}
             <X
               className="h-4 w-4 cursor-pointer"

@@ -129,6 +129,36 @@ export const updateDish = (dishId, dishData) => async (dispatch) => {
     }
 };
 
+export const removeOffer = (dishId) => async (dispatch) => {
+    console.log("action-remove-offer-dish-req:", dishId);
+    try {
+        dispatch(dishActions.removeOfferRequest());
+
+        const response = await axios.put(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/dishes/remove-offer/${dishId}`,
+            {},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        const { status, message, data } = response.data;
+        console.log("action-remove-offer-dish-res:", data);
+        if (status === "success") {
+            dispatch(dishActions.removeOfferSuccess(data));
+        } else {
+            dispatch(dishActions.removeOfferFailure(message));
+        }
+    } catch (error) {
+        console.log("action-remove-offer-dish-error:", error);
+        const errorMessage = getActionErrorMessage(error);
+        dispatch(dishActions.removeOfferFailure(errorMessage));
+    }
+};
+
 
 // Action to create a new dish
 export const createDish = (dishData) => async (dispatch) => {

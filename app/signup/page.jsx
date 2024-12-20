@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
 import { Building2 } from "lucide-react";
+import { Provider } from 'react-redux';
+import { store } from '@/redux/store';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,8 +30,9 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import OtpVerification from "@/components/auth/OtpVerification";
-import { useSignup } from "@/hooks/auth/useSignup";
-import { useResendOtp, useVerifyEmail } from "@/hooks/auth";
+import { useSignup } from "@/hooks/auth";
+import { useVerifyEmail } from "@/hooks/auth";
+import { useResendOtp } from "@/hooks/auth";
 
 const formSchema = z
   .object({
@@ -45,15 +48,14 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-export default function SignupPage() {
+const SignupContent = () => {
   const router = useRouter();
-  const { toast } = useToast();
-  const [formData, setFormData] = useState(null);
-  const [email, setEmail] = useState(null);
-
-  const { loading, handleSignup, showOtpVerification } = useSignup();
-  const { loading: emailVerifyLoading, handleVerify } = useVerifyEmail();
-  const { loading : resendOtpLoading, handleResendOtp } = useResendOtp();
+  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
+  const { loading, handleSignup, showOtpVerification, userEmail } = useSignup();
+  const { loading: verifyLoading, handleVerify } = useVerifyEmail();
+  const { loading: resendLoading, handleResendOtp } = useResendOtp();
+  const [selectedRole, setSelectedRole] = useState("hotelowner");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -62,67 +64,60 @@ export default function SignupPage() {
       email: "",
       password: "",
       confirmPassword: "",
-      userType: "",
+      role: "hotelowner",
       devKey: "",
     },
   });
-  const [showDevKeyInput, setShowDevKeyInput] = useState(false);
 
-  const handleSignupLocal = async (values) => {
+  const onSubmit = async (values) => {
+    setEmail(values.email);
     handleSignup(values);
-    setFormData(values);
-    setEmail(values.email);
-    setEmail(values.email);
   };
 
-  const handleOtpVerifyLocal = async (otp) => {
-    console.log("Verifying OTP:", otp);
-    handleVerify(email, otp);
-  };
-
-  const handleResendOtpLocal = async () => {
-    handleResendOtp(email);
+  const handleRoleChange = (value) => {
+    setSelectedRole(value);
+    form.setValue("role", value);
   };
 
   if (showOtpVerification) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
-        <OtpVerification
-          email={formData.email}
-          onVerify={handleOtpVerifyLocal}
-          onResendOtp={handleResendOtpLocal}
-          emailVerifyLoading={emailVerifyLoading}
-          resendOtpLoading={resendOtpLoading}
-        />
-      </div>
+      <OtpVerification 
+        email={email}
+        onVerify={handleVerify}
+        onResendOtp={() => handleResendOtp(email)}
+        emailVerifyLoading={verifyLoading}
+        resendOtpLoading={resendLoading}
+      />
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4 ">
-      <Card className="w-full max-w-md ">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <Building2 className="mx-auto h-12 w-12 text-primary" />
-          <CardTitle className="text-3xl">Create your account</CardTitle>
+          <CardTitle className="text-3xl">Create an account</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Or{" "}
+            Already have an account?{" "}
             <Link href="/login" className="text-primary hover:underline">
-              sign in to your account
+              Sign in
             </Link>
           </p>
         </CardHeader>
         <CardContent>
+          {error && (
+            <div className="mb-4 p-2 text-sm text-red-500 bg-red-50 rounded">
+              {error}
+            </div>
+          )}
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleSignupLocal)}
-              className="space-y-4"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input placeholder="John Doe" {...field} />
                     </FormControl>
@@ -130,25 +125,19 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email address</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="john@example.com"
-                        {...field}
-                      />
+                      <Input placeholder="john@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="password"
@@ -156,17 +145,12 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="••••••••"
-                        {...field}
-                      />
+                      <Input type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -174,63 +158,30 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="••••••••"
-                        {...field}
-                      />
+                      <Input type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              {/* <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => { 
-                  console.log("fields : ", field);
-                  if(field.value == "superadmin") setShowDevKeyInput(true);
-                  else setShowDevKeyInput(false);
-                  return(
-                  <FormItem>
-                    <FormLabel>User Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select user Role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="superadmin">Super Admin</SelectItem>
-                        <SelectItem value="hotelowner">Hotel Owner</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}}
-              /> */}
               <FormField
                 control={form.control}
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>User Type</FormLabel>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value); // Update the form state
-                        setShowDevKeyInput(value === "superadmin"); // Update local state
-                      }}
+                    <FormLabel>Role</FormLabel>
+                    <Select 
+                      onValueChange={(value) => handleRoleChange(value)} 
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select user Role" />
+                          <SelectValue placeholder="Select a role" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="superadmin">Super Admin</SelectItem>
                         <SelectItem value="hotelowner">Hotel Owner</SelectItem>
+                        <SelectItem value="superadmin">Super Admin</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -238,18 +189,15 @@ export default function SignupPage() {
                 )}
               />
 
-              {showDevKeyInput && (
+              {selectedRole === "superadmin" && (
                 <FormField
                   control={form.control}
                   name="devKey"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Dev Key</FormLabel>
+                      <FormLabel>Developer Key</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Enter key provided by developers"
-                          {...field}
-                        />
+                        <Input type="password" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -258,12 +206,20 @@ export default function SignupPage() {
               )}
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating account..." : "Sign up"}
+                {loading ? "Creating account..." : "Create account"}
               </Button>
             </form>
           </Form>
         </CardContent>
       </Card>
     </div>
+  );
+};
+
+export default function SignupPage() {
+  return (
+    <Provider store={store}>
+      <SignupContent />
+    </Provider>
   );
 }

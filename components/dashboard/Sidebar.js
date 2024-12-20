@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import SidebarNav from "./SidebarNav";
+import { useGetUser, useLogout } from "@/hooks/auth";
 
 // yaha par menu items aayenge bhaii , side bar ke items yaha add krdena
 const menuItems = [
@@ -44,6 +45,35 @@ const menuItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { loading, handleLogout } = useLogout();
+  const {loading : userLoading, user} = useGetUser();
+  const menuItems = [
+    {
+      title: "Live Orders",
+      icon: BarChart3,
+      href: `/order-page/${user?.hotelId}`,
+    },
+    {
+      title: "Dashboard",
+      icon: BarChart3,
+      href: "/dashboard",
+    },
+    {
+      title: "Admin Dashboard",
+      icon: ChartBarBig ,
+      href: "/admin-dashboard",
+    },
+    {
+      title: "Configuration",
+      icon: Settings,
+      href: "/dashboard/configuration",
+    },
+    {
+      title: "Profile",
+      icon: UserRoundCog,
+      href: "/dashboard/profile",
+    },
+  ];
 
   const sidebarContent = (
     <>
@@ -68,12 +98,11 @@ export default function Sidebar() {
         <Button
           variant="ghost"
           className="w-full justify-start gap-2"
-          onClick={() => {
-            console.log("Logout clicked");
-          }}
+          onClick={handleLogout}
+          disabled={loading}
         >
           <LogOut className="h-5 w-5" />
-          <span>Logout</span>
+          <span>{loading ? "Logging out..." : "Logout"}</span>
         </Button>
       </div>
     </>

@@ -5,7 +5,7 @@ import { categoryActions } from "@/redux/slices/categorySlice";
 import { getAllCategories } from "@/redux/actions/category";
 
 
-export const useGetAllCategories = (type) => {
+export const useGetAllCategories = (type="category") => {
     const params = {}
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();

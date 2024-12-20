@@ -32,7 +32,7 @@ export default function DiscountFields({ form }) {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="percentage">Percentage</SelectItem>
+                <SelectItem value="percent">Percentage</SelectItem>
                 <SelectItem value="amount">Fixed Amount</SelectItem>
               </SelectContent>
             </Select>

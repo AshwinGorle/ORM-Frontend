@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,21 +19,14 @@ import { useDeleteIngredient } from "@/hooks/ingredient/useDeleteIngredient";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function IngredientsPage() {
-  const [ingredients, setIngredients] = useState([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
 
-  const {ingredients : myIngredients, loading} = useGetAllIngredients();
-  const {loading : deleteLoading, handleDeleteIngredient} = useDeleteIngredient(setIsDeleteDialogOpen);
+  const { ingredients, loading } = useGetAllIngredients();
+  const { loading: deleteLoading, handleDeleteIngredient } = useDeleteIngredient(setIsDeleteDialogOpen);
 
-  const handleAddIngredient = (newIngredient) => {
-    setIngredients([...ingredients, { id: Date.now(), ...newIngredient }]);
-    setIsAddDialogOpen(false);
-  };
-
-  
 
   const handleDeleteIngredientLocal = () => {
     handleDeleteIngredient(selectedIngredient._id);
@@ -57,62 +50,67 @@ export default function IngredientsPage() {
           Add Ingredient
         </Button>
       </div>
-      {loading && <Spinner></Spinner> }
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow key={"7961"}>
-              <TableHead key={"7962"}>Name</TableHead>
-              <TableHead key={"7963"}>Description</TableHead>
-              <TableHead key={"7964"} className="w-[100px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {myIngredients?.map((ingredient) => (
-              <TableRow key={ingredient.id}>
-                <TableCell className="font-medium">{ingredient.name}</TableCell>
-                <TableCell>{ingredient.description}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        setSelectedIngredient(ingredient);
-                        setIsEditDialogOpen(true);
-                      }}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        setSelectedIngredient(ingredient);
-                        setIsDeleteDialogOpen(true);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4 text-red-500" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-            {myIngredients.length === 0 && (
+      {loading ? (
+        <div className="flex justify-center">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={3} className="text-center text-muted-foreground">
-                  No ingredients added yet
-                </TableCell>
+                <TableHead>Name</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="w-[100px]">Actions</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {ingredients?.length > 0 ? (
+                ingredients.map((ingredient) => (
+                  <TableRow key={ingredient._id}>
+                    <TableCell className="font-medium">{ingredient.name}</TableCell>
+                    <TableCell>{ingredient.description}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedIngredient(ingredient);
+                            setIsEditDialogOpen(true);
+                          }}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedIngredient(ingredient);
+                            setIsDeleteDialogOpen(true);
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center text-muted-foreground">
+                    No ingredients added yet
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      )}
 
       <AddIngredientDialog
         open={isAddDialogOpen}
         setOpen={setIsAddDialogOpen}
-        onAdd={handleAddIngredient}
       />
 
       <EditIngredientDialog
