@@ -1,8 +1,8 @@
 "use client"
 
 import { useParams } from "next/navigation";
-import { useGetTableBill } from "@/hooks/biill/useGetTableBill";
-import { BillCard } from "../component/BillCard";
+import { useGetTableBill } from "@/hooks/bill/useGetTableBill";
+import { BillCard } from "../components/BillCard";
 import { Button } from "@/components/ui/button";
 import { Print, Share2, Download } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";

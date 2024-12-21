@@ -1,14 +1,10 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Utensils, DollarSign, Info, ArrowLeft } from "lucide-react";
 import { useUpdateOrderStatus } from "@/hooks/order/useUpdateOrderStatus";
 import { Spinner } from "@/components/ui/spinner";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export function MyKanbanOrderCard({ order }) {
   const {
@@ -18,20 +14,22 @@ export function MyKanbanOrderCard({ order }) {
     rightLoading,
     handleUpdateOrderStatus,
   } = useUpdateOrderStatus();
+  
   const totalItems = order.dishes.reduce((sum, dish) => sum + dish.quantity, 0);
   const totalAmount = order.dishes.reduce(
-    (sum, dish) => sum + dish.dishId.price * dish.quantity,
+    (sum, dish) => sum + (dish.dishId?.price * dish.quantity),
     0
   );
+
   const handlePrevStatus = () => {
     const allStatus = ["draft", "pending", "preparing", "completed"];
     const indexOfCurrentStatus = allStatus.indexOf(order.status);
-    if (indexOfCurrentStatus == -1) {
-      console, log("invalid status : ", order.status);
+    if (indexOfCurrentStatus === -1) {
+      console.log("invalid status : ", order.status);
       return;
     }
-    if (indexOfCurrentStatus == 0) {
-      console.log("already in first stage can'tt move previous");
+    if (indexOfCurrentStatus === 0) {
+      console.log("already in first stage can't move previous");
       return;
     }
     const prevStatus = allStatus[indexOfCurrentStatus - 1];
@@ -41,11 +39,8 @@ export function MyKanbanOrderCard({ order }) {
   return (
     <Card className="w-full mb-2">
       <CardContent className="p-2 flex justify-between items-center">
-        <Button variant="outline" onClick={() => handlePrevStatus()} size="sm">
-          {loading &&
-          updatingOrderId &&
-          leftLoading &&
-          updatingOrderId == order._id.toString() ? (
+        <Button variant="outline" onClick={handlePrevStatus} size="sm">
+          {loading && updatingOrderId && leftLoading && updatingOrderId === order._id.toString() ? (
             <Spinner />
           ) : (
             <ArrowLeft className="h-4 w-4" />
@@ -69,21 +64,14 @@ export function MyKanbanOrderCard({ order }) {
             <div className="grid gap-4">
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">Order Details</h4>
-                <p className="text-sm text-muted-foreground">
-                  Order ID: {order._id}
-                </p>
+                <p className="text-sm text-muted-foreground">Order ID: {order._id}</p>
               </div>
               <div className="grid gap-2">
                 {order.dishes.map((dish) => (
-                  <div
-                    key={dish._id}
-                    className="grid grid-cols-3 items-center gap-4"
-                  >
-                    <span className="text-sm">{dish.dishId.name}</span>
+                  <div key={dish._id} className="grid grid-cols-3 items-center gap-4">
+                    <span className="text-sm">{dish.dishId?.name}</span>
                     <span className="text-sm">x{dish.quantity}</span>
-                    <span className="text-sm">
-                      ${(dish.dishId.price * dish.quantity).toFixed(2)}
-                    </span>
+                    <span className="text-sm">${(dish.dishId?.price * dish.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>

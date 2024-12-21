@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
-import { getAllOrders } from "@/redux/actions/order";
+import { getAllOrders } from "@/redux/actions/order/orderActions";
 import { orderActions } from "@/redux/slices/orderSlice";
-
 
 export const useGetAllOrders = (type="order") => {
     const params = {}
@@ -11,14 +10,14 @@ export const useGetAllOrders = (type="order") => {
     const dispatch = useDispatch();
     const { refresh = false, setRefresh = null } = params;
 
-    const { status, error, data } = useSelector((state) => state.order.getAllOrders); // Directly use this
+    const { status, error, data } = useSelector((state) => state.order.getAllOrders);
     const { toast } = useToast();
 
     const fetchAllOrders = useCallback(() => {
-        if (type == 'order' && (!data || refresh)) {
+        if (type === 'order' && (!data || refresh)) {
             dispatch(getAllOrders());
         }
-    }, [dispatch, data, refresh]);
+    }, [dispatch, data, refresh, type]);
 
     useEffect(() => {
         fetchAllOrders();
@@ -47,14 +46,14 @@ export const useGetAllOrders = (type="order") => {
             dispatch(orderActions.clearGetAllOrdersStatus());
             dispatch(orderActions.clearGetAllOrdersError());
         }
-    }, [status, data, error, dispatch, toast, setRefresh]);
+    }, [status, error, dispatch, toast, setRefresh]);
 
     const transformedOrders = useMemo(() => {
         return data || {
-          draft:[],  
-          pending: [],
-          preparing: [],
-          completed: [],
+            draft: [],
+            pending: [],
+            preparing: [],
+            completed: [],
         };
     }, [data]);
 

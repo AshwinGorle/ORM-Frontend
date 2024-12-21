@@ -30,11 +30,11 @@ export const useGetUser = () => {
         } else if (status === "success") {
             setLoading(false);
             setRefresh && setRefresh(false);
-            toast({
-                title: "Success",
-                description: "Users fetched successfully.",
-                variant: "success",
-            });
+            // toast({
+            //     title: "Success",
+            //     description: "Users fetched successfully.",
+            //     variant: "success",
+            // });
             dispatch(authActions.clearGetUserStatus());
             dispatch(authActions.clearGetUserError());
         } else if (status === "failed") {

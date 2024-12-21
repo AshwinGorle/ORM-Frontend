@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Clock,
   Pencil,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUpdateOrderStatus } from "@/hooks/order/useUpdateOrderStatus";
@@ -67,7 +68,7 @@ export function MyKanbanCard({ order }) {
     }
 
   return (
-    <Card className="w-full bg-white hover:shadow-md transition-all duration-200">
+    <Card className="w-full mb-2 flex flex-col h-full">
       <CardHeader className="pb-2">
         <CardTitle className="flex justify-between items-center text-base">
           <div className="flex gap-2">
@@ -89,45 +90,44 @@ export function MyKanbanCard({ order }) {
           </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="flex justify-between text-sm">
-          <div className="flex items-center gap-1 text-gray-600">
-            <User className="h-4 w-4" />
-            <span>{order.customerId.name}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <Utensils className="h-4 w-4 text-gray-500" />
-              <span>{totalItems}</span>
+      <CardContent className="p-4 flex-grow">
+        <div className="space-y-3 h-full flex flex-col">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Clock className="h-4 w-4" />
+              <span>{formatTime(order.createdAt)}</span>
             </div>
-            <div className="font-medium">₹{totalAmount.toFixed(2)}</div>
+            <div className="flex items-center gap-2 text-sm font-medium">
+              Table {order.tableId?.sequence}
+            </div>
           </div>
-        </div>
 
-        <div className="space-y-1.5">
-          {order.dishes.map((dish) => (
-            <div
-              key={dish._id}
-              className="flex justify-between items-center text-sm"
-            >
-              <span className="text-gray-700">{dish.dishId?.name}</span>
-              <div className="flex items-center gap-2">
-                <span className="text-gray-600">×{dish.quantity}</span>
-                <span className="text-gray-600">₹{(dish.dishId?.price * dish.quantity).toFixed(2)}</span>
+          <div className="space-y-2 flex-grow">
+            {order.dishes.map((dish) => (
+              <div
+                key={dish._id}
+                className="flex justify-between items-center text-sm"
+              >
+                <span>{dish.dishId?.name}</span>
+                <span>×{dish.quantity}</span>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {order.note && (
-          <div className="text-sm bg-gray-50 p-2 rounded-md">
-            <span className="text-gray-500">Note: </span>
-            {order.note}
+            ))}
           </div>
-        )}
+
+          <div className="flex justify-between items-center text-sm pt-2 border-t mt-auto">
+            <div className="flex items-center gap-1">
+              <Utensils className="h-4 w-4" />
+              <span>{totalItems} items</span>
+            </div>
+            <div className="flex items-center gap-1 font-medium">
+              <CreditCard className="h-4 w-4" />
+              <span>₹{totalAmount}</span>
+            </div>
+          </div>
+        </div>
       </CardContent>
       
-      <CardFooter className="pt-2">
+      <CardFooter className="p-4 pt-0">
         <div className="w-full flex justify-between gap-2">
           <Button
             variant="outline"

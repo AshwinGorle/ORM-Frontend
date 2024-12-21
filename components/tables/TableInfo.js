@@ -9,7 +9,11 @@ export default function TableInfo({ table }) {
       </div>
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">Location</span>
-        <span className="font-medium capitalize">{table.location.replace("-", " ")}</span>
+        <span className="font-medium capitalize">{table.position}</span>
+      </div>
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-muted-foreground">Status</span>
+        <span className="font-medium capitalize">{table.status}</span>
       </div>
     </div>
   );

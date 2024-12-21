@@ -3,36 +3,37 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { GroupedOrderCard } from './GroupedOrderCard';
 import { Utensils, CreditCard, Table } from 'lucide-react'
+import { calculateMultipleOrdersTotal } from '@/utils/calculations';
+
 
 export function MyKanbanCompletedColumn({ title="Completed", orders }) {
-  const orderCount = orders.length;
-  const totalAmount = orders.reduce((sum, order) => 
-    sum + order.dishes.reduce((dishSum, dish) => dishSum + (dish.dishId.price * dish.quantity), 0), 0
-  );
-  const uniqueTables = new Set(orders.map(order => order.tableId._id)).size;
+  const orderCount = orders?.length || 0;
+  const totalAmount = calculateMultipleOrdersTotal(orders);
+  
+  const uniqueTables = new Set(orders?.map(order => order?.tableId?._id))?.size || 0;
 
-  // Group orders by tableId and calculate table totals
-  const groupedOrders = orders.reduce((acc, order) => {
-    const tableId = order.tableId._id;
+  // Group orders by tableId with optional chaining
+  const groupedOrders = orders?.reduce((acc, order) => {
+    const tableId = order?.tableId?._id;
     if (!acc[tableId]) {
       acc[tableId] = {
         orders: [],
         totalAmount: 0,
-        tableSequence: order.tableId.sequence,
-        customerName: order.customerId.name,
-        billId: order.billId
+        tableSequence: order?.tableId?.sequence,
+        customerName: order?.customerId?.name,
+        billId: order?.billId
       };
     }
     acc[tableId].orders.push(order);
-    acc[tableId].totalAmount += order.dishes.reduce(
-      (sum, dish) => sum + (dish.dishId.price * dish.quantity), 
+    acc[tableId].totalAmount += order?.dishes?.reduce(
+      (sum, dish) => sum + ((dish?.dishId?.price || 0) * (dish?.quantity || 0)), 
       0
-    );
+    ) || 0;
     return acc;
-  }, {});
+  }, {}) || {};
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full h-full">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-bold">{title}</CardTitle>
         <div className="flex justify-between items-center text-sm mt-2">

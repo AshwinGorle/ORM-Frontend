@@ -3,17 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { MyKanbanCard } from './MyKanbanCard';
 import { Utensils, CreditCard, Table } from 'lucide-react'
+import { calculateMultipleOrdersTotal } from '@/utils/calculations';
 
 export function MyKanbanColumn({ title, orders }) {
   const orderCount = orders?.length;
-  let totalAmount = 0;
-  if(orderCount > 0) totalAmount = orders?.reduce((sum, order) => 
-    sum + order?.dishes?.reduce((dishSum, dish) => dishSum + (dish?.dishId?.price * dish?.quantity), 0), 0
-  );
+  const totalAmount =  calculateMultipleOrdersTotal(orders);
   const uniqueTables = new Set(orders?.map(order => order?.tableId?._id))?.size;
 
   return (
-    <Card className="w-full max-w-sm bg-gray-50/50 shadow-sm">
+    <Card className="w-full bg-gray-50/50 shadow-sm h-full">
       <CardHeader className="pb-2 space-y-2">
         <CardTitle className="text-lg font-bold flex items-center gap-2">
           {title}

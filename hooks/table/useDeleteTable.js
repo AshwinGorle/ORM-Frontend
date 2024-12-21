@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
 import { deleteTable} from "@/redux/actions/table";
-import { tableActions } from "@/redux/slices/tablesSlice";
+import { tableActions } from "@/redux/slices/tableSlice";
 
 export const useDeleteTable = (setDialog) => {
     const [loading, setLoading] = useState(false);

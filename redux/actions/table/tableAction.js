@@ -1,5 +1,5 @@
 import axios from "axios";
-import { tableActions } from "@/redux/slices/tablesSlice";
+import { tableActions } from "@/redux/slices/tableSlice";
 import { getActionErrorMessage } from "@/utils";
 
 // Action to get all tables
