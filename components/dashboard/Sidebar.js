@@ -11,7 +11,8 @@ import {
   LogOut,
   ChartBarBig,
   UserCircle,
-  UserRoundCog
+  UserRoundCog,
+  CookingPot
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -50,7 +51,7 @@ export default function Sidebar() {
   const menuItems = [
     {
       title: "Live Orders",
-      icon: BarChart3,
+      icon: CookingPot,
       href: `/order-page/${user?.hotelId}`,
     },
     {
