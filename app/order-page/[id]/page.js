@@ -16,6 +16,7 @@ import { useGetAllOrders } from "@/hooks/order/useGetAllOrders";
 import { MyKanbanBoard } from "../component/MykanbunBoard";
 import { useGetUser } from "@/hooks/auth";
 import useAbly from "@/hooks/ably/useAbly";
+import { useState } from "react";
 
 import {
   setSystemOnline,
@@ -88,6 +89,8 @@ export default function OrderPage() {
   // const { channel } = useAbly(user.hotelId, isSystemOnline);
   const { channel } = useAbly(id, isSystemOnline);
 
+  console.log("user", user);
+  console.log("hotelName", user?.hotelName);    
   
   return (
     <div className="max-w-7xl mx-auto">
@@ -116,21 +119,11 @@ export default function OrderPage() {
               Hotel ID
             </label>
             <div className="flex items-center gap-2">
-              <input
-                id="hotelId"
-                type="text"
-                value={user?.hotelId || ""}
-                onChange={(e) => setHotelId(e.target.value)}
-                placeholder="Enter Hotel ID"
-                className="w-[300px] px-4 py-2 border-2 border-gray-200 rounded-lg text-sm
-                           focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
-                           transition-all duration-200 outline-none
-                           hover:border-gray-300"
-                list="defaultHotelId"
-              />
-              <datalist id="defaultHotelId">
-                <option value="674cb4bdc72700e0f6dc839c">Default Hotel</option>
-              </datalist>
+              <div
+                className="w-[300px] px-4 py-2 border-2 border-gray-200 rounded-lg text-sm bg-gray-50"
+              >
+                {id}
+              </div>
             </div>
           </div>
 
@@ -193,7 +186,10 @@ export default function OrderPage() {
           </svg>
         </button>
       </div>
-      <MyKanbanBoard orders={orders} />
+      <MyKanbanBoard 
+        orders={orders} 
+        hotelName={user?.hotelName}
+      />
 
     </div>
   );

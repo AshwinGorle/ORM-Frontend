@@ -6,11 +6,17 @@ import { Utensils, User, Table } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from "next/navigation";
 
-export function GroupedOrderCard({ orders, tableSequence, customerName }) {
+export function GroupedOrderCard({ orders, tableSequence, customerName, totalAmount, billId }) {
+  const router = useRouter();
   const orderCount = orders.length;
 
-
-  const router = useRouter();
+  const handleBillClick = () => {
+    if (billId) {
+      router.push(`/bill/${billId}`);
+    } else {
+      router.push(`/bill/table/${orders[0].tableId._id.toString()}`);
+    }
+  };
 
   return (
     <Card className="w-full max-w-sm mb-4 p-0">
@@ -24,15 +30,22 @@ export function GroupedOrderCard({ orders, tableSequence, customerName }) {
             <User className="h-4 w-4" />
             <span>{customerName}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Button variant={"destructive"} onClick={()=>router.push(`/bill/table/${orders[0].tableId._id.toString()}`)}  className="px-2" > Bills </Button>
-            <Table className="h-4 w-4" />
-            <span>{tableSequence}</span>
+          <div className="flex items-center gap-2">
+            <div className="text-gray-600">
+              <span>₹{totalAmount.toFixed(2)}</span>
+            </div>
+            <Button 
+              variant={billId ? "outline" : "destructive"} 
+              onClick={handleBillClick}
+              className="px-2"
+            >
+              {billId ? "View Bill" : "Generate Bill"}
+            </Button>
           </div>
         </div>
       </CardHeader>
       <Separator />
-      <CardContent className="pt-4 px-2 space-y-2 max-h-[300px] overflow-y-auto">
+      <CardContent className="pt-4 px-2 space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
         {orders.map((order) => (
           <MyKanbanOrderCard key={order._id} order={order} />
         ))}

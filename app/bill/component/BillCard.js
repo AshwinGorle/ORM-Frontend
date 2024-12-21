@@ -4,85 +4,86 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 
 export function BillCard({ bill }) {
-  const date = new Date(bill.createdAt);
+  if (!bill) return null;
+
+  const date = new Date(bill?.createdAt);
   const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+  const billNumber = bill?._id ? `#${bill._id.slice(-6)}` : 'N/A';
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle className="text-xl font-bold">{bill?.hotelId?.name}</CardTitle>
-            <p className="text-xs text-muted-foreground">Order ID: {bill._id}</p>
+    <Card className="w-full bg-white shadow-lg">
+      <CardHeader className="border-b">
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <CardTitle className="text-2xl font-bold">{bill?.hotelId?.name || 'Hotel Name'}</CardTitle>
+            <div className="text-sm text-gray-500 space-y-0.5">
+              <p>GST No: {bill?.hotelId?.gstNumber || 'N/A'}</p>
+              <p>{bill?.hotelId?.address || 'N/A'}</p>
+              <p>Phone: {bill?.hotelId?.phone || 'N/A'}</p>
+            </div>
           </div>
-          <Image
-            src="/placeholder.svg"
-            alt="Hotel Logo"
-            width={48}
-            height={48}
-            className="rounded-full"
-          />
+          <div className="text-right space-y-1">
+            <p className="text-sm font-medium">Bill No: {billNumber}</p>
+            <p className="text-sm text-gray-500">{formattedDate}</p>
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="py-2">
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <div>
-              <p className="font-semibold">Customer:</p>
-              <p>{bill?.customerName}</p>
-            </div>
-            <div>
-              <p className="font-semibold">Table:</p>
-              <p>{bill?.tableId?.sequence}</p>
-            </div>
-            <div>
-              <p className="font-semibold">Date:</p>
-              <p>{formattedDate}</p>
-            </div>
+
+      <CardContent className="space-y-6 p-6">
+        <div className="grid grid-cols-3 gap-4 text-sm">
+          <div>
+            <p className="font-semibold text-gray-600">Customer</p>
+            <p className="mt-1">{bill?.customerName || 'N/A'}</p>
           </div>
-          <Separator className="my-2" />
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="py-2">Item</TableHead>
-                <TableHead className="py-2">Qty</TableHead>
-                <TableHead className="py-2">Price</TableHead>
-                <TableHead className="py-2 text-right">Total</TableHead>
+          <div>
+            <p className="font-semibold text-gray-600">Table</p>
+            <p className="mt-1">#{bill?.tableId?.sequence || 'N/A'}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-600">Payment Status</p>
+            <p className="mt-1">{bill?.paymentStatus || 'Pending'}</p>
+          </div>
+        </div>
+
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="py-2">Item</TableHead>
+              <TableHead className="py-2">Qty</TableHead>
+              <TableHead className="py-2">Price</TableHead>
+              <TableHead className="py-2 text-right">Total</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {(bill?.orderedItems || []).map((item, index) => (
+              <TableRow key={index}>
+                <TableCell className="py-1 font-medium">{item?.dishId?.name || 'N/A'}</TableCell>
+                <TableCell className="py-1">{item?.quantity || 0}</TableCell>
+                <TableCell className="py-1">₹{(item?.dishId?.price || 0).toFixed(2)}</TableCell>
+                <TableCell className="py-1 text-right">
+                  ₹{((item?.quantity || 0) * (item?.dishId?.price || 0)).toFixed(2)}
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {bill?.orderedItems?.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell className="py-1 font-medium">{item?.dishId?.name}</TableCell>
-                  <TableCell className="py-1">{item?.quantity}</TableCell>
-                  <TableCell className="py-1">₹{item?.dishId?.price?.toFixed(2)}</TableCell>
-                  <TableCell className="py-1 text-right">
-                    ₹{(item?.quantity * item?.dishId?.price)?.toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <Separator className="my-2" />
-          <div className="space-y-1 text-sm">
-            <div className="flex justify-between">
-              <p>Subtotal:</p>
-              <p>₹{bill?.totalAmount?.toFixed(2)}</p>
-            </div>
-            <div className="flex justify-between">
-              <p>Discount:</p>
-              <p>₹{bill?.totalDiscount?.toFixed(2)}</p>
-            </div>
-            <div className="flex justify-between font-bold">
-              <p>Total:</p>
-              <p>₹{bill?.finalAmount?.toFixed(2)}</p>
-            </div>
+            ))}
+          </TableBody>
+        </Table>
+
+        <Separator className="my-2" />
+        <div className="space-y-1 text-sm">
+          <div className="flex justify-between">
+            <p>Subtotal:</p>
+            <p>₹{(bill?.totalAmount || 0).toFixed(2)}</p>
+          </div>
+          <div className="flex justify-between">
+            <p>Discount:</p>
+            <p>₹{(bill?.totalDiscount || 0).toFixed(2)}</p>
+          </div>
+          <div className="flex justify-between font-bold">
+            <p>Total:</p>
+            <p>₹{(bill?.finalAmount || 0).toFixed(2)}</p>
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-center py-2">
-        <p className="text-xs text-muted-foreground">Thank you for your order!</p>
-      </CardFooter>
     </Card>
   );
 }
