@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
 
-import { updateOrderStatus } from "@/redux/actions/order";
+import { updateOrderStatus } from "@/redux/actions/order/orderActions";
 import { orderActions } from "@/redux/slices/orderSlice";
 
 export const useUpdateOrderStatus = () => {
