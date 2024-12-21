@@ -1,7 +1,7 @@
 "use client"
 
 import { useParams } from "next/navigation";
-import { useGetBill } from "@/hooks/bill/useGetBill";
+import { useGetTableBill } from "@/hooks/biill/useGetTableBill";
 import { BillCard } from "../component/BillCard";
 import { Button } from "@/components/ui/button";
 import { Print, Share2, Download } from "lucide-react";
@@ -9,7 +9,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 export default function BillPage() {
   const { id } = useParams();
-  const { loading, bill } = useGetBill(id);
+  const { loading, bill } = useGetTableBill(id);
 
   if (loading) {
     return (
