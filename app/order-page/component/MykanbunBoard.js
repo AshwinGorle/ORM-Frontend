@@ -12,18 +12,26 @@ export function MyKanbanBoard({ orders, type="global", tableId, hotelName }) {
   const [openCreateOrderDialog, setOpenCreateOrderDialog] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const tableOrders = {
-    draft : [],
-    pending : [],
-    preparing : [],
-    completed : [],
+    draft: [],
+    pending: [],
+    preparing: [],
+    completed: [],
   };
 
-  if(type == "table"){
-    tableOrders.draft = orders.draft.filter((order)=>order.tableId._id.toString() == tableId);
-    tableOrders.preparing = orders.preparing.filter((order)=>order.tableId._id.toString() == tableId);
-    tableOrders.pending = orders.pending.filter((order)=>order.tableId._id.toString() == tableId);
-    tableOrders.completed = orders.completed.filter((order)=>order.tableId._id.toString() == tableId);
-    orders = tableOrders
+  if (type == "table") {
+    tableOrders.draft = orders.draft.filter(
+      (order) => order.tableId._id.toString() == tableId
+    );
+    tableOrders.preparing = orders.preparing.filter(
+      (order) => order.tableId._id.toString() == tableId
+    );
+    tableOrders.pending = orders.pending.filter(
+      (order) => order.tableId._id.toString() == tableId
+    );
+    tableOrders.completed = orders.completed.filter(
+      (order) => order.tableId._id.toString() == tableId
+    );
+    orders = tableOrders;
   }
 
   return (
