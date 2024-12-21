@@ -27,70 +27,49 @@ const formatDate = (dateString) => {
 };
 
 const BillShimmer = () => {
+    const foodEmojis = ["🍕", "🍔", "🍜", "🍱", "🍣", "🍗", "🥘", "🥗"];
+    const [currentEmojiIndex, setCurrentEmojiIndex] = React.useState(0);
+    const [dots, setDots] = React.useState('');
+
+    React.useEffect(() => {
+        // Emoji animation
+        const emojiInterval = setInterval(() => {
+            setCurrentEmojiIndex((prev) => (prev + 1) % foodEmojis.length);
+        }, 1000);
+
+        // Dots animation
+        const dotsInterval = setInterval(() => {
+            setDots(prev => prev.length >= 3 ? '' : prev + '.');
+        }, 500);
+
+        return () => {
+            clearInterval(emojiInterval);
+            clearInterval(dotsInterval);
+        };
+    }, []);
+
     return (
-        <div className="animate-pulse">
-            <Card className="shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200/30 relative">
-                {/* Professional binding effect shimmer */}
-                <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-slate-200/40 via-slate-100/30 to-transparent"></div>
-                
-                {/* Texture overlay shimmer */}
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-50/20"></div>
+        <div className="relative min-h-[600px] bg-white rounded-2xl shadow-xl p-8">
+            {/* Single Emoji Animation */}
+            <div className="absolute inset-0 flex items-center justify-center">
+                <div 
+                    key={currentEmojiIndex}
+                    className="text-7xl animate-fadeInOut"
+                >
+                    {foodEmojis[currentEmojiIndex]}
+                </div>
+            </div>
 
-                <CardHeader className="bg-gradient-to-r from-slate-50/40 to-white/30 border-b border-slate-200/30 p-8">
-                    <div className="flex justify-between items-center relative z-10">
-                        <div className="space-y-3">
-                            <div className="h-10 w-64 bg-gradient-to-r from-slate-200/60 to-slate-100/60 rounded-lg"></div>
-                            <div className="h-4 w-48 bg-gradient-to-r from-slate-100/60 to-slate-50/60 rounded"></div>
-                        </div>
-                        <div className="space-y-2 text-right">
-                            <div className="h-8 w-36 bg-gradient-to-r from-slate-100/60 to-slate-50/60 rounded-full"></div>
-                            <div className="h-4 w-24 bg-gradient-to-r from-slate-100/40 to-slate-50/40 rounded ml-auto"></div>
-                        </div>
-                    </div>
-                </CardHeader>
-
-                <CardContent className="p-8 relative">
-                    <Table className="w-full">
-                        <TableHeader>
-                            <TableRow className="border-b-2 border-slate-200/30">
-                                {['w-24', 'w-16', 'w-20', 'w-24'].map((width, i) => (
-                                    <TableHead key={i} className={i > 0 ? 'text-right' : ''}>
-                                        <div className={`h-5 ${width} bg-gradient-to-r from-slate-200/60 to-slate-100/60 rounded ${i > 0 ? 'ml-auto' : ''}`}></div>
-                                    </TableHead>
-                                ))}
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {[1, 2, 3].map((item) => (
-                                <TableRow key={item} className="border-b border-slate-100/30">
-                                    <TableCell><div className="h-5 w-40 bg-gradient-to-r from-slate-100/40 to-slate-50/40 rounded"></div></TableCell>
-                                    <TableCell className="text-center"><div className="h-5 w-8 bg-gradient-to-r from-slate-100/40 to-slate-50/40 rounded mx-auto"></div></TableCell>
-                                    <TableCell className="text-right"><div className="h-5 w-20 bg-gradient-to-r from-slate-100/40 to-slate-50/40 rounded ml-auto"></div></TableCell>
-                                    <TableCell className="text-right"><div className="h-5 w-24 bg-gradient-to-r from-slate-100/40 to-slate-50/40 rounded ml-auto"></div></TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-
-                    {/* Professional corner effect */}
-                    <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-br from-transparent via-slate-100/20 to-slate-200/30 transform rotate-45 translate-x-8 translate-y-8"></div>
-                </CardContent>
-
-                <CardFooter className="bg-gradient-to-b from-transparent via-slate-50/30 to-slate-100/20 p-8 border-t border-slate-200/30">
-                    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {[1, 2, 3].map((item) => (
-                            <div key={item} className="space-y-2">
-                                <div className="h-4 w-20 bg-gradient-to-r from-slate-100/40 to-slate-50/40 rounded"></div>
-                                <div className="h-7 w-28 bg-gradient-to-r from-slate-200/60 to-slate-100/60 rounded"></div>
-                            </div>
-                        ))}
-                        <div className="text-right space-y-2">
-                            <div className="h-4 w-32 bg-gradient-to-r from-slate-100/40 to-slate-50/40 rounded ml-auto"></div>
-                            <div className="h-4 w-24 bg-gradient-to-r from-slate-100/40 to-slate-50/40 rounded ml-auto"></div>
-                        </div>
-                    </div>
-                </CardFooter>
-            </Card>
+            {/* Loading text */}
+            <div className="absolute bottom-1/4 left-1/2 transform -translate-x-1/2 text-center">
+                <div className="text-2xl font-medium text-gray-800 mb-4 flex items-center gap-2">
+                    Preparing your bill
+                    <span className="inline-block w-12 text-left">{dots}</span>
+                </div>
+                <div className="text-sm text-gray-600">
+                    This will just take a moment
+                </div>
+            </div>
         </div>
     );
 };
@@ -101,47 +80,48 @@ const Bill = ({ bill }) => {
     const formattedDate = formatDate(bill.createdAt);
 
     return (
-        <Card className="shadow-2xl rounded-2xl overflow-hidden bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 relative transform transition-all duration-300 hover:scale-[1.002] hover:shadow-slate-200/50">
-            {/* Professional binding effect */}
-            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-slate-200 via-slate-100 to-transparent shadow-inner"></div>
+        <Card className="shadow-xl rounded-2xl overflow-hidden bg-white border border-gray-200 relative transform transition-all duration-300 hover:shadow-2xl">
+            {/* Professional paper texture */}
+            <div className="absolute inset-0 bg-[url('/subtle-pattern.png')] opacity-[0.02]"></div>
+            <div className="absolute inset-0 bg-[linear-gradient(45deg,_transparent_48%,_#fafafa_49%,_#f5f5f5_51%,_transparent_52%)] bg-[length:20px_20px] opacity-30"></div>
             
-            {/* Subtle texture overlay */}
-            <div className="absolute inset-0 bg-[url('/paper-texture.png')] opacity-5 mix-blend-overlay pointer-events-none"></div>
+            {/* Left binding effect */}
+            <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-gray-100 to-transparent"></div>
 
-            <CardHeader className="bg-gradient-to-r from-slate-50/80 to-white/90 border-b border-slate-200/50 p-8">
-                <div className="flex justify-between items-center relative z-10">
-                    <div className="space-y-3">
-                        <h1 className="text-4xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700">
+            <CardHeader className="relative z-10 bg-gradient-to-b from-gray-50 to-white border-b border-gray-200 p-8 shadow-sm">
+                <div className="flex justify-between items-start">
+                    <div className="space-y-2">
+                        <h1 className="text-3xl font-serif text-gray-900">
                             {bill.hotelId?.name}
                         </h1>
-                        <p className="text-sm text-slate-600 font-medium tracking-wide">{bill.hotelId?.address}</p>
+                        <p className="text-sm text-gray-600 font-medium">{bill.hotelId?.address}</p>
                     </div>
-                    <div className="space-y-2 text-right">
-                        <Badge variant="outline" className="px-4 py-2 text-sm font-medium bg-slate-50/80 border-slate-200/80 text-slate-700 backdrop-blur-sm">
-                            Bill ID: {bill._id}
+                    <div className="text-right space-y-2">
+                        <Badge variant="outline" className="px-4 py-1.5 bg-gradient-to-r from-gray-50 to-white border-gray-300 text-gray-700 font-medium shadow-sm">
+                            Invoice #{bill._id}
                         </Badge>
-                        <p className="text-xs text-slate-500 font-medium">{formattedDate}</p>
+                        <p className="text-sm text-gray-500">{formattedDate}</p>
                     </div>
                 </div>
             </CardHeader>
 
-            <CardContent className="p-8 relative backdrop-blur-sm backdrop-saturate-150">
-                <Table className="w-full relative z-10">
+            <CardContent className="p-8 relative z-10">
+                <Table className="w-full">
                     <TableHeader>
-                        <TableRow className="hover:bg-transparent border-b-2 border-slate-200/50">
-                            <TableHead className="font-serif font-semibold text-slate-800">Item</TableHead>
-                            <TableHead className="text-center font-serif font-semibold text-slate-800">Qty</TableHead>
-                            <TableHead className="text-right font-serif font-semibold text-slate-800">Price</TableHead>
-                            <TableHead className="text-right font-serif font-semibold text-slate-800">Total</TableHead>
+                        <TableRow className="border-b-2 border-blue-600 bg-[#1877F2] hover:bg-[#1877F2]">
+                            <TableHead className="font-serif text-white text-base">Item</TableHead>
+                            <TableHead className="text-center font-serif text-white text-base">Qty</TableHead>
+                            <TableHead className="text-right font-serif text-white text-base">Price</TableHead>
+                            <TableHead className="text-right font-serif text-white text-base">Total</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {bill.orderedItems?.map((item, index) => (
-                            <TableRow key={index} className="hover:bg-slate-50/30 transition-colors duration-200 border-b border-slate-100">
-                                <TableCell className="font-medium text-slate-700">{item.dishId?.name}</TableCell>
-                                <TableCell className="text-center text-slate-600">{item.quantity}</TableCell>
-                                <TableCell className="text-right text-slate-600">₹{item.dishId?.price.toFixed(2)}</TableCell>
-                                <TableCell className="text-right font-medium text-slate-700">
+                            <TableRow key={index} className="border-b border-gray-100 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-300">
+                                <TableCell className="font-medium text-gray-900">{item.dishId?.name}</TableCell>
+                                <TableCell className="text-center text-gray-700">{item.quantity}</TableCell>
+                                <TableCell className="text-right text-gray-600">₹{item.dishId?.price.toFixed(2)}</TableCell>
+                                <TableCell className="text-right font-medium text-gray-900">
                                     ₹{(item.quantity * item.dishId?.price).toFixed(2)}
                                 </TableCell>
                             </TableRow>
@@ -149,34 +129,41 @@ const Bill = ({ bill }) => {
                     </TableBody>
                 </Table>
 
-                {/* Professional corner fold */}
-                <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-br from-transparent via-slate-100/30 to-slate-200/40 transform rotate-45 translate-x-8 translate-y-8 backdrop-blur-sm"></div>
+                {/* Subtle watermark */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none">
+                    <div className="text-[120px] font-serif text-gray-900 rotate-[-30deg]">PAID</div>
+                </div>
             </CardContent>
 
-            <CardFooter className="bg-gradient-to-b from-transparent via-slate-50/30 to-slate-100/20 p-8 border-t border-slate-200/50">
+            <CardFooter className="relative z-10 bg-gradient-to-b from-white to-gray-50 p-8 border-t border-gray-200">
                 <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div className="backdrop-blur-sm">
-                        <p className="text-sm text-slate-600">Subtotal</p>
-                        <p className="text-xl font-serif font-bold text-slate-800">₹{bill.totalAmount.toFixed(2)}</p>
+                    <div>
+                        <p className="text-sm text-gray-600">Subtotal</p>
+                        <p className="text-xl font-serif font-semibold text-gray-900">₹{bill.totalAmount.toFixed(2)}</p>
                     </div>
-                    <div className="backdrop-blur-sm">
-                        <p className="text-sm text-slate-600">Discount</p>
-                        <p className="text-xl font-serif font-bold text-emerald-600">
+                    <div>
+                        <p className="text-sm text-gray-600">Discount</p>
+                        <p className="text-xl font-serif font-semibold text-green-600">
                             - ₹{(bill.totalDiscount || 0).toFixed(2)}
                         </p>
                     </div>
-                    <div className="backdrop-blur-sm">
-                        <p className="text-sm text-slate-600">Final Amount</p>
-                        <p className="text-2xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700">
+                    <div>
+                        <p className="text-sm text-gray-600">Final Amount</p>
+                        <p className="text-2xl font-serif font-bold text-gray-900 animate-in slide-in-from-bottom duration-700">
                             ₹{(bill.totalAmount - (bill.totalDiscount || 0)).toFixed(2)}
                         </p>
                     </div>
-                    <div className="text-right backdrop-blur-sm">
-                        <p className="text-sm text-slate-600 font-medium">Thank you for dining with us!</p>
-                        <p className="text-xs text-slate-500 mt-1 italic">Visit again</p>
+                    <div className="text-right">
+                        <p className="text-sm text-gray-700 font-medium">Thank you for dining with us!</p>
+                        <p className="text-xs text-gray-500 mt-1">This is a computer-generated bill</p>
                     </div>
                 </div>
             </CardFooter>
+
+            {/* Professional corner fold effect */}
+            <div className="absolute bottom-0 right-0 w-16 h-16">
+                <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-br from-transparent via-gray-100 to-gray-200 transform rotate-45 translate-x-8 translate-y-8"></div>
+            </div>
         </Card>
     );
 };

@@ -54,7 +54,35 @@ module.exports = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		keyframes : {
+			orbit: {
+				'0%': { transform: 'rotate(0deg) translateX(150px) rotate(0deg)' },
+				'100%': { transform: 'rotate(360deg) translateX(150px) rotate(-360deg)' }
+			},
+			fadeInOut: {
+				'0%': { 
+					opacity: '0',
+					transform: 'scale(0.5) translateY(20px)'
+				},
+				'20%': { 
+					opacity: '1',
+					transform: 'scale(1) translateY(0)'
+				},
+				'80%': { 
+					opacity: '1',
+					transform: 'scale(1) translateY(0)'
+				},
+				'100%': { 
+					opacity: '0',
+					transform: 'scale(0.5) translateY(-20px)'
+				}
+			}
+		},
+		animation: {
+			orbit: 'orbit 20s linear infinite',
+			fadeInOut: 'fadeInOut 1s ease-in-out'
+		}	
   	}
   },
   plugins: [require("tailwindcss-animate")],
