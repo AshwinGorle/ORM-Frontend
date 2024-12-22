@@ -89,8 +89,9 @@ const tableSlice = createSlice({
         },
         deleteTableSuccess: (state, action) => {
             state.deleteTable.status = "success";
+            console.log("tabel in redux ----", )
             state.getAllTables.data.tables = state.getAllTables.data.tables.filter(
-                (table) => table._id !== action.payload.table
+                (table) => table._id !== action.payload.table._id
             );
         },
         deleteTableFailure: (state, action) => {

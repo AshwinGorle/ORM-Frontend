@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
 import { createTable } from "@/redux/actions/table";
-import { tableActions } from "@/redux/slices/tablesSlice";
+import { tableActions } from "@/redux/slices/tableSlice";
 
-export const useCreateTable = (setOpen) => {
+export const useCreateTable = (handleClose) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { status, error, data } = useSelector((state) => state.table.createTable);
@@ -21,7 +21,7 @@ export const useCreateTable = (setOpen) => {
                 variant: "success", // Optional, for success styling
             });
             dispatch(tableActions.clearCreateTableStats());
-            setOpen(false) // to close dialog
+            handleClose() // to close dialog
         } else if (status === "failed") {
             setLoading(false);
             toast({
@@ -30,7 +30,7 @@ export const useCreateTable = (setOpen) => {
                 variant: "destructive", // Optional, for error styling
             });
             dispatch(tableActions.clearCreateTableStats());
-            setOpen(false) // to close dialog
+            handleClose() // to close dialog
 
         }
     }, [status, error, dispatch, toast]);

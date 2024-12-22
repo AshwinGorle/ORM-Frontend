@@ -36,9 +36,9 @@ export const updateTable = (tableId, tableData) => async (dispatch) => {
     console.log("action-update-table-req:", tableId);
     try {
         dispatch(tableActions.updateTableRequest());
-        const response = await axios.patch(
+        const response = await axios.put(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/tables/${tableId}`,
-            { name : tableData.name, description : tableData.description},
+            tableData,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -110,7 +110,7 @@ export const deleteTable = (tableId) => async (dispatch) => {
         const { status, message, data } = response.data;
         console.log("action-delete-table-res:", data);
         if (status === "success") {
-            dispatch(tableActions.deleteTableSuccess({ deletedTableId: tableId }));
+            dispatch(tableActions.deleteTableSuccess(data));
         } else {
             dispatch(tableActions.deleteTableFailure(message));
         }

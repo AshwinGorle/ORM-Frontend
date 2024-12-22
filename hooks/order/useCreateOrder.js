@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
-import { createOrder } from "@/redux/actions/order";
+import { createOrder } from "@/redux/actions/order/orderActions";
 import { orderActions } from "@/redux/slices/orderSlice";
 import { useGetUser } from "../auth";
 

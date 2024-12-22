@@ -7,6 +7,7 @@ import TableCard from "@/components/tables/TableCard";
 import { AddTableDialog } from "@/components/tables/AddTableDialog";
 import { EditTableDialog } from "@/components/tables/EditTableDialog";
 import { DeleteTableDialog } from "@/components/tables/DeleteTableDialog";
+import { useGetAllTables } from "@/hooks/table/useGetAllTables";
 
 export default function ManageTablesPage() {
   const [tables, setTables] = useState([
@@ -32,6 +33,8 @@ export default function ManageTablesPage() {
       status: "free" 
     },
   ]);
+
+  const {loading : tableLoading, tables : myTables} = useGetAllTables();
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -82,7 +85,7 @@ export default function ManageTablesPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-        {tables.map((table) => (
+        {myTables.map((table) => (
           <TableCard
             key={table.id}
             table={table}

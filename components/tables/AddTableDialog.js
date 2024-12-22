@@ -6,52 +6,57 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useCreateTable } from "@/hooks/table/useCreateTable";
+import { Spinner } from "../ui/spinner";
 // import QRCode from "qrcode";
 
-export function AddTableDialog({ open, onOpenChange, onAdd }) {
-  const [name, setName] = useState("");
+export function AddTableDialog({ open, onOpenChange }) {
+  const [sequence, setSequence] = useState(0);
   const [capacity, setCapacity] = useState("");
-  const [location, setLocation] = useState("main-hall");
-  const [qrCode, setQrCode] = useState("");
+  const [position, setPosition] = useState("");
 
-  const generateQR = async (tableData) => {
-    console.log("generae qrcode function");
-  };
+  const handleClose = ()=>{
+    setSequence("");
+    setCapacity("");
+    setPosition("");
+    onOpenChange(false)
+  }
+
+  const {loading : createTableLoading, handleCreateTable} = useCreateTable(handleClose); 
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const tableData = {
-      name,
+      sequence,
       capacity: parseInt(capacity),
-      location,
-      status: "free",
+      position,
     };
+
+    console.log("table data -------", tableData)
     
-    const qrCodeUrl = await generateQR(tableData);
+    handleCreateTable(tableData);
     
-    onAdd({ ...tableData, qrCode: qrCodeUrl });
-    setName("");
-    setCapacity("");
-    setLocation("main-hall");
-    setQrCode("");
   };
 
+ 
+
   const downloadQR = async () => {
-    if (!name || !capacity) {
+    if (!sequence || !capacity) {
       alert("Please fill in table details first");
       return;
     }
 
     const qrCodeUrl = await generateQR({
-      name,
+      sequence,
       capacity: parseInt(capacity),
-      location,
+      position,
     });
 
     if (qrCodeUrl) {
       const link = document.createElement("a");
       link.href = qrCodeUrl;
-      link.download = `table-${name}-qr.png`;
+      link.download = `table-${sequence}-qr.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -59,19 +64,20 @@ export function AddTableDialog({ open, onOpenChange, onAdd }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={()=>handleClose()}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Add New Table</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Table Name</Label>
+            <Label htmlFor="sequence">Table Number</Label>
             <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter table name"
+              id="sequence"
+              type="number"
+              value={sequence}
+              onChange={(e) => setSequence(e.target.value)}
+              placeholder="Enter table sequence"
               required
             />
           </div>
@@ -89,34 +95,21 @@ export function AddTableDialog({ open, onOpenChange, onAdd }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select location" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="main-hall">Main Hall</SelectItem>
-                <SelectItem value="outdoor">Outdoor</SelectItem>
-                <SelectItem value="private">Private Area</SelectItem>
-                <SelectItem value="roof">Roof Top</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="sequence">Position</Label>
+            <Input
+              id="sequence"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              placeholder="Enter table position"
+              required
+            />
           </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={downloadQR}
-          >
-            Download QR Code
-          </Button>
-
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button type="button" variant="outline" onClick={() => handleClose()}>
               Cancel
             </Button>
-            <Button type="submit">Add Table</Button>
+            <Button type="submit">{createTableLoading ? <Spinner/> : "Add Table"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

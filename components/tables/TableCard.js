@@ -11,10 +11,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import TableStatusToggle from "./TableStatusToggle";
 import { Badge } from "@/components/ui/badge";
+import { useDispatch } from "react-redux";
+import { printQr } from "@/redux/actions/qr/qrAction";
+import { useState } from "react";
+import { Spinner } from "../ui/spinner";
 
 export default function TableCard({ table, onStatusChange, onEdit, onDelete }) {
-  const downloadQR = () => {
-    console.log("QR code downloader");
+  const dispatch = useDispatch();
+  const [qrLoading, setQrLoading] = useState(null);
+  const downloadQR = (tableId) => {
+    console.log("QR code downloader tableID : ", tableId);
+    dispatch(printQr(tableId, setQrLoading));
   };
 
   return (
@@ -22,7 +29,7 @@ export default function TableCard({ table, onStatusChange, onEdit, onDelete }) {
       <div className={`absolute inset-0 w-1 ${table.status === 'free' ? 'bg-green-500' : 'bg-red-500'}`} />
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pl-6">
         <div className="space-y-1">
-          <h3 className="font-semibold text-xl tracking-tight">{table.name}</h3>
+          <h3 className="font-semibold text-xl tracking-tight">{table.sequence}</h3>
           <p className="text-sm text-muted-foreground flex items-center gap-1">
             <Users className="h-3 w-3" />
             {table.capacity} People
@@ -51,7 +58,7 @@ export default function TableCard({ table, onStatusChange, onEdit, onDelete }) {
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="flex items-center gap-1">
             <MapPin className="h-3 w-3" />
-            {table.location.replace("-", " ")}
+            {table?.position?.replace("-", " ")}
           </Badge>
         </div>
         
@@ -64,10 +71,10 @@ export default function TableCard({ table, onStatusChange, onEdit, onDelete }) {
           variant="outline"
           size="sm"
           className="w-full group-hover:border-primary/50 transition-colors"
-          onClick={downloadQR}
+          onClick={()=>downloadQR(table._id)}
         >
           <Download className="h-4 w-4 mr-2" />
-          Download QR
+          { qrLoading == table._id.toString() ? <Spinner/> : "Download QR" }
         </Button>
       </CardContent>
     </Card>
