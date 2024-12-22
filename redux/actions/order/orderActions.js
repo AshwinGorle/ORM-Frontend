@@ -127,7 +127,7 @@ export const createOrder = (orderData, hotelId, tableId) => async (dispatch) => 
     try {
         dispatch(orderActions.createOrderRequest());
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/orders/${hotelId}/${tableId}`,
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/orders/${tableId}`,
             orderData,
             {
                 headers: {

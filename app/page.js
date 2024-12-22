@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const router = useRouter();
-
   useEffect(() => {
     const cookies = parseCookies();
     if (cookies.authToken) {
