@@ -41,7 +41,7 @@ export const login = (loginData) => async(dispatch) => {
             return false;
         }
     } catch (error) {
-        console.error("Login error:", error.response?.data || error.message);
+        console.log("Login error:", error.response?.data || error.message);
         const errorMessage = getActionErrorMessage(error);
         dispatch(authActions.loginFailure(errorMessage));
         return false;
