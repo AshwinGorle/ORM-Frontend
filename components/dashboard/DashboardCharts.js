@@ -62,13 +62,7 @@ export default function DashboardCharts() {
       {
         label: "Daily Customers",
         data: generateRandomData(300),
-        backgroundColor: function(context) {
-          return createGradient(
-            context,
-            'hsla(221, 83%, 53%, 0.2)',
-            'hsla(221, 83%, 53%, 0.8)'
-          );
-        },
+        backgroundColor: `rgb(115, 147, 179)`,
         borderRadius: 6,
         borderSkipped: false,
       },
@@ -81,13 +75,7 @@ export default function DashboardCharts() {
       {
         label: "Daily Revenue",
         data: generateRandomData(40000),
-        backgroundColor: function(context) {
-          return createGradient(
-            context,
-            'hsla(334, 86%, 48%, 0.2)',
-            'hsla(334, 86%, 48%, 0.8)'
-          );
-        },
+        backgroundColor: `rgb(54, 69, 79)`,
         borderRadius: 6,
         borderSkipped: false,
       },
