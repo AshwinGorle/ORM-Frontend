@@ -5,6 +5,7 @@ import { Users, IndianRupee, UserCheck, TrendingUp } from "lucide-react";
 import DashboardCharts from "@/components/dashboard/DashboardCharts";
 import TopDishesCard from "@/components/dashboard/top-dishes/TopDishesCard";
 import { useFetchDashboard } from "@/hooks/dashboard/useFetchDashboard";
+import DashboardLoading from "./loading";
 
 export default function DashboardPage() {
   const { data, loading } = useFetchDashboard();
@@ -34,7 +35,7 @@ export default function DashboardPage() {
       </div>
 
       {loading ?
-        <h3>loading...</h3> :
+        <DashboardLoading/> :
         <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {/* Today's Customers */}
