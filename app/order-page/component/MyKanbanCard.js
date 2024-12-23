@@ -91,12 +91,12 @@ export function MyKanbanCard({ order }) {
             >
               <Trash color="white" className="h-3.5 w-3.5" />
             </div>
-            {/* <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <span className="font-medium">Table {order.tableId.sequence}</span>
-              <Badge variant={order.status === "pending" ? "warning" : "default"}>
+              {/* <Badge variant={order.status === "pending" ? "warning" : "default"}>
                 {order.status}
-              </Badge>
-            </div> */}
+              </Badge> */}
+            </div>
           </div>
           <span className="text-sm text-gray-500">
             {formatTime(order.createdAt)}
