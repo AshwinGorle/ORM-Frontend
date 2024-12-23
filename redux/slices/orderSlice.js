@@ -251,6 +251,8 @@ const orderSlice = createSlice({
     },
 
     setNewOrder: (state, action) => {
+      const newOrder = action.payload;
+      console.log("new Order in action-------", newOrder)
       if(!state.getAllOrders.data){
         state.getAllOrders.data= {
           draft:[],  
@@ -259,12 +261,10 @@ const orderSlice = createSlice({
           completed: [],
         }
       }
-      const exists1 = state.getAllOrders.data.pending.some(order => order._id === action.payload._id);
-      const exists2 = state.getAllOrders.data.completed.some(order => order._id === action.payload._id);
-      const exists3 = state.getAllOrders.data.preparing.some(order => order._id === action.payload._id);
-      if (!(exists1 || exists2 || exists3)) {
-        state.getAllOrders.data.pending.unshift(action.payload);
-        state.getAllOrders.status = 'success';
+      const existsInPending = state.getAllOrders.data.pending.some(order => order._id.toString() === newOrder._id.toString());
+      if (!existsInPending) {
+        state.getAllOrders.data.pending.unshift(newOrder);
+        // state.getAllOrders.status = 'success';
       }
     },
 
