@@ -52,76 +52,91 @@ export function CreateOrderModel({ open, setOpen }) {
 
   return (
     <Dialog open={open} onOpenChange={()=>handleClose()}>
-      <DialogContent className="sm:max-w-[625px]">
-        <DialogHeader>
-          <DialogTitle>Create Order</DialogTitle>
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="border-b pb-4">
+          <DialogTitle className="text-2xl font-bold">Create New Order</DialogTitle>
         </DialogHeader>
-        <div className="gap-4 py-4 flex">
-          {/* Customer Name Field */}
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="customerName">Customer Name</Label>
-            <Input
-              id="customerName"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              placeholder="Enter customer name"
+
+        <div className="grid grid-cols-2 gap-6 py-6">
+          {/* Left Column */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Customer Name Field */}
+              <div className="space-y-2">
+                <Label htmlFor="customerName">Customer Name</Label>
+                <Input
+                  id="customerName"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="Enter customer name"
+                  className="w-full"
+                />
+              </div>
+
+              {/* Table Selection */}
+              <div className="space-y-2">
+                <Label htmlFor="tableId">Table</Label>
+                <TableSelector
+                  selectedTable={tableId}
+                  setSelectedTable={setTableId}
+                />
+              </div>
+            </div>
+
+            {/* Notes Field */}
+            <div className="space-y-2">
+              <Label htmlFor="notes">Notes</Label>
+              <Input
+                id="notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Add any special instructions"
+                className="w-full"
+              />
+            </div>
+
+            {/* Status Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select value={status} onValueChange={setStatus}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="preparing">Preparing</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Right Column - Dish Selection */}
+          <div className="space-y-4">
+            <SelectMultipleDishesForOrder
+              selectedInputs={selectedDishes}
+              setSelectedInputs={setSelectedDishes}
+              usedPlace={'createOrder'}
+            />
+            <DisplayMultipleDishesForOrder
+              selectedInputs={selectedDishes}
+              setSelectedInputs={setSelectedDishes}
             />
           </div>
-
-          {/* Notes Field */}
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="notes">Notes</Label>
-            <Input
-              id="notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Enter any notes"
-            />
-          </div>
-
-          {/* Status Dropdown */}
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="status">Status</Label>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="preparing">Preparing</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Table ID Field */}
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="tableId">Table ID</Label>
-            <TableSelector
-              selectedTable={tableId}
-              setSelectedTable={setTableId}
-            />
-          </div>
-
         </div>
 
-        {/* Dish Selection Components */}
-        <div className="flex gap-4">
-          <SelectMultipleDishesForOrder
-            selectedInputs={selectedDishes}
-            setSelectedInputs={setSelectedDishes}
-            usedPlace={'createOrder'}
-          />
-          <DisplayMultipleDishesForOrder
-            selectedInputs={selectedDishes}
-            setSelectedInputs={setSelectedDishes}
-          />
-        </div>
-
-        <DialogFooter>
-          <Button type="submit" onClick={handleSubmit}>
-            {createLoading ? <Spinner /> : "Save changes"}
+        <DialogFooter className="border-t pt-4">
+          <Button variant="outline" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSubmit}
+            className="bg-primary hover:bg-primary/90"
+            disabled={createLoading || !selectedDishes.length}
+          >
+            {createLoading ? <Spinner className="mr-2" /> : null}
+            {createLoading ? "Creating..." : "Create Order"}
           </Button>
         </DialogFooter>
       </DialogContent>

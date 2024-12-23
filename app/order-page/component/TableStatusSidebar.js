@@ -14,7 +14,7 @@ export function TableStatusSidebar() {
   const { tables, loading } = useGetAllTables();
   
   return (
-    <div className="h-full">
+    <div className="h-full border-l">
       <div className="p-4 border-b bg-white space-y-4">
         <h2 className="text-lg font-semibold">Table Status</h2>
         <p className="text-sm text-muted-foreground">
@@ -28,7 +28,7 @@ export function TableStatusSidebar() {
           <Spinner />
         </div>
       ) : (
-        <ScrollArea className="h-[calc(100vh-140px)]">
+        <div className="h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
           <div className="p-4">
             {view === 'list' ? (
               <div className="space-y-4">
@@ -40,7 +40,7 @@ export function TableStatusSidebar() {
               <CircleTableView tables={tables} />
             )}
           </div>
-        </ScrollArea>
+        </div>
       )}
     </div>
   );
