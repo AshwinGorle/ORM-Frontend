@@ -66,9 +66,11 @@ const useAbly = (hotelId, isSystemOnline) => {
                     withCredentials: true,
                   }
                 );
-                if (response.data.success) {
+                console.log("response--------", response)
+                if (response.data.status == 'success') {
                   const completeOrderData = response.data.data.order;
-                  dispatch(orderActions.setNewOrder(completeOrderData));
+                  console.log("completedOrderData : ", completeOrderData);
+                  dispatch(orderActions.setNewOrder(response.data.data.order));
                 }
               } catch (error) {
                 console.error('Error fetching complete order details:', error);
