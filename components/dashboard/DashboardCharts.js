@@ -36,15 +36,22 @@ const generateDates = () => {
   return dates;
 };
 
-const generateRandomData = (max) => {
-  return generateDates().map(() => Math.floor(Math.random() * max));
-};
+// const generateRandomData = (max, data) => {
+//   return generateDates().map(() => Math.floor(Math.random() * max));
+// };
 
-export default function DashboardCharts() {
+
+const generateRandomData = (max, dataObject) => {
+  const dates = generateDates();
+  return dates.map(date => {
+    const key = `2024-12-${date.padStart(2, "0")}`; // Format the date to match the keys in the object
+    return dataObject && dataObject[key] !== undefined ? dataObject[key] : 0;
+  });
+};
+export default function DashboardCharts({ data }) {
   const [activeTab, setActiveTab] = useState("customers");
   const chartRef = useRef(null);
   const dates = generateDates();
-
   const createGradient = (context, color1, color2) => {
     const chart = context.chart;
     const { ctx, chartArea } = chart;
@@ -61,7 +68,7 @@ export default function DashboardCharts() {
     datasets: [
       {
         label: "Daily Customers",
-        data: generateRandomData(300),
+        data: generateRandomData(300, data.customersByDate),
         backgroundColor: `rgb(115, 147, 179)`,
         borderRadius: 6,
         borderSkipped: false,
@@ -74,7 +81,7 @@ export default function DashboardCharts() {
     datasets: [
       {
         label: "Daily Revenue",
-        data: generateRandomData(40000),
+        data: generateRandomData(40000, data.revenueByDate),
         backgroundColor: `rgb(54, 69, 79)`,
         borderRadius: 6,
         borderSkipped: false,
@@ -139,6 +146,7 @@ export default function DashboardCharts() {
       easing: 'easeInOutQuart',
     },
   };
+
 
   return (
     <Card className="mt-6">
