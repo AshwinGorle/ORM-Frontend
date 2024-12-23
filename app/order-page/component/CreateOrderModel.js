@@ -15,6 +15,7 @@ import { Spinner } from "@/components/ui/spinner";
 import SelectMultipleDishesForOrder from "@/components/orders/component/SelectMultipleDishesForOrder";
 import DisplayMultipleDishesForOrder from "@/components/orders/component/DisplayultipleDishesForOrder";
 import { useCreateOrder } from "@/hooks/order/useCreateOrder";
+import TableSelector from "./TableSelector";
 
 export function CreateOrderModel({ open, setOpen }) {
   const [selectedDishes, setSelectedDishes] = useState([]);
@@ -97,13 +98,12 @@ export function CreateOrderModel({ open, setOpen }) {
           {/* Table ID Field */}
           <div className="flex flex-col gap-1">
             <Label htmlFor="tableId">Table ID</Label>
-            <Input
-              id="tableId"
-              value={tableId}
-              onChange={(e) => setTableId(e.target.value)}
-              placeholder="Enter table ID"
+            <TableSelector
+              selectedTable={tableId}
+              setSelectedTable={setTableId}
             />
           </div>
+
         </div>
 
         {/* Dish Selection Components */}
