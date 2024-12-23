@@ -6,6 +6,7 @@ import { CreateOrderModel } from "./CreateOrderModel";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useSelector } from "react-redux";
+import { DeleteOrderModal } from "./DeleteOrderModal";
 
 export function MyKanbanBoard({ orders, type="global", tableId, hotelName }) {
   console.log("MyKanbanBoard received orders:", orders);
@@ -54,8 +55,9 @@ export function MyKanbanBoard({ orders, type="global", tableId, hotelName }) {
         <MyKanbanColumn title="Pending" orders={orders?.pending} />
         <MyKanbanColumn title="Preparing" orders={orders?.preparing} />
         <MyKanbanCompletedColumn title="Completed" orders={orders?.completed} />
-        <UpdateOrderModal order={selectedOrder}/>
         <CreateOrderModel open={openCreateOrderDialog} setOpen={setOpenCreateOrderDialog} />
+        <UpdateOrderModal order={selectedOrder}/>
+        <DeleteOrderModal />
       </div>
     </div>
   );

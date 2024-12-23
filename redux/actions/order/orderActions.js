@@ -169,7 +169,7 @@ export const deleteOrder = (orderId) => async (dispatch) => {
         const { status, message, data } = response.data;
         console.log("action-delete-order-res:", data);
         if (status === "success") {
-            dispatch(orderActions.deleteOrderSuccess({ deletedOrderId: orderId }));
+            dispatch(orderActions.deleteOrderSuccess(data));
         } else {
             dispatch(orderActions.deleteOrderFailure(message));
         }

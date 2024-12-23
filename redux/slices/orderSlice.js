@@ -145,7 +145,11 @@ const initialOrder = {
   },
 
   openEditOrderDialog : false,
-  selectedEditOrder : null
+  selectedEditOrder : null,
+
+  openDeleteOrderDialog : false,
+  selectedDeleteOrder : null
+
 };
 
 const orderSlice = createSlice({
@@ -192,14 +196,24 @@ const orderSlice = createSlice({
 
     /////////////////////////////////////////////////////////////////
 
-    // getAllOrders
+   
+    //////////// fro edit and delete order dialogs///////////
     setOpenEditOrder: (state, action) => {
       state.openEditOrderDialog = action.payload;
     },
-
+    
     setSelectedEditOrder: (state, action) => {
       state.selectedEditOrder = action.payload;
     },
+    
+    setOpenDeleteOrder: (state, action) => {
+      state.openDeleteOrderDialog = action.payload;
+    },
+    
+    setSelectedDeleteOrder: (state, action) => {
+      state.selectedDeleteOrder = action.payload;
+    },
+    //////////// fro edit and delete order dialogs///////////
 
     getAllOrdersRequest: (state) => {
       state.getAllOrders.status = "pending";
@@ -330,12 +344,21 @@ const orderSlice = createSlice({
     },
     deleteOrderSuccess: (state, action) => {
       state.deleteOrder.status = "success";
-      if (state.getAllOrders.data && state.getAllOrders.data.orders) {
-        state.getAllOrders.data.orders = state.getAllOrders.data.orders.filter(
-          (order) => order._id !== action.payload.order
-        );
+      const deletedOrder = action.payload.order
+      if(deletedOrder.status == 'draft'){
+        state.getAllOrders.data.draft = state.getAllOrders.data.draft.filter((prevOrder)=> prevOrder._id.toString() != deletedOrder._id.toString());
+      }
+      if(deletedOrder.status == 'pending'){
+        state.getAllOrders.data.pending = state.getAllOrders.data.pending.filter((prevOrder)=> prevOrder._id.toString() != deletedOrder._id.toString());
+      }
+      if(deletedOrder.status == 'preparing'){
+        state.getAllOrders.data.preparing = state.getAllOrders.data.preparing.filter((prevOrder)=> prevOrder._id.toString() != deletedOrder._id.toString());
+      }
+      if(deletedOrder.status == 'completed'){
+        state.getAllOrders.data.completed = state.getAllOrders.data.completed.filter((prevOrder)=> prevOrder._id.toString() != deletedOrder._id.toString());
       }
     },
+
     deleteOrderFailure: (state, action) => {
       state.deleteOrder.status = "failed";
       state.deleteOrder.error = action.payload;

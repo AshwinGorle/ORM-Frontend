@@ -15,6 +15,7 @@ import {
   Clock,
   Pencil,
   CreditCard,
+  Trash,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUpdateOrderStatus } from "@/hooks/order/useUpdateOrderStatus";
@@ -31,6 +32,7 @@ export function MyKanbanCard({ order }) {
     rightLoading,
     handleUpdateOrderStatus,
   } = useUpdateOrderStatus();
+
   const totalItems = order.dishes.reduce((sum, dish) => sum + dish.quantity, 0);
   //optional chaining
   const totalAmount = order.dishes.reduce(
@@ -67,6 +69,11 @@ export function MyKanbanCard({ order }) {
        dispatch(orderActions.setOpenEditOrder(true));
     }
 
+  const handleDeleteOrder = () => {
+    dispatch(orderActions.setSelectedDeleteOrder(order));
+       dispatch(orderActions.setOpenDeleteOrder(true));
+  }    
+
   return (
     <Card className="w-full mb-2 flex flex-col h-full">
       <CardHeader className="pb-2">
@@ -78,12 +85,18 @@ export function MyKanbanCard({ order }) {
             >
               <Pencil color="white" className="h-3.5 w-3.5" />
             </div>
-            <div className="flex items-center gap-2">
+            <div 
+              className=" bg-gray-400 p-1.5 rounded-md cursor-pointer hover:bg-red-500 transition-colors" 
+              onClick={() => handleDeleteOrder()}
+            >
+              <Trash color="white" className="h-3.5 w-3.5" />
+            </div>
+            {/* <div className="flex items-center gap-2">
               <span className="font-medium">Table {order.tableId.sequence}</span>
               <Badge variant={order.status === "pending" ? "warning" : "default"}>
                 {order.status}
               </Badge>
-            </div>
+            </div> */}
           </div>
           <span className="text-sm text-gray-500">
             {formatTime(order.createdAt)}
