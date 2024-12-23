@@ -32,11 +32,6 @@ export const useFetchDashboard = (params = {}) => {
             if (setRefresh) {
                 setRefresh(false);
             }
-            toast({
-                title: "Success",
-                description: "Dashboard Stats fetched successfully.",
-                variant: "success",
-            });
             dispatch(dashboardActions.clearDashboardStats());
         } else if (status === "failed") {
             setLoading(false);
