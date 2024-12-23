@@ -7,121 +7,152 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useDispatch, useSelector } from "react-redux";
 import { orderActions } from "@/redux/slices/orderSlice";
 import { Spinner } from "@/components/ui/spinner";
 import SelectMultipleDishesForOrder from "@/components/orders/component/SelectMultipleDishesForOrder";
 import DisplayMultipleDishesForOrder from "@/components/orders/component/DisplayultipleDishesForOrder";
 import { useUpdateOrder } from "@/hooks/order/useUpdateOrder";
-export function UpdateOrderModal({ setOpen }) {
-  const openEditOrderDialog = useSelector(
-    (state) => state.order.openEditOrderDialog
-  );
+import { Clock, Utensils, User, MapPin, Receipt, PenSquare } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { formatPrice } from "@/lib/utils";
+
+export function UpdateOrderModal({ open, onOpenChange, orderToEdit }) {
   const dispatch = useDispatch();
-  let order = useSelector((state) => state.order.selectedEditOrder);
-  console.log("updating order ------", order);
-  const dummyOrder = {
-    _id: "dummy123",
-    billId: "bill123",
-    createdAt: "2024-12-19T10:00:00.000Z",
-    customerId: { _id: "customer123", name: "John Doe" },
-    dishes: [
-      { dishId: { name: "Burger", price: 9.99 }, quantity: 2, _id: "dish123" },
-      { dishId: { name: "Fries", price: 3.99 }, quantity: 1, _id: "dish124" },
-    ],
-    hotelId: { _id: "hotel123", name: "Test Hotel" },
-    note: "Extra cheese on burger",
-    status: "preparing",
-    tableId: { _id: "table123", sequence: 3 },
-    updatedAt: "2024-12-19T10:05:00.000Z",
-    __v: 0,
-  };
-
   const [selectedDishes, setSelectedDishes] = useState([]);
-  const [dishes, setDishes] = useState(null);
-  const {loading : updateLoading, handleUpdateOrder} = useUpdateOrder();
-
-  const handleDishChange = (index, field, value) => {
-    // let updatedSelectedDishes = selectedDishes
-    if (field === "name") {
-      selectedDishes[index].name = value;
-    } else {
-      selectedDishes[index].orderQuantity = value;
-    }
-    // setSelectedDishes(updatedSelectedDishes);
-  };
-
-  const handleSubmit = () => {
-    // Typically, you'd call an API to update the order here
-    // for updating order
-    console.log("Updated order:", { ...order, dishes });
-    console.log("selected dishes ", selectedDishes);
-    const selectedDishesInApiFormat = selectedDishes.map((dish)=>{
-        const obj = {
-            dishId : dish._id,
-            quantity : dish.orderQuantity,
-            note : dish.note || ""
-        }
-        return obj;
-    })
-    console.log("formatted selected dishes ", selectedDishesInApiFormat);
-    if(order) handleUpdateOrder(order._id, {dishes : selectedDishesInApiFormat });
-  };
+  const { loading: updateLoading, handleUpdateOrder } = useUpdateOrder();
 
   useEffect(() => {
-    if (order) {
-      setDishes(order?.dishes);
-      const dishesInOrder = order?.dishes;
-      const dishesInSelectedDishFormat = dishesInOrder.map((dish) => {
-        let convertedDish = { ...dish.dishId };
-        convertedDish["orderQuantity"] = dish?.quantity || 0;
-        return convertedDish;
-      });
+    if (orderToEdit) {
+      const dishesInOrder = orderToEdit?.dishes || [];
+      const dishesInSelectedDishFormat = dishesInOrder.map((dish) => ({
+        ...dish.dishId,
+        orderQuantity: dish?.quantity || 0,
+        note: dish?.note || ""
+      }));
       setSelectedDishes(dishesInSelectedDishFormat);
     }
-  }, [order]);
+  }, [orderToEdit]);
 
-  if (!order) return <Spinner />;
+  const handleSubmit = async () => {
+    if (!orderToEdit) return;
+    
+    const selectedDishesInApiFormat = selectedDishes.map((dish) => ({
+      dishId: dish._id,
+      quantity: dish.orderQuantity,
+      note: dish.note || "",
+    }));
+
+    await handleUpdateOrder(orderToEdit._id, { 
+      dishes: selectedDishesInApiFormat 
+    });
+    
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setSelectedDishes([]);
+    onOpenChange(false);
+  };
+
+  const totalAmount = selectedDishes.reduce(
+    (sum, dish) => sum + (dish.price * dish.orderQuantity),
+    0
+  );
+
+  if (!orderToEdit) return null;
+
   return (
-    <Dialog
-      open={openEditOrderDialog}
-      onOpenChange={() => {
-        dispatch(orderActions.setOpenEditOrder(false));
-        dispatch(orderActions.setOpenEditOrder(null));
+    <Dialog 
+      open={open} 
+      onOpenChange={(open) => {
+        if (!open) handleClose();
       }}
     >
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Update Order</DialogTitle>
+          <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+            <PenSquare className="h-6 w-6" />
+            Update Order #{orderToEdit._id.slice(-6)}
+          </DialogTitle>
         </DialogHeader>
-        <ul className="grid gap-4 py-4">
-          {selectedDishes?.map((dish, index) => (
-            <li key={dish._id} className="grid grid-cols-2 items-center gap-2">
-              <div className="">
-                {dish.name}
-              </div>
-              <div className="">
-                 {dish.orderQuantity}
-              </div>
-            </li>
-          ))}
-        </ul>
-        <div className="flex gap-4">
+        <ScrollArea className="max-h-[80vh]">
+          <div className="space-y-6 p-6">
+            <Card className="border shadow-sm">
+              <CardContent className="p-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <User className="h-4 w-4" />
+                      <span>{orderToEdit.customerId?.name || 'Guest'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <MapPin className="h-4 w-4" />
+                      <span>Table {orderToEdit.tableId?.sequence}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <Clock className="h-4 w-4" />
+                      <span>{new Date(orderToEdit.createdAt).toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">{orderToEdit.status}</Badge>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          <SelectMultipleDishesForOrder
-            selectedInputs={selectedDishes}
-            setSelectedInputs={setSelectedDishes}
-          />
-          <DisplayMultipleDishesForOrder
-            selectedInputs={selectedDishes}
-            setSelectedInputs={setSelectedDishes}
-          />
-        </div>
+            <Card className="border shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Receipt className="h-5 w-5 text-gray-500" />
+                  <h3 className="font-semibold text-lg">Current Order Items</h3>
+                </div>
+                <div className="space-y-3">
+                  {selectedDishes?.map((dish, index) => (
+                    <div
+                      key={dish._id}
+                      className="flex justify-between items-center p-3 rounded-lg bg-gray-50"
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium">{dish.name}</p>
+                        <p className="text-sm text-gray-500">
+                          {formatPrice(dish.price)} × {dish.orderQuantity}
+                        </p>
+                      </div>
+                      <p className="font-semibold">
+                        {formatPrice(dish.price * dish.orderQuantity)}
+                      </p>
+                    </div>
+                  ))}
+                  <div className="flex justify-between items-center pt-3 border-t">
+                    <p className="text-gray-600">Total Amount</p>
+                    <p className="text-lg font-bold">{formatPrice(totalAmount)}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-2 gap-4">
+              <SelectMultipleDishesForOrder
+                selectedInputs={selectedDishes}
+                setSelectedInputs={setSelectedDishes}
+              />
+              <DisplayMultipleDishesForOrder
+                selectedInputs={selectedDishes}
+                setSelectedInputs={setSelectedDishes}
+              />
+            </div>
+          </div>
+        </ScrollArea>
         <DialogFooter>
-          <Button type="submit" onClick={handleSubmit}>
-            {updateLoading ? <Spinner/> : "Save changes"}
+          <Button type="submit" onClick={handleSubmit} className="w-full sm:w-auto">
+            {updateLoading ? <Spinner className="mr-2" /> : <PenSquare className="w-4 h-4 mr-2" />}
+            {updateLoading ? "Updating..." : "Update Order"}
           </Button>
         </DialogFooter>
       </DialogContent>

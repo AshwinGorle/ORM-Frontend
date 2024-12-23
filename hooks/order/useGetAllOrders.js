@@ -4,49 +4,66 @@ import { useToast } from "@/hooks/use-toast";
 import { getAllOrders } from "@/redux/actions/order/orderActions";
 import { orderActions } from "@/redux/slices/orderSlice";
 
-export const useGetAllOrders = (type="order") => {
-    const params = {}
+export const useGetAllOrders = (type="order", params = {}) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { refresh = false, setRefresh = null } = params;
+    const { refresh = false, setRefresh } = params;
 
     const { status, error, data } = useSelector((state) => state.order.getAllOrders);
     const { toast } = useToast();
 
+    // Cleanup function to reset states
+    useEffect(() => {
+        return () => {
+            dispatch(orderActions.clearGetAllOrdersStatus());
+            dispatch(orderActions.clearGetAllOrdersError());
+        };
+    }, [dispatch]);
+
     const fetchAllOrders = useCallback(() => {
-        if (type === 'order' && (!data || refresh)) {
+        if (type === 'order') {
             dispatch(getAllOrders());
         }
-    }, [dispatch, data, refresh, type]);
+    }, [dispatch, type]);
 
+    // Initial fetch and refresh handling
     useEffect(() => {
-        fetchAllOrders();
-    }, [fetchAllOrders]);
-
-    useEffect(() => {
-        if (status === "pending") {
-            setLoading(true);
-        } else if (status === "success") {
-            setLoading(false);
-            setRefresh && setRefresh(false);
-            toast({
-                title: "Success",
-                description: "Orders fetched successfully.",
-                variant: "success",
-            });
-            dispatch(orderActions.clearGetAllOrdersStatus());
-            dispatch(orderActions.clearGetAllOrdersError());
-        } else if (status === "failed") {
-            setLoading(false);
-            toast({
-                title: "Error",
-                description: error || "Failed to Fetch Orders.",
-                variant: "destructive",
-            });
-            dispatch(orderActions.clearGetAllOrdersStatus());
-            dispatch(orderActions.clearGetAllOrdersError());
+        if (!data || refresh) {
+            fetchAllOrders();
         }
-    }, [status, error, dispatch, toast, setRefresh]);
+    }, [fetchAllOrders, data, refresh]);
+
+    // Status handling
+    useEffect(() => {
+        switch (status) {
+            case "pending":
+                setLoading(true);
+                break;
+            case "success":
+                setLoading(false);
+                if (setRefresh) setRefresh(false);
+                if (refresh) {
+                    toast({
+                        title: "Success",
+                        description: "Orders fetched successfully.",
+                        variant: "success",
+                    });
+                }
+                dispatch(orderActions.clearGetAllOrdersStatus());
+                dispatch(orderActions.clearGetAllOrdersError());
+                break;
+            case "failed":
+                setLoading(false);
+                toast({
+                    title: "Error",
+                    description: error || "Failed to Fetch Orders.",
+                    variant: "destructive",
+                });
+                dispatch(orderActions.clearGetAllOrdersStatus());
+                dispatch(orderActions.clearGetAllOrdersError());
+                break;
+        }
+    }, [status, error, dispatch, toast, setRefresh, refresh]);
 
     const transformedOrders = useMemo(() => {
         return data || {
@@ -57,5 +74,9 @@ export const useGetAllOrders = (type="order") => {
         };
     }, [data]);
 
-    return { orders: transformedOrders, loading };
+    return { 
+        orders: transformedOrders, 
+        loading,
+        refetch: fetchAllOrders
+    };
 };

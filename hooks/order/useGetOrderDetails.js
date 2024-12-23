@@ -14,7 +14,7 @@ export const useGetOrderDetails = () => {
     try {
       console.log('Fetching from:', getBaseUrl());
       const response = await axios.get(
-        `${getBaseUrl()}/orders/${orderId}`,
+        `${getBaseUrl()}/orders/details/${orderId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -23,8 +23,8 @@ export const useGetOrderDetails = () => {
         }
       );
 
-      if (response.data.success) {
-        setOrderDetails(response.data.data.orderDetails);
+      if (response.data.status === "success") {
+        setOrderDetails(response.data.data.order);
         toast({
           title: "Success",
           description: "Order details fetched successfully",

@@ -35,6 +35,13 @@ import { TableStatusSidebar } from "../component/TableStatusSidebar";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, PanelRightClose, PanelRightOpen } from "lucide-react";
 import { KanbanBoardShimmer } from "../component/KanbanShimmer";
+import { Alert } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Power } from "lucide-react";
+import { Building2 } from 'lucide-react';
 
 export default function OrderPage() {
   const dispatch = useDispatch();
@@ -100,134 +107,103 @@ export default function OrderPage() {
   console.log("hotelName", user?.hotelName);    
   
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden bg-gray-50">
       <div className={cn(
-        "flex-1 p-6 overflow-y-auto transition-all duration-300",
-        isTableSidebarOpen ? "max-w-[calc(100%-320px)]" : "max-w-full"
+        "flex-1 transition-all duration-300 relative",
+        isTableSidebarOpen ? "mr-[320px]" : "mr-0"
       )}>
-        {connectionError && (
-          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-            <p className="font-medium">Connection Error</p>
-            <p className="text-sm">{connectionError}</p>
-          </div>
-        )}
-        {!isConnected && !connectionError && (
-          <div className="mb-4 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg">
-            <p>
-              Connection lost - Press the Power button to reconnect to the system
-            </p>
-          </div>
-        )}
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center gap-6">
-            <h1 className="text-3xl font-bold text-gray-900">Order Management</h1>
+        <div className="h-full overflow-y-auto custom-scrollbar">
+          <div className="flex flex-col space-y-6 p-6">
+            {/* Alert Messages */}
+            {connectionError && (
+              <Alert variant="destructive" className="animate-in fade-in duration-300">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Connection Error</AlertTitle>
+                <AlertDescription>{connectionError}</AlertDescription>
+              </Alert>
+            )}
+            
+            {!isConnected && !connectionError && (
+              <Alert variant="warning" className="animate-in fade-in duration-300">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Connection Lost</AlertTitle>
+                <AlertDescription>
+                  Press the Power button to reconnect to the system
+                </AlertDescription>
+              </Alert>
+            )}
 
-            <div className="relative group">
-              <label
-                htmlFor="hotelId"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Hotel ID
-              </label>
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-[300px] px-4 py-2 border-2 border-gray-200 rounded-lg text-sm bg-gray-50"
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-6 rounded-xl shadow-sm">
+              <div className="flex flex-col gap-2">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Order Management
+                </h1>
+                {user?.hotelName && (
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Building2 className="h-4 w-4" />
+                    <span className="text-lg">{user.hotelName}</span>
+                    <Badge variant={isSystemOnline ? "success" : "secondary"} className="text-sm ml-2">
+                      {isSystemOnline ? "System Online" : "System Offline"}
+                    </Badge>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Button
+                  onClick={handleSystemToggle}
+                  size="lg"
+                  variant={isSystemOnline ? "default" : "outline"}
+                  className={cn(
+                    "relative group transition-all duration-300",
+                    isSystemOnline 
+                      ? "bg-green-500 hover:bg-green-600 text-white" 
+                      : "hover:bg-gray-100"
+                  )}
                 >
-                  {id}
-                </div>
+                  <Power className={cn(
+                    "h-5 w-5 transition-all duration-300",
+                    isSystemOnline ? "scale-110" : "scale-100"
+                  )} />
+                  <span className="ml-2">{isSystemOnline ? "Online" : "Offline"}</span>
+                </Button>
               </div>
             </div>
 
-            <div className="relative group">
-              <label
-                htmlFor="serverSelect"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                API Server
-              </label>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={toggleServer}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                      ${
-                        selectedServer === "deployed"
-                          ? "bg-green-100 text-green-700 hover:bg-green-200"
-                          : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                      }`}
-                >
-                  {selectedServer === "deployed"
-                    ? "🌐 Deployed Server"
-                    : "💻 Local Server"}
-                </button>
-                <div className="text-xs text-gray-500">
-                  {selectedServer === "deployed"
-                    ? "Using: oms-api.vercel.app"
-                    : "Using: localhost:5000"}
-                </div>
-              </div>
+            {/* Main Content */}
+            <div className="bg-gray-50/50 rounded-xl p-6">
+              {!orders ? (
+                <KanbanBoardShimmer />
+              ) : (
+                <MyKanbanBoard 
+                  orders={orders} 
+                  hotelName={user?.hotelName}
+                />
+              )}
             </div>
           </div>
-
-          <button
-            onClick={handleSystemToggle}
-            className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl ${
-              isConnected && isSystemOnline
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "bg-white hover:bg-gray-100 text-gray-900"
-            }`}
-            title={
-              isConnected && isSystemOnline ? "System Online" : "System Offline"
-            }
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className={`w-6 h-6 transition-all duration-300 ${
-                isConnected && isSystemOnline ? "scale-110" : "scale-100"
-              }`}
-            >
-              <path
-                d="M12 3v10m-6.4-4.5a8 8 0 1 0 12.8 0"
-                stroke="currentColor"
-                fill="none"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
         </div>
-        {/* {(ordersLoading || userLoading) ? (
-          <KanbanBoardShimmer />
-        ) : (
-          <MyKanbanBoard 
-            orders={orders} 
-            hotelName={user?.hotelName}
-          />
-        )} */}
-
-        <MyKanbanBoard 
-          orders={orders} 
-          hotelName={user?.hotelName}
-        />
       </div>
 
       <div className={cn(
-        "fixed right-0 top-0 h-full bg-white transition-all duration-300 border-l",
+        "fixed right-0 top-0 h-full bg-white transition-all duration-300",
+        "border-l shadow-xl backdrop-blur-sm",
         isTableSidebarOpen ? "w-[320px] translate-x-0" : "w-0 translate-x-full"
       )}>
         <button 
           onClick={() => setIsTableSidebarOpen(!isTableSidebarOpen)}
           className={cn(
-            "absolute top-1/2 -translate-y-1/2 -left-12 bg-white border shadow-sm rounded-l-lg p-2 transition-all duration-300",
-            isTableSidebarOpen ? "hover:bg-gray-100" : "hover:bg-gray-100"
+            "absolute -left-14 top-1/2 -translate-y-1/2 bg-white border shadow-lg rounded-l-xl p-3",
+            "transition-all duration-300 hover:bg-gray-50 group",
+            "focus:outline-none focus:ring-2 focus:ring-primary/20"
           )}
-          title={isTableSidebarOpen ? "Hide table status panel" : "Show table status panel"}
+          title={isTableSidebarOpen ? "Hide table status" : "Show table status"}
         >
           {isTableSidebarOpen ? (
-            <PanelRightClose className="h-6 w-6" />
+            <PanelRightClose className="h-5 w-5 text-gray-600 group-hover:text-gray-900" />
           ) : (
-            <PanelRightOpen className="h-6 w-6" />
+            <PanelRightOpen className="h-5 w-5 text-gray-600 group-hover:text-gray-900" />
           )}
         </button>
         
