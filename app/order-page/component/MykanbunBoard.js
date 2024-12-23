@@ -58,7 +58,7 @@ export function MyKanbanBoard({ orders, type="global", tableId, hotelName }) {
             variant="ghost"
             size="sm"
             className="flex items-center gap-2 hover:bg-gray-100"
-            onClick={() => router.back()}
+            onClick={() => router.push('/dashboard')}
           >
             <ArrowLeft className="h-4 w-4" />
             Back
