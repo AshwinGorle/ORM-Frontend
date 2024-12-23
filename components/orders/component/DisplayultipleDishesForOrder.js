@@ -161,7 +161,7 @@ const DisplayMultipleDishesForOrder = ({
 
   return (
     <div className="flex flex-col justify-items-center">
-      <div className="flex flex-wrap  gap-2  p-2 mb-2 border border-gray-200 rounded-md">
+      {/* <div className="flex flex-wrap  gap-2  p-2 mb-2 border border-gray-200 rounded-md">
         {selectedInputs?.map((input) => (
           <Badge
             key={input._id}
@@ -174,15 +174,15 @@ const DisplayMultipleDishesForOrder = ({
             />
           </Badge>
         ))}
-      </div>
+      </div> */}
       <div>
         <ScrollArea className="h-[200px] rounded-md border p-4">
           {loading && <Spinner />}
           <Command>
-            <CommandInput placeholder={`Type a ${type} or search...`} />
+            {/* <CommandInput placeholder={`Type a ${type} or search...`} /> */}
             <CommandList>
               <CommandEmpty>{`No ${type} found.`}</CommandEmpty>
-              <CommandGroup heading="Suggestions">
+              <CommandGroup heading="Select Dishes">
                 {filteredInputs?.map((input) => {
                   const selectedInput = selectedInputs.find(
                     (ing) => ing._id === input._id
