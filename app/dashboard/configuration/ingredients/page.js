@@ -99,7 +99,7 @@ export default function IngredientsPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={3} className="text-center text-muted-foreground">
-                    No ingredients added yet
+                    No ingredients added yet Please add ingredients!
                   </TableCell>
                 </TableRow>
               )}

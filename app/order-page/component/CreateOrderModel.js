@@ -111,6 +111,7 @@ export function CreateOrderModel({ open, setOpen }) {
           <SelectMultipleDishesForOrder
             selectedInputs={selectedDishes}
             setSelectedInputs={setSelectedDishes}
+            usedPlace={'createOrder'}
           />
           <DisplayMultipleDishesForOrder
             selectedInputs={selectedDishes}

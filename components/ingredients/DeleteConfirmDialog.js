@@ -31,3 +31,5 @@ export function DeleteConfirmDialog({ open, onOpenChange, onConfirm, ingredient 
     </AlertDialog>
   );
 }
+
+

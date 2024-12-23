@@ -18,7 +18,6 @@
 
 // const { useState, useEffect } = require("react");
 
-
 // //////////
 // const SelectMultipleDishesForOrder = ({
 //   setSelectedInputs,
@@ -31,9 +30,9 @@
 
 //   const [filteredInputs, setFilteredInputs] = useState([]);
 //   const { loading : dishLoading, dishes = []} = useGetAllDishes(type);
-  
+
 //   switch(type){
-//     case "dish" : 
+//     case "dish" :
 //     inputs = dishes
 //     loading = dishLoading
 //     break
@@ -161,8 +160,7 @@
 
 //   return (
 //     <div className="flex flex-col justify-items-center">
-      
-      
+
 //         <ScrollArea className="h-[200px] rounded-md border p-4">
 //           {loading && <Spinner />}
 //           <Command>
@@ -226,13 +224,12 @@
 //             </CommandList>
 //           </Command>
 //         </ScrollArea>
-     
+
 //     </div>
 //   );
 // };
 
 // export default SelectMultipleDishesForOrder;
-
 
 "use client";
 
@@ -247,7 +244,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CommandList } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
@@ -258,6 +255,7 @@ const SelectMultipleDishesForOrder = ({
   setSelectedInputs,
   selectedInputs,
   type = "dish",
+  usedPlace = "n/a",
 }) => {
   let inputs;
   let loading;
@@ -278,10 +276,11 @@ const SelectMultipleDishesForOrder = ({
   }, [inputs]);
 
   const toggleInputSelection = (input) => {
-    setSelectedInputs((prev) =>
-      prev.some((item) => item._id === input._id)
-        ? prev.filter((item) => item._id !== input._id)
-        : [...prev, { ...input, orderQuantity: 1 }] // Add with default quantity of 1
+    setSelectedInputs(
+      (prev) =>
+        prev.some((item) => item._id === input._id)
+          ? prev.filter((item) => item._id !== input._id)
+          : [...prev, { ...input, orderQuantity: 1 }] // Add with default quantity of 1
     );
   };
 
@@ -296,21 +295,24 @@ const SelectMultipleDishesForOrder = ({
 
   return (
     <div className="flex flex-col justify-items-center">
-      <div className="flex flex-wrap w-full gap-2 mt-2 p-2 my-2 border border-gray-200 rounded-md">
-      {selectedInputs?.map((input) => (
-        <Badge key={input._id} className="w-fit text-nowrap items-center gap-1 pr-1">
-          {input.name} ({input.orderQuantity})
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-4 w-4 p-0 hover:bg-transparent"
-            onClick={() => toggleInputSelection(input)}
+      {usedPlace != "createOrder" && <div className="flex flex-wrap w-full gap-2 mt-2 p-2 my-2 border border-gray-200 rounded-md">
+        {selectedInputs?.map((input) => (
+          <Badge
+            key={input._id}
+            className="w-fit text-nowrap items-center gap-1 pr-1"
           >
-            <X className="h-3 w-3 text-red-500" />
-          </Button>
-        </Badge>
-      ))}
-    </div>
+            {input.name} ({input.orderQuantity})
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-4 w-4 p-0 hover:bg-transparent"
+              onClick={() => toggleInputSelection(input)}
+            >
+              <X className="h-3 w-3 text-red-500" />
+            </Button>
+          </Badge>
+        ))}
+      </div>}
       <ScrollArea className="h-[200px] rounded-md border p-4">
         {loading && <Spinner />}
         <Command>
@@ -379,4 +381,3 @@ const SelectMultipleDishesForOrder = ({
 };
 
 export default SelectMultipleDishesForOrder;
-

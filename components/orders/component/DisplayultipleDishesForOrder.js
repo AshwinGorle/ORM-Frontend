@@ -112,7 +112,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CommandList } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { CrossIcon, X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
@@ -190,10 +190,13 @@ const DisplayMultipleDishesForOrder = ({
                   {
                     return selectedInput ? (
                       <CommandItem key={input._id}>
-                        <Checkbox
-                          checked={!!selectedInput}
-                          onCheckedChange={() => toggleInputSelection(input)}
+                        <button className=" bg-red-500 rounded-sm" onClick={() => toggleInputSelection(input)}>
+                        <X 
+                          color="white"
+                          // checked={selectedInput}
+                          // onCheckedChange={() => toggleInputSelection(input)}
                         />
+                        </button>
                         {input.name}
                         {selectedInput && (
                           <div className="flex items-center ml-4">
