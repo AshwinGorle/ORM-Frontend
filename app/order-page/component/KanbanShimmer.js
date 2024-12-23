@@ -54,7 +54,7 @@ const ColumnShimmer = ({ isCompleted = false }) => (
 export function KanbanBoardShimmer() {
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="h-10 w-40 bg-gray-200 rounded relative overflow-hidden">
+      <div className=" self-end h-6 w-40 bg-gray-200 rounded relative overflow-hidden">
         <ShimmerEffect />
       </div>
       <div className="flex flex-col md:flex-row gap-6 overflow-x-auto">

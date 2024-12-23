@@ -30,6 +30,21 @@ const tableSlice = createSlice({
     name: "table",
     initialState: initialTable,
     reducers: {
+        // Insert updated  table
+        insertUpdatedTable : (state, action) => {
+            const updatedTable = action.payload
+            if(!state?.getAllTables?.tables){
+                state.getAllTables.tables = [];
+                state.getAllTables.tables.push = (updatedTable)
+            }else{
+                state.getAllTables.tables = state.getAllTables.tables.map((table)=>{
+                    if (table._id.toString() == updatedTable._id.toString()) return updatedTable;
+                    else return table
+                })
+            }
+        },
+
+
         // createTable
         createTableRequest: (state) => {
             state.createTable.status = "pending";

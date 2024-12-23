@@ -83,7 +83,6 @@ export function UpdateOrderModal({ setOpen }) {
     }
   }, [order]);
 
-  if (!order) return <Spinner />;
   return (
     <Dialog
       open={openEditOrderDialog}
@@ -96,6 +95,7 @@ export function UpdateOrderModal({ setOpen }) {
         <DialogHeader>
           <DialogTitle>Update Order</DialogTitle>
         </DialogHeader>
+        {!order ? <Spinner/> : <div>
         <ul className="grid gap-4 py-4">
           {selectedDishes?.map((dish, index) => (
             <li key={dish._id} className="grid grid-cols-2 items-center gap-2">
@@ -119,6 +119,7 @@ export function UpdateOrderModal({ setOpen }) {
             setSelectedInputs={setSelectedDishes}
           />
         </div>
+        </div>}
         <DialogFooter>
           <Button type="submit" onClick={handleSubmit}>
             {updateLoading ? <Spinner/> : "Save changes"}

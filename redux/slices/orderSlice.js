@@ -345,6 +345,7 @@ const orderSlice = createSlice({
     deleteOrderSuccess: (state, action) => {
       state.deleteOrder.status = "success";
       const deletedOrder = action.payload.order
+      const table = action?.payload.table
       if(deletedOrder.status == 'draft'){
         state.getAllOrders.data.draft = state.getAllOrders.data.draft.filter((prevOrder)=> prevOrder._id.toString() != deletedOrder._id.toString());
       }

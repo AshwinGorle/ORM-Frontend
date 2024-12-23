@@ -51,39 +51,7 @@ export default function OrderPage() {
       variant: newStatus ? "success" : "default",
     });
   };
-  // const dispatch = useDispatch();
-  // const { toast } = useToast();
-  // const isSystemOnline = useSelector(selectIsSystemOnline);
-  // const isConnected = useSelector(selectConnectionStatus);
-  // const connectionError = useSelector(selectConnectionError);
-  // // const orders = useSelector(selectOrders);
-  // const {orders, loading} = useGetAllOrders();
-  // const [hotelId, setHotelId] = useState("674cb4bdc72700e0f6dc839c");
-  // const { selectedServer, toggleServer } = useGetOrderDetails();
 
-  // const handleSystemToggle = () => {
-  //   const newStatus = !isSystemOnline;
-  //   dispatch(setSystemOnline(newStatus));
-
-  //   toast({
-  //     title: newStatus ? "System Online" : "System Offline",
-  //     description: newStatus
-  //       ? "Now receiving new orders"
-  //       : "Order system is now offline",
-  //     variant: newStatus ? "success" : "default",
-  //   });
-  // };
-
-  // // Connect to Ably for real-time updates
-  // const { channel } = useAbly(hotelId, isSystemOnline);
-
-  // const handleMoveOrder = (orderId, from, to) => {
-  //   if (from === "new" && to === "inProgress") {
-  //     dispatch(moveOrderToInProgress(orderId));
-  //   } else if (from === "inProgress" && to === "completed") {
-  //     dispatch(moveOrderToCompleted(orderId));
-  //   }
-  // };
   const isSystemOnline = useSelector(selectIsSystemOnline);
   const isConnected = useSelector(selectConnectionStatus);
   const connectionError = useSelector(selectConnectionError);
@@ -197,19 +165,19 @@ export default function OrderPage() {
             </svg>
           </button>
         </div>
-        {/* {(ordersLoading || userLoading) ? (
+        {!ordersLoading  || userLoading? (
           <KanbanBoardShimmer />
         ) : (
           <MyKanbanBoard 
             orders={orders} 
             hotelName={user?.hotelName}
           />
-        )} */}
+        )}
 
-        <MyKanbanBoard 
+        {/* <MyKanbanBoard 
           orders={orders} 
           hotelName={user?.hotelName}
-        />
+        /> */}
       </div>
 
       <div className={cn(
