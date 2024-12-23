@@ -52,6 +52,7 @@ export function MyKanbanBoard({ orders, type="global", tableId, hotelName }) {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 w-full">
+        <MyKanbanColumn title="Draft" orders={orders?.draft} />
         <MyKanbanColumn title="Pending" orders={orders?.pending} />
         <MyKanbanColumn title="Preparing" orders={orders?.preparing} />
         <MyKanbanCompletedColumn title="Completed" orders={orders?.completed} />
