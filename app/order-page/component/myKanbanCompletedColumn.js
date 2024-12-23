@@ -4,15 +4,14 @@ import { Separator } from "@/components/ui/separator"
 import { GroupedOrderCard } from './GroupedOrderCard';
 import { Utensils, CreditCard, Table } from 'lucide-react'
 import { calculateMultipleOrdersTotal } from '@/utils/calculations';
+import { Badge } from "@/components/ui/badge"
 
 
 export function MyKanbanCompletedColumn({ title="Completed", orders }) {
   const orderCount = orders?.length || 0;
   const totalAmount = calculateMultipleOrdersTotal(orders);
-  
   const uniqueTables = new Set(orders?.map(order => order?.tableId?._id))?.size || 0;
 
-  // Group orders by tableId with optional chaining
   const groupedOrders = orders?.reduce((acc, order) => {
     const tableId = order?.tableId?._id;
     if (!acc[tableId]) {
@@ -33,36 +32,63 @@ export function MyKanbanCompletedColumn({ title="Completed", orders }) {
   }, {}) || {};
 
   return (
-    <Card className="w-full h-full">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-bold">{title}</CardTitle>
-        <div className="flex justify-between items-center text-sm mt-2">
-          <div className="flex items-center gap-1">
-            <Utensils className="h-4 w-4" />
-            <span>{orderCount} orders</span>
+    <Card className="w-full h-full border-t-4 border-t-green-500 bg-green-50/30">
+      <CardHeader className="pb-2 space-y-3">
+        <CardTitle className="flex items-center justify-between">
+          <div className="text-xl font-bold flex items-center gap-2">
+            {title}
+            <Badge variant="secondary" className="text-base">
+              {orderCount}
+            </Badge>
           </div>
-          <div className="flex items-center gap-1">
-            <CreditCard className="h-4 w-4" />
-            <span>₹{totalAmount.toFixed(2)}</span>
+        </CardTitle>
+        
+        <div className="grid grid-cols-3 gap-2 bg-white/80 p-3 rounded-lg shadow-sm backdrop-blur-sm">
+          <div className="flex flex-col items-center justify-center p-2.5 bg-white rounded-md border">
+            <div className="flex items-center gap-1.5 text-gray-600 mb-1.5">
+              <Utensils className="h-4 w-4 text-primary" />
+              <span className="text-xs font-medium">Orders</span>
+            </div>
+            <span className="text-base font-bold text-gray-900">{orderCount}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Table className="h-4 w-4" />
-            <span>{uniqueTables} tables</span>
+
+          <div className="flex flex-col items-center justify-center p-2.5 bg-white rounded-md border">
+            <div className="flex items-center gap-1.5 text-gray-600 mb-1.5">
+              <CreditCard className="h-4 w-4 text-primary" />
+              <span className="text-xs font-medium">Total</span>
+            </div>
+            <span className="text-base font-bold text-gray-900">₹{totalAmount.toFixed(2)}</span>
+          </div>
+
+          <div className="flex flex-col items-center justify-center p-2.5 bg-white rounded-md border">
+            <div className="flex items-center gap-1.5 text-gray-600 mb-1.5">
+              <Table className="h-4 w-4 text-primary" />
+              <span className="text-xs font-medium">Tables</span>
+            </div>
+            <span className="text-base font-bold text-gray-900">{uniqueTables}</span>
           </div>
         </div>
       </CardHeader>
-      <Separator />
-      <CardContent className="pt-4 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
-        {Object.entries(groupedOrders).map(([tableId, tableData]) => (
-          <GroupedOrderCard
-            key={tableId}
-            orders={tableData.orders}
-            tableSequence={tableData.tableSequence}
-            customerName={tableData.customerName}
-            totalAmount={tableData.totalAmount}
-            billId={tableData.billId}
-          />
-        ))}
+
+      <Separator className="mb-4" />
+
+      <CardContent className="pt-0 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-hidden custom-scrollbar pr-4">
+        {Object.entries(groupedOrders).length > 0 ? (
+          Object.entries(groupedOrders).map(([tableId, tableData]) => (
+            <GroupedOrderCard
+              key={tableId}
+              orders={tableData.orders}
+              tableSequence={tableData.tableSequence}
+              customerName={tableData.customerName}
+              totalAmount={tableData.totalAmount}
+              billId={tableData.billId}
+            />
+          ))
+        ) : (
+          <div className="text-center py-8 text-gray-500 bg-white/50 rounded-lg border-2 border-dashed">
+            <p className="text-sm font-medium">No completed orders</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

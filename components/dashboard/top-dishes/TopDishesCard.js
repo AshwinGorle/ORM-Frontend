@@ -5,8 +5,8 @@ import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components
 import TopDishesRow from "./TopDishesRow";
 import { useTopDishes } from "@/hooks/useTopDishes";
 
-export default function TopDishesCard() {
-  const { dishes } = useTopDishes();
+export default function TopDishesCard({ data }) {
+  // const { dishes } = useTopDishes();
 
   return (
     <Card className="mt-6">
@@ -24,7 +24,7 @@ export default function TopDishesCard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dishes.map((dish) => (
+              {data?.map((dish) => (
                 <TopDishesRow key={dish.id} dish={dish} />
               ))}
             </TableBody>

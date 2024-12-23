@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,8 +22,11 @@ import { useUpdateOrderStatus } from "@/hooks/order/useUpdateOrderStatus";
 import { Spinner } from "@/components/ui/spinner";
 import { useDispatch } from "react-redux";
 import { orderActions } from "@/redux/slices/orderSlice";
+import { OrderDetailsDialog } from '@/components/orders/OrderDetailsDialog';
+import { useGetOrderDetails } from '@/hooks/order/useGetOrderDetails';
+import { cn } from "@/lib/utils";
 
-export function MyKanbanCard({ order }) {
+export function MyKanbanCard({ order, onEditOrder }) {
   const dispatch = useDispatch();
   const {
     loading,
@@ -48,7 +51,8 @@ export function MyKanbanCard({ order }) {
     });
   };
 
-  const handlePrevStatus = () => {
+  const handlePrevStatus = (e) => {
+    e.stopPropagation();
     const allStatus = ["draft", "pending", "preparing", "completed"];
     const indexOfCurrentStatus = allStatus.indexOf(order.status);
     if (indexOfCurrentStatus <= 0) return;
@@ -56,7 +60,8 @@ export function MyKanbanCard({ order }) {
     handleUpdateOrderStatus(order._id.toString(), prevStatus, "left");
   };
 
-  const handleNextStatus = () => {
+  const handleNextStatus = (e) => {
+    e.stopPropagation();
     const allStatus = ["draft", "pending", "preparing", "completed"];
     const indexOfCurrentStatus = allStatus.indexOf(order.status);
     if (indexOfCurrentStatus >= allStatus.length - 1) return;
@@ -64,112 +69,191 @@ export function MyKanbanCard({ order }) {
     handleUpdateOrderStatus(order._id.toString(), nextStatus, "right");
   };
 
-  const handleEditOrder = ()=>{
-    dispatch(orderActions.setSelectedEditOrder(order));
-       dispatch(orderActions.setOpenEditOrder(true));
-    }
-
-  const handleDeleteOrder = () => {
+  const handleDeleteOrder = (e) => {
+    e.stopPropagation();
     dispatch(orderActions.setSelectedDeleteOrder(order));
-       dispatch(orderActions.setOpenDeleteOrder(true));
-  }    
+    dispatch(orderActions.setOpenDeleteOrder(true));
+  };
+
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const { loading: detailsLoading, orderDetails, fetchOrderDetails } = useGetOrderDetails();
+
+  const handleCardClick = async (e) => {
+    e.stopPropagation();
+    setIsDetailsOpen(true);
+    await fetchOrderDetails(order._id.toString());
+  };
+
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    if (onEditOrder) {
+      onEditOrder(order);
+    }
+  };
 
   return (
-    <Card className="w-full mb-2 flex flex-col h-full">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex justify-between items-center text-base">
-          <div className="flex gap-2">
-            <div 
-              className="bg-black p-1.5 rounded-md cursor-pointer hover:bg-gray-800 transition-colors" 
-              onClick={() => handleEditOrder()}
-            >
-              <Pencil color="white" className="h-3.5 w-3.5" />
-            </div>
-            <div 
-              className=" bg-gray-400 p-1.5 rounded-md cursor-pointer hover:bg-red-500 transition-colors" 
-              onClick={() => handleDeleteOrder()}
-            >
-              <Trash color="white" className="h-3.5 w-3.5" />
-            </div>
+    <>
+      <Card 
+        className={cn(
+          "w-full mb-2 flex flex-col h-full cursor-pointer transition-all duration-200",
+          "hover:shadow-md hover:translate-y-[-2px]",
+          "border-l-4",
+          {
+            "border-l-yellow-500": order.status === "pending",
+            "border-l-blue-500": order.status === "preparing",
+            "border-l-green-500": order.status === "completed",
+            "border-l-gray-500": order.status === "draft"
+          }
+        )}
+        onClick={handleCardClick}
+      >
+        <CardHeader className="pb-2">
+          <CardTitle className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <span className="font-medium">Table {order.tableId.sequence}</span>
-              {/* <Badge variant={order.status === "pending" ? "warning" : "default"}>
-                {order.status}
-              </Badge> */}
-            </div>
-          </div>
-          <span className="text-sm text-gray-500">
-            {formatTime(order.createdAt)}
-          </span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-4 flex-grow">
-        <div className="space-y-3 h-full flex flex-col">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Clock className="h-4 w-4" />
-              <span>{formatTime(order.createdAt)}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm font-medium">
-              Table {order.tableId?.sequence}
-            </div>
-          </div>
-
-          <div className="space-y-2 flex-grow">
-            {order.dishes.map((dish) => (
-              <div
-                key={dish._id}
-                className="flex justify-between items-center text-sm"
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 w-8 p-0 hover:bg-gray-100"
+                onClick={handleEditClick}
               >
-                <span>{dish.dishId?.name}</span>
-                <span>×{dish.quantity}</span>
+                <Pencil className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600"
+                onClick={handleDeleteOrder}
+              >
+                <Trash className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 bg-gray-50/80 px-2.5 py-1.5 rounded-md">
+                <User className="h-4 w-4 text-gray-500" />
+                <span className="text-sm font-medium">
+                  Table {order.tableId?.sequence}
+                </span>
               </div>
-            ))}
-          </div>
+              <span className="text-xs text-gray-500">
+                {formatTime(order.createdAt)}
+              </span>
+            </div>
+          </CardTitle>
+        </CardHeader>
 
-          <div className="flex justify-between items-center text-sm pt-2 border-t mt-auto">
-            <div className="flex items-center gap-1">
-              <Utensils className="h-4 w-4" />
-              <span>{totalItems} items</span>
+        <CardContent className="p-4 flex-grow">
+          <div className="space-y-4 h-full flex flex-col">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-gray-500">Customer:</span>
+              <span className="font-medium truncate">
+                {order.customerId?.name || 'Guest'}
+              </span>
             </div>
-            <div className="flex items-center gap-1 font-medium">
-              <CreditCard className="h-4 w-4" />
-              <span>₹{totalAmount}</span>
+
+            <div className="flex-grow space-y-2 divide-y">
+              {order.dishes.map((dish) => (
+                <div
+                  key={dish._id}
+                  className="flex justify-between items-center py-2.5"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">{dish.dishId?.name}</span>
+                    <Badge variant="secondary" className="text-[11px] px-1.5 py-0.5">
+                      ×{dish.quantity}
+                    </Badge>
+                  </div>
+                  <span className="text-sm font-medium text-gray-900">
+                    ₹{(dish.dishId?.price * dish.quantity).toFixed(2)}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-between items-center pt-3 border-t mt-auto">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-primary/10 rounded-full">
+                  <Utensils className="h-4 w-4 text-primary" />
+                </div>
+                <span className="text-sm font-medium">{totalItems} items</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-primary/10 rounded-full">
+                  <CreditCard className="h-4 w-4 text-primary" />
+                </div>
+                <span className="text-sm font-bold">₹{totalAmount.toFixed(2)}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </CardContent>
-      
-      <CardFooter className="p-4 pt-0">
-        <div className="w-full flex justify-between gap-2">
-          <Button
-            variant="outline"
-            onClick={handlePrevStatus}
-            size="sm"
-            disabled={loading || order.status === "draft"}
-            className="w-full"
-          >
-            {loading && updatingOrderId && leftLoading && updatingOrderId === order._id.toString() ? (
-              <Spinner />
-            ) : (
-              <ArrowLeft className="h-4 w-4" />
-            )}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={handleNextStatus}
-            size="sm"
-            disabled={loading || order.status === "completed"}
-            className="w-full"
-          >
-            {loading && updatingOrderId && rightLoading && updatingOrderId === order._id.toString() ? (
-              <Spinner />
-            ) : (
-              <ArrowRight className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </CardFooter>
-    </Card>
+        </CardContent>
+
+        <CardFooter className="p-4 pt-0">
+          <div className="w-full flex justify-between gap-2">
+            <Button
+              variant="outline"
+              onClick={handlePrevStatus}
+              size="icon"
+              disabled={loading || order.status === "draft"}
+              className={cn(
+                "h-8 w-8 transition-colors group relative",
+                {
+                  "opacity-50 cursor-not-allowed": order.status === "draft",
+                  "hover:border-yellow-500 hover:text-yellow-600": order.status === "preparing",
+                  "hover:border-blue-500 hover:text-blue-600": order.status === "completed",
+                  "hover:border-gray-500 hover:text-gray-600": order.status === "pending"
+                }
+              )}
+            >
+              {loading && updatingOrderId && leftLoading && updatingOrderId === order._id.toString() ? (
+                <Spinner className="h-4 w-4" />
+              ) : (
+                <>
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="absolute invisible group-hover:visible bg-gray-900 text-white px-2 py-1 rounded text-xs -top-8 whitespace-nowrap">
+                    {order.status === "preparing" && "Move to Pending"}
+                    {order.status === "completed" && "Move to Preparing"}
+                    {order.status === "pending" && "Move to Draft"}
+                  </span>
+                </>
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleNextStatus}
+              size="icon"
+              disabled={loading || order.status === "completed"}
+              className={cn(
+                "h-8 w-8 transition-colors group relative",
+                {
+                  "opacity-50 cursor-not-allowed": order.status === "completed",
+                  "hover:border-green-500 hover:text-green-600": order.status === "preparing",
+                  "hover:border-blue-500 hover:text-blue-600": order.status === "pending",
+                  "hover:border-yellow-500 hover:text-yellow-600": order.status === "draft"
+                }
+              )}
+            >
+              {loading && updatingOrderId && rightLoading && updatingOrderId === order._id.toString() ? (
+                <Spinner className="h-4 w-4" />
+              ) : (
+                <>
+                  <ArrowRight className="h-4 w-4" />
+                  <span className="absolute invisible group-hover:visible bg-gray-900 text-white px-2 py-1 rounded text-xs -top-8 whitespace-nowrap">
+                    {order.status === "draft" && "Move to Pending"}
+                    {order.status === "pending" && "Move to Preparing"}
+                    {order.status === "preparing" && "Move to Completed"}
+                  </span>
+                </>
+              )}
+            </Button>
+          </div>
+        </CardFooter>
+      </Card>
+
+      <OrderDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={(open) => setIsDetailsOpen(open)}
+        orderDetails={orderDetails}
+        loading={detailsLoading}
+      />
+    </>
   );
 }

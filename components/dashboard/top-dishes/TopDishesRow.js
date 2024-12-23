@@ -7,8 +7,8 @@ export default function TopDishesRow({ dish }) {
   return (
     <TableRow>
       <TableCell className="font-medium">{dish.name}</TableCell>
-      <TableCell className="text-right">{dish.orderCount}</TableCell>
-      <TableCell className="text-right">{formatPrice(dish.revenue)}</TableCell>
+      <TableCell className="text-right">{dish.totalQuantity}</TableCell>
+      <TableCell className="text-right">{formatPrice(dish.totalRevenue)}</TableCell>
     </TableRow>
   );
 }

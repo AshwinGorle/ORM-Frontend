@@ -7,7 +7,7 @@ import { orderActions } from "@/redux/slices/orderSlice";
 export const useUpdateOrder = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error, data } = useSelector((state) => state.order.updateOrder);
+    const { status, error } = useSelector((state) => state.order.updateOrder);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -18,28 +18,23 @@ export const useUpdateOrder = () => {
             toast({
                 title: "Success",
                 description: "Order updated successfully.",
-                variant: "success", // Optional, for success styling
+                variant: "success",
             });
             dispatch(orderActions.clearUpdateOrderStats());
-            dispatch(orderActions.setSelectedEditOrder(null));
-            dispatch(orderActions.setOpenEditOrder(false));
-            
         } else if (status === "failed") {
             setLoading(false);
             toast({
                 title: "Error",
                 description: error || "Failed to update Orders.",
-                variant: "destructive", // Optional, for error styling
+                variant: "destructive",
             });
             dispatch(orderActions.clearUpdateOrderStats());
-
         }
     }, [status, error, dispatch, toast]);
 
-    const handleUpdateOrder = (orderId, data) => {
-        console.log("hook-update-order-req:" , orderId , data);
-        dispatch(updateOrder(orderId, data));
+    const handleUpdateOrder = async (orderId, data) => {
+        await dispatch(updateOrder(orderId, data));
     };
 
-    return {loading, handleUpdateOrder};
+    return { loading, handleUpdateOrder };
 };
