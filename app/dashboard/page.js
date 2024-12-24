@@ -27,16 +27,17 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+     
+
+      {loading ?
+        <DashboardLoading/> :
+        <>
+         <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <div className="p-2 bg-primary/10 rounded-full">
           <TrendingUp className="h-8 w-8 text-primary" />
         </div>
       </div>
-
-      {loading ?
-        <DashboardLoading/> :
-        <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {/* Today's Customers */}
             <Card>
