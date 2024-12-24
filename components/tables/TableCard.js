@@ -25,7 +25,7 @@ export default function TableCard({ table, onStatusChange, onEdit, onDelete }) {
   };
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+    <Card key={table._id} className="group hover:shadow-lg transition-all duration-300 relative overflow-hidden">
       <div className={`absolute inset-0 w-1 ${table.status === 'free' ? 'bg-green-500' : 'bg-red-500'}`} />
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 pl-6">
         <div className="space-y-1">

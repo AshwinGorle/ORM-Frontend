@@ -50,7 +50,7 @@ export const getTableBill = (tableId) => async (dispatch) => {
         if (status === "success") {
             dispatch(billActions.getTableBillSuccess(data));
         } else {
-            dispatch(billActions.getAllBillsFailure(message));
+            dispatch(billActions.getTableBillFailure(message));
         }
     } catch (error) {
         console.log("action-get-all-bills-error:", error);

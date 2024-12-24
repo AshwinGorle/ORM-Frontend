@@ -176,36 +176,6 @@ export default function TableBillPage() {
               // tentativeAmount={tentativeAmount}
               orders={orders}
             />
-            {/* <HoverCard>
-              <HoverCardTrigger>
-                <div className="text-lg font-semibold">
-                  Total: ₹{tentativeAmount || 0}
-                </div>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80">
-                <div className="space-y-2">
-                  <h4 className="font-medium">Bill Summary</h4>
-                  <div className="text-sm">
-                    <div className="flex justify-between">
-                      <span>Items Total</span>
-                      <span>₹{tentativeAmount || 0}</span>
-                    </div>
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Tax (5%)</span>
-                      <span>₹{(tentativeAmount * 0.05).toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Service Charge (10%)</span>
-                      <span>₹{(tentativeAmount * 0.1).toFixed(2)}</span>
-                    </div>
-                    <div className="mt-2 pt-2 border-t flex justify-between font-medium">
-                      <span>Grand Total</span>
-                      <span>₹{(tentativeAmount * 1.15).toFixed(2)}</span>
-                    </div>
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard> */}
             <div className="flex justify-end mt-6">
               <Button
                 size="lg"

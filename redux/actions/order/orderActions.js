@@ -1,6 +1,7 @@
 import axios from "axios";
 import { orderActions } from "@/redux/slices/orderSlice";
 import { getActionErrorMessage } from "@/utils";
+import { tableActions } from "@/redux/slices/tableSlice";
 
 // Action to get all orders
 export const getAllOrders = () => async (dispatch) => {
@@ -139,8 +140,9 @@ export const createOrder = (orderData, hotelId, tableId) => async (dispatch) => 
 
         const { status, message, data } = response.data;
         console.log("action-create-order-res:", data);
-        if (status === "success") {
+        if (status == "success") {
             dispatch(orderActions.createOrderSuccess(data));
+            if(data.table) dispatch(tableActions.insertUpdatedTable(data.table));
         } else {
             dispatch(orderActions.createOrderFailure(message));
         }
@@ -168,7 +170,11 @@ export const deleteOrder = (orderId) => async (dispatch) => {
 
         const { status, message, data } = response.data;
         console.log("action-delete-order-res:", data);
+
+        // if while deleting we are getting table 
+        
         if (status === "success") {
+            if(data.table != null) dispatch(tableActions.insertUpdatedTable(data.table));
             dispatch(orderActions.deleteOrderSuccess(data));
         } else {
             dispatch(orderActions.deleteOrderFailure(message));

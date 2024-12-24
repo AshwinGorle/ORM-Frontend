@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TableCard from "@/components/tables/TableCard";
@@ -8,34 +8,14 @@ import { AddTableDialog } from "@/components/tables/AddTableDialog";
 import { EditTableDialog } from "@/components/tables/EditTableDialog";
 import { DeleteTableDialog } from "@/components/tables/DeleteTableDialog";
 import { useGetAllTables } from "@/hooks/table/useGetAllTables";
+import { Spinner } from "@/components/ui/spinner";
+import { useCallback } from "react";
+
 
 export default function ManageTablesPage() {
-  const [tables, setTables] = useState([
-    { 
-      id: 1, 
-      name: "Table 1", 
-      capacity: 4, 
-      location: "main-hall",
-      status: "free" 
-    },
-    { 
-      id: 2, 
-      name: "Table 2", 
-      capacity: 6, 
-      location: "main-hall",
-      status: "occupied" 
-    },
-    { 
-      id: 3, 
-      name: "Table 3", 
-      capacity: 2, 
-      location: "outdoor",
-      status: "free" 
-    },
-  ]);
 
-  const {loading : tableLoading, tables : myTables} = useGetAllTables();
-
+  const { loading: tableLoading, tables: fetchedTables } = useGetAllTables();
+ 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -47,9 +27,11 @@ export default function ManageTablesPage() {
   };
 
   const handleEditTable = (updatedTable) => {
-    setTables(tables.map((table) => 
-      table.id === updatedTable.id ? updatedTable : table
-    ));
+    setTables(
+      tables.map((table) =>
+        table.id === updatedTable.id ? updatedTable : table
+      )
+    );
     setIsEditDialogOpen(false);
     setSelectedTable(null);
   };
@@ -61,16 +43,20 @@ export default function ManageTablesPage() {
   };
 
   const handleStatusChange = (tableId, newStatus) => {
-    setTables(tables.map((table) =>
-      table.id === tableId ? { ...table, status: newStatus } : table
-    ));
+    setTables(
+      tables.map((table) =>
+        table.id === tableId ? { ...table, status: newStatus } : table
+      )
+    );
   };
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Table Management</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Table Management
+          </h1>
           <p className="text-sm sm:text-base text-muted-foreground">
             Manage restaurant tables and their status
           </p>
@@ -84,31 +70,36 @@ export default function ManageTablesPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-        {myTables.map((table) => (
-          <TableCard
-            key={table.id}
-            table={table}
-            onStatusChange={handleStatusChange}
-            onEdit={() => {
-              setSelectedTable(table);
-              setIsEditDialogOpen(true);
-            }}
-            onDelete={() => {
-              setSelectedTable(table);
-              setIsDeleteDialogOpen(true);
-            }}
-          />
-        ))}
-      </div>
+      {tableLoading ? (
+        <Spinner />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+          {fetchedTables.map((table) => (
+            <TableCard
+            key={table._id}
+              table={table}
+              onStatusChange={handleStatusChange}
+              onEdit={() => {
+                setSelectedTable(table);
+                setIsEditDialogOpen(true);
+              }}
+              onDelete={() => {
+                setSelectedTable(table);
+                setIsDeleteDialogOpen(true);
+              }}
+            />
+          ))}
+        </div>
+      )}
 
-      <AddTableDialog
+      {fetchedTables && fetchedTables.length > 0 && <div>
+        {/* <AddTableDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
         onAdd={handleAddTable}
-      />
+      /> */}
 
-      <EditTableDialog
+      {/* <EditTableDialog
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         table={selectedTable}
@@ -120,7 +111,9 @@ export default function ManageTablesPage() {
         onOpenChange={setIsDeleteDialogOpen}
         table={selectedTable}
         onConfirm={handleDeleteTable}
-      />
+      /> */}
+      </div>}
     </div>
   );
 }
+

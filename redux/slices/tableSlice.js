@@ -33,11 +33,13 @@ const tableSlice = createSlice({
         // Insert updated  table
         insertUpdatedTable : (state, action) => {
             const updatedTable = action.payload
-            if(!state?.getAllTables?.tables){
-                state.getAllTables.tables = [];
-                state.getAllTables.tables.push = (updatedTable)
+            console.log("insertUpdatedTable : ", updatedTable);
+            if(!state?.getAllTables?.data.tables){
+                state.getAllTables.data.tables = [];
+                state.getAllTables.data.tables.push = (updatedTable)
             }else{
-                state.getAllTables.tables = state.getAllTables.tables.map((table)=>{
+                console.log("Entered in else block--------")
+                state.getAllTables.data.tables = state.getAllTables.data.tables.map((table)=>{
                     if (table._id.toString() == updatedTable._id.toString()) return updatedTable;
                     else return table
                 })

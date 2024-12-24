@@ -23,7 +23,7 @@ export const getAllTables = () => async (dispatch) => {
             dispatch(tableActions.getAllTablesSuccess(data));
         } else {
             dispatch(tableActions.getAllTablesFailure(message));
-        }
+        }   
     } catch (error) {
         console.log("action-get-all-tables-error:", error);
         const errorMessage = getActionErrorMessage(error);
