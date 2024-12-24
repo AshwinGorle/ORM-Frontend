@@ -2,20 +2,16 @@
 
 export const generatePrintTemplate = (qrData) => `
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>QR Code - Table ${qrData.tableNumber}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Menu - ${qrData.hotelName}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
       @page {
         size: A4;
-        margin: 15mm;
-      }
-      
-      :root {
-        --primary-color: #0f172a;
-        --secondary-color: #64748b;
-        --border-color: #e2e8f0;
-        --background-color: #ffffff;
+        margin: 0;
       }
       
       * {
@@ -25,152 +21,171 @@ export const generatePrintTemplate = (qrData) => `
       }
       
       body {
-        margin: 0;
-        padding: 40px;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--background-color);
-        color: var(--primary-color);
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f0f0f0;
       }
       
-      .container {
-        max-width: 500px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        overflow: hidden;
-      }
-      
-      .header {
-        background: var(--primary-color);
-        color: white;
-        padding: 24px;
-        text-align: center;
+      .page-container {
+        width: 210mm;
+        height: 297mm;
         position: relative;
-      }
-      
-      .header h1 {
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 4px;
-      }
-      
-      .header p {
-        font-size: 14px;
-        opacity: 0.9;
+        overflow: hidden;
+        background-color: #ffffff;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
       }
       
       .content {
-        padding: 32px;
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+      }
+      
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+      }
+      
+      .header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(to right, #ff6b6b, #feca57);
+      }
+      
+      .hotel-name {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      }
+      
+      .subtitle {
+        font-size: 1.8rem;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: #34495e;
+      }
+      
+      .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
       }
       
       .qr-section {
-        display: flex;
-        justify-content: center;
-        padding: 24px;
-        background: #f8fafc;
-        border-radius: 8px;
-        margin-bottom: 24px;
+        text-align: center;
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        max-width: 500px;
+        width: 100%;
+      }
+      
+      .qr-section::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        width: 100px;
+        height: 100px;
+        background: #feca57;
+        border-radius: 50%;
+      }
+      
+      .qr-section::after {
+        content: '';
+        position: absolute;
+        bottom: -50px;
+        right: -50px;
+        width: 100px;
+        height: 100px;
+        background: #ff6b6b;
+        border-radius: 50%;
       }
       
       .qr-code {
-        width: 240px;
-        height: 240px;
-        padding: 16px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        display: block;
+        margin: 0 auto 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
       }
       
-      .details {
-        background: white;
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
+      .table-info {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #2c3e50;
       }
       
-      .detail-row {
-        display: flex;
-        padding: 16px;
-        border-bottom: 1px solid var(--border-color);
-      }
-      
-      .detail-row:last-child {
-        border-bottom: none;
-      }
-      
-      .label {
-        flex: 1;
-        color: var(--secondary-color);
-        font-size: 14px;
-      }
-      
-      .value {
-        flex: 2;
-        font-weight: 500;
-        font-size: 14px;
+      .scan-text {
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: #34495e;
       }
       
       .footer {
-        margin-top: 24px;
+        margin-top: auto;
         text-align: center;
-        font-size: 12px;
-        color: var(--secondary-color);
+        font-size: 1.2rem;
+        padding-top: 2rem;
+        color: #34495e;
       }
       
       @media print {
         body {
           print-color-adjust: exact;
           -webkit-print-color-adjust: exact;
-          background: none;
-          padding: 0;
-        }
-        
-        .container {
-          box-shadow: none;
-        }
-        
-        .qr-section {
-          break-inside: avoid;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <h1>${qrData.hotelName}</h1>
-        <p>Table QR Code</p>
-      </div>
-      
+    <div class="page-container">
       <div class="content">
-        <div class="qr-section">
-          <img 
-            src="${qrData.qrCodeImage.imageUrl}" 
-            alt="Table QR Code" 
-            class="qr-code"
-          />
-        </div>
+        <header class="header">
+          <h1 class="hotel-name">${qrData.hotelName}</h1>
+          <p class="subtitle">Digital Dining Experience</p>
+        </header>
         
-        <div class="details">
-          <div class="detail-row">
-            <div class="label">Table Number</div>
-            <div class="value">${qrData.tableNumber}</div>
-          </div>
-          <div class="detail-row">
-            <div class="label">Table ID</div>
-            <div class="value">${qrData.tableId}</div>
-          </div>
-          <div class="detail-row">
-            <div class="label">Hotel ID</div>
-            <div class="value">${qrData.hotelId}</div>
-          </div>
-        </div>
+        <main class="main-content">
+          <section class="qr-section">
+            <img 
+              src="${qrData.qrCodeImage.imageUrl}" 
+              alt="Table QR Code" 
+              class="qr-code"
+            />
+            <p class="table-info">Table ${qrData.tableNumber}</p>
+            <p class="scan-text">Scan to Explore Our Menu &amp; Order</p>
+          </section>
+        </main>
         
-        <div class="footer">
-          <p>Scan this QR code to access the table's menu and services</p>
-        </div>
+        <footer class="footer">
+          <p>Embark on a culinary journey through our digital menu.</p>
+          <p>Scan the QR code to start your gastronomic adventure!</p>
+        </footer>
       </div>
     </div>
   </body>
 </html>
 `;
+
