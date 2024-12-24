@@ -93,13 +93,13 @@ export default function ManageTablesPage() {
       )}
 
       {fetchedTables && fetchedTables.length > 0 && <div>
-        {/* <AddTableDialog
+        <AddTableDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
         onAdd={handleAddTable}
-      /> */}
+      />
 
-      {/* <EditTableDialog
+      <EditTableDialog
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         table={selectedTable}
@@ -111,7 +111,7 @@ export default function ManageTablesPage() {
         onOpenChange={setIsDeleteDialogOpen}
         table={selectedTable}
         onConfirm={handleDeleteTable}
-      /> */}
+      />
       </div>}
     </div>
   );

@@ -141,7 +141,7 @@ export default function OrderPage() {
 
             {/* Main Content */}
             <div className="bg-gray-50/50 rounded-xl p-6">
-              {!orders ? (
+              {!ordersLoading ? (
                 <KanbanBoardShimmer />
               ) : (
                 <MyKanbanBoard 
