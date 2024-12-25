@@ -99,7 +99,7 @@ const BillEditor = ({ bill }) => {
             onChange={(e) => setCustomDiscount(Number(e.target.value))}
           />
         </div>
-        <div className=" flex gap-4">
+        {/* <div className=" flex gap-4">
           <div>
             <Label>Add Items</Label>
             <SelectMultipleDishesForOrder
@@ -117,7 +117,7 @@ const BillEditor = ({ bill }) => {
               usedPlace={"billEditor"}
             />
           </div>
-        </div>
+        </div> */}
       </CardContent>
       <CardFooter>
           <div className=" flex flex-col gap-2 w-full">
