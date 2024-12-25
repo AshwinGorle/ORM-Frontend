@@ -148,8 +148,8 @@ export const logout = () => async (dispatch) => {
         
         // Remove auth cookie
         document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        
         dispatch(authActions.logoutSuccess());
+        document.location.reload();
         return true;
     } catch (error) {
         console.error('Logout error:', error);

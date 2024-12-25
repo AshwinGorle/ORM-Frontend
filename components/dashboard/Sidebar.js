@@ -1,90 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Building2,
   Menu,
   X,
   Settings,
-  BarChart3,  
+  BarChart3,
   LogOut,
   ChartBarBig,
-  UserCircle,
   UserRoundCog,
   CookingPot,
-  Receipt
+  Receipt,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import SidebarNav from "./SidebarNav";
 import { useGetUser, useLogout } from "@/hooks/auth";
 
-// yaha par menu items aayenge bhaii , side bar ke items yaha add krdena
-const menuItems = [
-  {
-    title: "Dashboard",
-    icon: BarChart3,
-    href: "/dashboard",
-  },
-  {
-    title: "Admin Dashboard",
-    icon: ChartBarBig ,
-    href: "/admin-dashboard",
-  },
-  {
-    title: "Configuration",
-    icon: Settings,
-    href: "/dashboard/configuration",
-  },
-  {
-    title: "Profile",
-    icon: UserRoundCog,
-    href: "/dashboard/profile",
-  },
-];
-
 export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const { loading, handleLogout } = useLogout();
-  const {loading : userLoading, user} = useGetUser();
-  const menuItems = [
-    {
-      title: "Live Orders",
-      icon: CookingPot,
-      href: `/order-page/${user?.hotelId}`,
-    },
-    {
-      title: "Dashboard",
-      icon: BarChart3,
-      href: "/dashboard",
-    },
-    {
-      title: "Bills",
-      icon: Receipt, 
-      href: "/dashboard/bills",
-    },    
-    {
-      title: "Admin Dashboard",
-      icon: ChartBarBig ,
-      href: "/admin-dashboard",
-    },
-    {
-      title: "Configuration",
-      icon: Settings,
-      href: "/dashboard/configuration",
-    },
-    {
-      title: "Profile",
-      icon: UserRoundCog,
-      href: "/dashboard/profile",
-    },
-
-  ];
+  const { loading: logoutLoading, handleLogout } = useLogout();
+  
+ 
 
   const sidebarContent = (
     <>
+      {/* Sidebar Header */}
       <div className="flex items-center h-16 px-4 border-b">
         <div className="flex items-center gap-3">
           <Building2 className="h-8 w-8 text-primary" />
@@ -100,17 +44,19 @@ export default function Sidebar() {
         </Button>
       </div>
 
-      <SidebarNav items={menuItems} pathname={pathname} />
+      {/* Sidebar Navigation */}
+      <SidebarNav  pathname={pathname} />
 
+      {/* Logout Button */}
       <div className="mt-auto border-t p-4">
         <Button
           variant="ghost"
           className="w-full justify-start gap-2"
           onClick={handleLogout}
-          disabled={loading}
+          disabled={logoutLoading}
         >
           <LogOut className="h-5 w-5" />
-          <span>{loading ? "Logging out..." : "Logout"}</span>
+          <span>{logoutLoading ? "Logging out..." : "Logout"}</span>
         </Button>
       </div>
     </>
@@ -118,6 +64,7 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* Mobile Menu Button */}
       <Button
         variant="ghost"
         size="icon"
