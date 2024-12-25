@@ -154,12 +154,12 @@ const BillEditor = ({ bill }) => {
             <Button
               onClick={handleCancelBill}
               variant="default"
-              className="w-full bg-red-700 text-white hover:bg-red-800"
+              className={`w-full ${bill.status == 'paid' ? " bg-black" : "bg-red-700"}  text-white hover:bg-red-800`}
             >
                 <>
                   <XCircle className="mr-2 h-4 w-4" />
                   {/* Icon for Cancel Bill */}
-                  Cancel Bill
+                  {bill?.status == 'paid' ? 'Return to Dashboard' : 'Cancel Bill'}
                 </>
             </Button>
           </div>
