@@ -65,7 +65,7 @@ export default function OrderPage() {
   const {id} = useParams();
   const { loading: ordersLoading, orders } = useGetAllOrders();
   const { loading: userLoading, user } = useGetUser();
-  const { selectedServer, toggleServer } = useGetOrderDetails();  
+  // const { selectedServer, toggleServer } = useGetOrderDetails();  
   // const { channel } = useAbly(user.hotelId, isSystemOnline);
   const { channel } = useAbly(id, isSystemOnline);
 
@@ -141,14 +141,12 @@ export default function OrderPage() {
 
             {/* Main Content */}
             <div className="bg-gray-50/50 rounded-xl p-6">
-              {!ordersLoading ? (
-                <KanbanBoardShimmer />
-              ) : (
-                <MyKanbanBoard 
+              
+                { ordersLoading ? <KanbanBoardShimmer/> : <MyKanbanBoard 
                   orders={orders} 
                   hotelName={user?.hotelName}
-                />
-              )}
+                />}
+              
             </div>
           </div>
         </div>

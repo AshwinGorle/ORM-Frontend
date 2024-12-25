@@ -28,7 +28,7 @@ export const useGetAllOrders = (type="order", params = {}) => {
 
     // Initial fetch and refresh handling
     useEffect(() => {
-        if (!data || refresh) {
+        if (!data ) {
             fetchAllOrders();
         }
     }, [fetchAllOrders, data, refresh]);

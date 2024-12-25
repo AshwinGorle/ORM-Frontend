@@ -121,6 +121,8 @@ const orderSlice = createSlice({
     },
     getAllOrdersSuccess: (state, action) => {
       // orderActions.checkAndPrepareOrder();
+      state.getAllOrders.status = "success";
+
       if(!state.getAllOrders.data){
         state.getAllOrders.data= {
           draft:[],  
