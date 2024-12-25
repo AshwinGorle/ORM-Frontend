@@ -52,7 +52,7 @@ export function MyKanbanOrderCard({ order }) {
         </div>
         <div className="flex items-center gap-2">
           <DollarSign className="h-4 w-4" />
-          <span>${totalAmount.toFixed(2)}</span>
+          <span>₹{totalAmount.toFixed(2)}</span>
         </div>
         <Popover>
           <PopoverTrigger asChild>
@@ -71,7 +71,7 @@ export function MyKanbanOrderCard({ order }) {
                   <div key={dish._id} className="grid grid-cols-3 items-center gap-4">
                     <span className="text-sm">{dish.dishId?.name}</span>
                     <span className="text-sm">x{dish.quantity}</span>
-                    <span className="text-sm">${(dish.dishId?.price * dish.quantity).toFixed(2)}</span>
+                    <span className="text-sm">₹{(dish.dishId?.price * dish.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>

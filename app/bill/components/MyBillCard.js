@@ -40,7 +40,7 @@ const MyBillCard = ({ bill }) => {
               <TableRow key={item._id} className="text-sm">
                 <TableCell className="py-1">{item.dishId.name}</TableCell>
                 <TableCell className="text-right py-1">{item.quantity}</TableCell>
-                <TableCell className="text-right py-1">${(item.quantity * item.dishId.price).toFixed(2)}</TableCell>
+                <TableCell className="text-right py-1">₹{(item.quantity * item.dishId.price).toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -49,19 +49,19 @@ const MyBillCard = ({ bill }) => {
         <div className="space-y-1 text-sm">
           <div className="flex justify-between">
             <span>Subtotal:</span>
-            <span>${bill.totalAmount.toFixed(2)}</span>
+            <span>₹{bill.totalAmount.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Discount:</span>
-            <span>-${bill.totalDiscount.toFixed(2)}</span>
+            <span>-₹{bill.totalDiscount.toFixed(2)}</span>
           </div>
           { bill.customDiscount && <div className="flex justify-between">
             <span>Custom Discount:</span>
-            <span>-${bill.customDiscount.toFixed(2)}</span>
+            <span>-₹{bill.customDiscount.toFixed(2)}</span>
           </div>}
           <div className="flex justify-between font-bold">
             <span>Total:</span>
-            <span>${bill.finalAmount.toFixed(2)}</span>
+            <span>₹{bill.finalAmount.toFixed(2)}</span>
           </div>
         </div>
       </CardContent>
