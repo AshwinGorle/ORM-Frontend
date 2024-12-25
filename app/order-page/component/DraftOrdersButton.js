@@ -15,7 +15,7 @@ export function DraftOrdersButton({ orders = [] }) {
       <Button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "fixed bottom-6 left-6 h-16 w-16 rounded-full shadow-lg z-50",
+          "fixed bottom-24 left-6 h-16 w-16 rounded-full shadow-lg z-50",
           "bg-gray-900 hover:bg-gray-800 transition-all duration-200",
           "flex flex-col items-center justify-center gap-1",
         )}

@@ -51,39 +51,22 @@ export function MyKanbanBoard({ orders, type="global", tableId, hotelName }) {
   };
 
   return (
-    <div className="space-y-4 w-full">
-      <div className="flex justify-between items-center px-6 py-4 bg-white rounded-lg shadow-sm">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-2 hover:bg-gray-100"
-            onClick={() => router.push('/dashboard')}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-          <div className="h-6 w-px bg-gray-200" />
-          <h2 className="text-xl font-semibold text-gray-800">
-            {hotelName || "Orders"}
-          </h2>
-        </div>
-        <Button 
-          onClick={() => setOpenCreateOrderDialog(true)}
-          className="bg-primary hover:bg-primary/90 text-white flex items-center gap-2 shadow-sm transition-all duration-200 hover:shadow-md"
-        >
-          <Plus className="h-4 w-4" />
-          Create New Order
-        </Button>
-      </div>
+    <div className="w-full">
+      <DraftOrdersButton orders={orders?.draft}  />
       
+      <Button 
+        onClick={() => setOpenCreateOrderDialog(true)}
+        className="fixed bottom-6 left-6 h-16 w-16 rounded-full shadow-lg z-50 bg-primary hover:bg-primary/90 text-white flex items-center justify-center transition-all duration-200"
+      >
+        <Plus className="h-4 w-4" />
+      </Button>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 w-full">
-        <DraftOrdersButton orders={orders?.draft} />
         <MyKanbanColumn title="Pending" orders={orders?.pending} onEditOrder={handleEditOrder} />
         <MyKanbanColumn title="Preparing" orders={orders?.preparing} onEditOrder={handleEditOrder} />
         <MyKanbanCompletedColumn title="Completed" orders={orders?.completed} onEditOrder={handleEditOrder} />
         <CreateOrderModel open={openCreateOrderDialog} setOpen={setOpenCreateOrderDialog} />
-         <UpdateOrderModal 
+        <UpdateOrderModal 
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
           orderToEdit={selectedOrder}

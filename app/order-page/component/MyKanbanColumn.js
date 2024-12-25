@@ -28,39 +28,22 @@ export function MyKanbanColumn({ title, orders, onEditOrder }) {
 
   return (
     <Card className={`w-full shadow-sm h-full border-t-4 ${getColumnStyles()}`}>
-      <CardHeader className="pb-2 space-y-3">
+      <CardHeader className="pb-1 space-y-1">
         <CardTitle className="flex items-center justify-between">
-          <div className="text-xl font-bold flex items-center gap-2">
-            {title}
-            <Badge variant="secondary" className="text-base">
-              {orderCount}
-            </Badge>
-          </div>
+          <div className="text-lg font-bold">{title}</div>
+          <Badge variant="secondary" className="text-sm">
+            {orderCount}
+          </Badge>
         </CardTitle>
-        
-        <div className="grid grid-cols-3 gap-2 bg-white/80 p-3 rounded-lg shadow-sm backdrop-blur-sm">
-          <div className="flex flex-col items-center justify-center p-2.5 bg-white rounded-md border">
-            <div className="flex items-center gap-1.5 text-gray-600 mb-1.5">
-              <Utensils className="h-4 w-4 text-primary" />
-              <span className="text-xs font-medium">Orders</span>
-            </div>
-            <span className="text-base font-bold text-gray-900">{orderCount}</span>
-          </div>
-
-          <div className="flex flex-col items-center justify-center p-2.5 bg-white rounded-md border">
-            <div className="flex items-center gap-1.5 text-gray-600 mb-1.5">
-              <CreditCard className="h-4 w-4 text-primary" />
-              <span className="text-xs font-medium">Total</span>
-            </div>
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+            <Utensils className="h-4 w-4 text-primary" />
             <span className="text-base font-bold text-gray-900">₹{totalAmount.toFixed(2)}</span>
           </div>
-
-          <div className="flex flex-col items-center justify-center p-2.5 bg-white rounded-md border">
-            <div className="flex items-center gap-1.5 text-gray-600 mb-1.5">
-              <Table className="h-4 w-4 text-primary" />
-              <span className="text-xs font-medium">Tables</span>
-            </div>
-            <span className="text-base font-bold text-gray-900">{uniqueTables}</span>
+          <div className="flex items-center gap-2">
+            <Table className="h-4 w-4 text-primary" />
+            
+            <span className="text-base font-bold text-gray-900"> {uniqueTables} Tables</span>
           </div>
         </div>
       </CardHeader>

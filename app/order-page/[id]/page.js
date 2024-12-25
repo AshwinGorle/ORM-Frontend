@@ -41,11 +41,13 @@ import { AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Power } from "lucide-react";
-import { Building2 } from 'lucide-react';
+import { Building2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useRouter } from "next/navigation";
 
 export default function OrderPage() {
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const router = useRouter();
   const handleSystemToggle = () => {
     const newStatus = !isSystemOnline;
     dispatch(setSystemOnline(newStatus));
@@ -107,6 +109,17 @@ export default function OrderPage() {
                 <h1 className="text-2xl font-bold text-gray-900">
                   Order Management
                 </h1>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex items-center gap-2 hover:bg-gray-100"
+                    onClick={() => router.push('/dashboard')}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                </Button>
+              
                 {user?.hotelName && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <Building2 className="h-4 w-4" />
@@ -116,6 +129,7 @@ export default function OrderPage() {
                     </Badge>
                   </div>
                 )}
+                </div>
               </div>
 
               <div className="flex items-center gap-4">
@@ -140,7 +154,8 @@ export default function OrderPage() {
             </div>
 
             {/* Main Content */}
-            <div className="bg-gray-50/50 rounded-xl p-6">
+            
+            <div className="bg-gray-50/50 rounded-xl ml-10">
               
                 { ordersLoading ? <KanbanBoardShimmer/> : <MyKanbanBoard 
                   orders={orders} 
