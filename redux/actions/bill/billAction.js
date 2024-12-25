@@ -2,6 +2,7 @@ import axios from "axios";
 import { billActions } from "@/redux/slices/billSlice";
 import { getActionErrorMessage } from "@/utils";
 import { tableActions } from "@/redux/slices/tableSlice";
+import { orderActions } from "@/redux/slices/orderSlice";
 
 // Action to get all bills
 export const getAllBills = () => async (dispatch) => {
@@ -112,6 +113,7 @@ export const payBill = (billId) => async (dispatch) => {
         if (status === "success") {
             dispatch(billActions.payBillSuccess(data.bill));
             if(data.table) dispatch(tableActions.insertUpdatedTable(data.table));
+            if(data.orders) dispatch(orderActions.deleteBilledOrders(data.orders));
         } else {
             dispatch(billActions.payBillFailure(message));
         }
