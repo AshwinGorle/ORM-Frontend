@@ -259,6 +259,7 @@ const SelectMultipleDishesForOrder = ({
 }) => {
   let inputs;
   let loading;
+  const billEditor = usedPlace == 'billEditor' ? true : false;
 
   const [filteredInputs, setFilteredInputs] = useState([]);
   const { loading: dishLoading, dishes = [] } = useGetAllDishes(type);
@@ -295,7 +296,7 @@ const SelectMultipleDishesForOrder = ({
 
   return (
     <div className="flex flex-col justify-items-center">
-      {usedPlace != "createOrder" && <div className="flex flex-wrap w-full gap-2 mt-2 p-2 my-2 border border-gray-200 rounded-md">
+      {/* {usedPlace != "createOrder" && <div className="flex flex-wrap w-full gap-2 mt-2 p-2 my-2 border border-gray-200 rounded-md">
         {selectedInputs?.map((input) => (
           <Badge
             key={input._id}
@@ -312,8 +313,8 @@ const SelectMultipleDishesForOrder = ({
             </Button>
           </Badge>
         ))}
-      </div>}
-      <ScrollArea className="h-[200px] rounded-md border p-4">
+      </div>} */}
+      <ScrollArea className={`${billEditor ? "h-[300px]" : "h-[200px]"}  rounded-md border p-4`}>
         {loading && <Spinner />}
         <Command>
           <CommandInput placeholder={`Type a ${type} or search...`} />
@@ -321,7 +322,7 @@ const SelectMultipleDishesForOrder = ({
             <CommandEmpty>{`No ${type} found.`}</CommandEmpty>
             <CommandGroup heading="Suggestions">
               {filteredInputs?.map((input) => {
-                const selectedInput = selectedInputs.find(
+                const selectedInput = selectedInputs?.find(
                   (ing) => ing._id === input._id
                 );
                 return (
@@ -331,10 +332,11 @@ const SelectMultipleDishesForOrder = ({
                       onCheckedChange={() => toggleInputSelection(input)}
                     />
                     {input.name}
-                    {selectedInput && (
-                      <div className="flex items-center ml-4">
+                    {/*i don't want to display this change quantity controls in Editor*/}
+                    {selectedInput && !billEditor && (
+                      <div className="flex ml-auto items-center ml-4">
                         <button
-                          className="px-2 py-1 border rounded"
+                          className="px-2 border"
                           onClick={() =>
                             updateOrderQuantity(
                               input,
@@ -356,7 +358,7 @@ const SelectMultipleDishesForOrder = ({
                           }
                         />
                         <button
-                          className="px-2 py-1 border rounded"
+                          className="px-2  border"
                           onClick={() =>
                             updateOrderQuantity(
                               input,

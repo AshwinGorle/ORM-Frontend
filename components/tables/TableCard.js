@@ -110,7 +110,6 @@ export default function TableCard({ table, onStatusChange, onEdit, onDelete }) {
           { qrLoading == table._id.toString() ? <Spinner/> : "Download QR" }
         </Button>
       </CardContent>
-
           <QRCodeModal
             open={isQrModalOpen}
             onOpenChange={setIsQrModalOpen}

@@ -19,6 +19,12 @@ const initialBill = {
         data: null,
     },
 
+    payBill: {
+        status: null,
+        error: null,
+        data: null,
+    },
+
     deleteBill: {
         status: null,
         error: null,
@@ -76,6 +82,8 @@ const billSlice = createSlice({
         getTableBillSuccess: (state, action) => {
             state.getTableBill.status = "success";
             state.getTableBill.data = action.payload;
+            if(!state.getAllBills.data) state.getAllBills.data = {bills : []}
+            state.getAllBills.data.bills.unshift(action.payload.bill)
         },
         getTableBillFailure: (state, action) => {
             state.getTableBill.status = "failed";
@@ -108,10 +116,35 @@ const billSlice = createSlice({
                     return bill;
                 }
             });
+            state.getTableBill.data = action.payload;
         },
         updateBillFailure: (state, action) => {
             state.updateBill.status = "failed";
             state.updateBill.error = action.payload;
+        },
+
+        payBillRequest: (state) => {
+            state.payBill.status = "pending";
+        },
+        payBillSuccess: (state, action) => {
+            console.log("payload success bill = ", action.payload
+            )
+         
+            state.payBill.status = "success";
+            state.payBill.data = action.payload;
+            state.getAllBills.data.bills = state.getAllBills.data.bills.map((bill) => {
+                if (bill._id === action.payload._id) {
+                    return action.payload;
+                } else {
+                    return bill;
+                }
+            });
+            state.payBill.data = action.payload
+            state.getTableBill.data = {bill : action.payload}
+        },
+        payBillFailure: (state, action) => {
+            state.payBill.status = "failed";
+            state.payBill.error = action.payload;
         },
 
         // deleteBill
@@ -147,6 +180,11 @@ const billSlice = createSlice({
 
 
         clearUpdateBillStats: (state) => {
+            state.updateBill.status = null;
+            state.updateBill.error = null;
+            state.updateBill.data = null;
+        },
+        clearPayBillStats: (state) => {
             state.updateBill.status = null;
             state.updateBill.error = null;
             state.updateBill.data = null;

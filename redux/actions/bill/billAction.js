@@ -1,6 +1,7 @@
 import axios from "axios";
 import { billActions } from "@/redux/slices/billSlice";
 import { getActionErrorMessage } from "@/utils";
+import { tableActions } from "@/redux/slices/tableSlice";
 
 // Action to get all bills
 export const getAllBills = () => async (dispatch) => {
@@ -63,10 +64,10 @@ export const getTableBill = (tableId) => async (dispatch) => {
 
 // Action to update an bill
 export const updateBill = (billId, billData) => async (dispatch) => {
-    console.log("action-update-bill-req:", billId);
+    console.log("action-update-bill-req:", billId, billData);
     try {
         dispatch(billActions.updateBillRequest());
-        const response = await axios.patch(
+        const response = await axios.put(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/bills/${billId}`,
             billData,
             {
@@ -88,6 +89,36 @@ export const updateBill = (billId, billData) => async (dispatch) => {
         console.log("action-update-bill-error:", error);
         const errorMessage = getActionErrorMessage(error);
         dispatch(billActions.updateBillFailure(errorMessage));
+    }
+};
+// Action to Pay an bill
+export const payBill = (billId) => async (dispatch) => {
+    console.log("action-pay-bill-req:", billId);
+    try {
+        dispatch(billActions.payBillRequest());
+        const response = await axios.patch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/bills/paid/${billId}`,
+            {},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        const { status, message, data } = response.data;
+        console.log("action-pay-bill-res:", data);
+        if (status === "success") {
+            dispatch(billActions.payBillSuccess(data.bill));
+            if(data.table) dispatch(tableActions.insertUpdatedTable(data.table));
+        } else {
+            dispatch(billActions.payBillFailure(message));
+        }
+    } catch (error) {
+        console.log("action-pay-bill-error:", error);
+        const errorMessage = getActionErrorMessage(error);
+        dispatch(billActions.payBillFailure(errorMessage));
     }
 };
 
@@ -151,3 +182,5 @@ export const deleteBill = (billId) => async (dispatch) => {
     }
 
 };
+
+

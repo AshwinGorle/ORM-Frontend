@@ -122,7 +122,9 @@ const DisplayMultipleDishesForOrder = ({
   setSelectedInputs,
   selectedInputs,
   type = "dish",
+  usedPlace = 'n/a'
 }) => {
+  const billEditor = usedPlace == 'billEditor' ? true : false;
   let inputs;
   let loading;
 
@@ -176,7 +178,7 @@ const DisplayMultipleDishesForOrder = ({
         ))}
       </div> */}
       <div>
-        <ScrollArea className="h-[200px] rounded-md border p-4">
+        <ScrollArea className={` ${billEditor ? 'h-[300px]' : 'h-[200px]'  } rounded-md border p-4`}>
           {loading && <Spinner />}
           <Command>
             {/* <CommandInput placeholder={`Type a ${type} or search...`} /> */}
@@ -184,7 +186,7 @@ const DisplayMultipleDishesForOrder = ({
               <CommandEmpty>{`No ${type} found.`}</CommandEmpty>
               <CommandGroup heading="Select Dishes">
                 {filteredInputs?.map((input) => {
-                  const selectedInput = selectedInputs.find(
+                  const selectedInput = selectedInputs?.find(
                     (ing) => ing._id === input._id
                   );
                   {
@@ -199,9 +201,9 @@ const DisplayMultipleDishesForOrder = ({
                         </button>
                         {input.name}
                         {selectedInput && (
-                          <div className="flex items-center ml-4">
+                          <div className="flex ml-auto items-center ml-4">
                             <button
-                              className="px-2 py-1 border rounded"
+                              className="px-2  border "
                               onClick={() =>
                                 updateOrderQuantity(
                                   input,
@@ -213,7 +215,7 @@ const DisplayMultipleDishesForOrder = ({
                             </button>
                             <input
                               type="number"
-                              className="w-12 text-center border mx-2"
+                              className="w-8 text-center border"
                               value={selectedInput.orderQuantity}
                               onChange={(e) =>
                                 updateOrderQuantity(
@@ -223,7 +225,7 @@ const DisplayMultipleDishesForOrder = ({
                               }
                             />
                             <button
-                              className="px-2 py-1 border rounded"
+                              className="px-2 border"
                               onClick={() =>
                                 updateOrderQuantity(
                                   input,
