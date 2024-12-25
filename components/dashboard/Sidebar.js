@@ -12,7 +12,8 @@ import {
   ChartBarBig,
   UserCircle,
   UserRoundCog,
-  CookingPot
+  CookingPot,
+  Receipt
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -60,6 +61,11 @@ export default function Sidebar() {
       href: "/dashboard",
     },
     {
+      title: "Bills",
+      icon: Receipt, 
+      href: "/dashboard/bills",
+    },    
+    {
       title: "Admin Dashboard",
       icon: ChartBarBig ,
       href: "/admin-dashboard",
@@ -74,6 +80,7 @@ export default function Sidebar() {
       icon: UserRoundCog,
       href: "/dashboard/profile",
     },
+
   ];
 
   const sidebarContent = (
