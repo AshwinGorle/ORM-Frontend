@@ -16,9 +16,11 @@ import { formatPrice } from "@/lib/utils/price";
 import DeleteBillDialog from "./DeleteBillDialog";
 import { useState } from "react";
 import BillCard from "./BillCard";
+import { useDeleteBill } from "@/hooks/bill/useDeleteBIll";
 
 export default function BillsTable({ bills, onViewBill, onDeleteBill }) {
   const [billToDelete, setBillToDelete] = useState(null);
+  const {loading : deleteBillLoading , handleDeleteBill} = useDeleteBill(setBillToDelete);
 
   const handleDeleteClick = (bill) => {
     setBillToDelete(bill);
@@ -26,7 +28,7 @@ export default function BillsTable({ bills, onViewBill, onDeleteBill }) {
 
   const handleConfirmDelete = () => {
     if (billToDelete) {
-      onDeleteBill(billToDelete._id);
+      handleDeleteBill(billToDelete)
       setBillToDelete(null);
     }
   };
@@ -44,9 +46,10 @@ export default function BillsTable({ bills, onViewBill, onDeleteBill }) {
           />
         ))}
         <DeleteBillDialog
-          open={!!billToDelete}
+          open={billToDelete}
           onOpenChange={() => setBillToDelete(null)}
-          onConfirm={handleConfirmDelete}
+          onConfirm={handleDeleteBill}
+          loading = {deleteBillLoading}
         />
       </div>
     );
@@ -96,7 +99,7 @@ export default function BillsTable({ bills, onViewBill, onDeleteBill }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleDeleteClick(bill)}
+                    onClick={() => handleDeleteClick(bill._id.toString())}
                     className="text-red-500 hover:text-red-600"
                   >
                     <Trash2 className="h-4 w-4" />

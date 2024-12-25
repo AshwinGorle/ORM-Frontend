@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Building2 } from "lucide-react";
 import BillsTable from "@/components/bills/BillsTable";
 import BillInfoModal from "@/components/bills/BillInfoModal";
+import { useGetAllBills } from "@/hooks/bill/useGetAllTableBills";
+import { Spinner } from "@/components/ui/spinner";
 
 // Dummy data for testing
 const initialBills = [
@@ -40,18 +42,17 @@ const initialBills = [
 ];
 
 export default function BillsPage() {
-  const [bills, setBills] = useState(initialBills);
+  const {bills, loading : billsLoading} = useGetAllBills();
   const [selectedBill, setSelectedBill] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const handleViewBill = (bill) => {
     setSelectedBill(bill);
     setIsModalOpen(true);
   };
 
-  const handleDeleteBill = (billId) => {
-    setBills(bills.filter(bill => bill._id !== billId));
-  };
+
 
   return (
     <div className="p-6">
@@ -64,11 +65,10 @@ export default function BillsPage() {
         </div>
         <Building2 className="h-8 w-8 text-primary" />
       </div>
-
+       { billsLoading ? <Spinner/> : <>
       <BillsTable 
         bills={bills}
         onViewBill={handleViewBill}
-        onDeleteBill={handleDeleteBill}
       />
 
       <BillInfoModal
@@ -76,6 +76,7 @@ export default function BillsPage() {
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
       />
+      </>}
     </div>
   );
 }
