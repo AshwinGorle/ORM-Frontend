@@ -1,6 +1,43 @@
 import { toast } from "@/hooks/use-toast";
 import { getActionErrorMessage } from "@/utils";
 import axios from "axios";
+import { QrActions } from "@/redux/slices/qrSlice";
+
+export const getQr = (tableId, setQrLoading) => async (dispatch) => {
+    try {
+        setQrLoading(tableId);
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/qrs/${tableId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        // Dispatch success action to update the store with the fetched data
+        dispatch(QrActions.getQrSuccess(response.data));
+
+        toast({
+            title: "Success",
+            description: "QR Code details fetched successfully",
+            variant: "success",
+        });
+
+    } catch (error) {
+        console.log("action-get-qr-error:", error);
+        dispatch(QrActions.getQrFailure(getActionErrorMessage(error)));
+        toast({
+            title: "Failed",
+            description: getActionErrorMessage(error),
+            variant: "destructive",
+        });
+    } finally {
+        setQrLoading(null);
+    }
+};
+
 
 export const printQr = (tableId, setQrLoading) => async (dispatch) => {
     try {

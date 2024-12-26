@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
-import { createUpload } from "@/redux/actions/upload";
-import { uploadActions } from "@/redux/slices/uploadSlice";
-import { defaultDishLogo } from "@/config/config";
+import { deleteBill } from "@/redux/actions/bill/billAction";
+import { billActions } from "@/redux/slices/billSlice";
 
-export const useCreateUpload = (setImageUrl) => {
+export const useDeleteBill = (setDialog) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error, data } = useSelector((state) => state.upload.createUpload);
+    const { status, error } = useSelector((state) => state.bill.deleteBill);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -18,28 +17,28 @@ export const useCreateUpload = (setImageUrl) => {
             setLoading(false);
             toast({
                 title: "Success",
-                description: "Upload added successfully.",
+                description: "Bill deleted successfully.",
                 variant: "success", // Optional, for success styling
             });
-            dispatch(uploadActions.clearCreateUploadStats());
-            setImageUrl(data.url || defaultDishLogo);
-           
+            dispatch(billActions.clearDeleteBillStats());
+            setDialog(null) // to close dialog
         } else if (status === "failed") {
             setLoading(false);
             toast({
                 title: "Error",
-                description: error || "Failed to add Uploads.",
+                description: error || "Failed to delete bill.",
                 variant: "destructive", // Optional, for error styling
             });
-            dispatch(uploadActions.clearCreateUploadStats());
+            dispatch(billActions.clearDeleteBillStats());
+            setDialog(null) // to close dialog
 
         }
     }, [status, error, dispatch, toast]);
 
-    const handleCreateUpload = (data) => {
-        console.log("hook-create-upload-req:", data);
-        dispatch(createUpload(data));
+    const handleDeleteBill = (billId) => {
+        console.log("hook-delete-bill-req:" , billId);
+        dispatch(deleteBill(billId));
     };
 
-    return {data, loading, handleCreateUpload};
+    return {loading, handleDeleteBill};
 };

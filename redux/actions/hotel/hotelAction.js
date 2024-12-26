@@ -1,6 +1,35 @@
 import axios from "axios";
-import { hotelActions } from "../slices/hotelSlice";
-import { getActionErrorMessage } from "@/utils/errorHandler";
+import { hotelActions } from "@/redux/slices/hotelSlice";
+import { getActionErrorMessage } from "@/utils";
+
+export const getHotel = (hotelId) => async (dispatch) => {
+    console.log("action-get-hotel-req: ", hotelId);
+    try {
+        dispatch(hotelActions.getHotelRequest());
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/hotels/${hotelId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        const { status, message, data } = response.data;
+        console.log("action-get-hotel-res:", data);
+        if (status === "success") {
+            dispatch(hotelActions.getHotelSuccess(data));
+        } else {
+            dispatch(hotelActions.getHotelFailure(message));
+        }
+    } catch (error) {
+        console.log("action-get-all-hotel-error:", error);
+        const errorMessage = getActionErrorMessage(error);
+        dispatch(hotelActions.getHotelFailure(errorMessage));
+    }
+};
+
 
 export const fetchHotelOwners = () => async (dispatch) => {
     console.log("action-fetch-hotel-owners-req");
@@ -52,7 +81,7 @@ export const updateHotel = (hotelId, updateData) => async (dispatch) => {
     try {
         dispatch(hotelActions.updateHotelRequest());
         const response = await axios.put(
-            `http://localhost:5000/api/v1/hotels/update/${hotelId}`, 
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/hotel/${hotelId}`, 
             updateData, 
             {
                 headers: { "Content-Type": "application/json" },

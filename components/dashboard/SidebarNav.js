@@ -2,12 +2,72 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useGetUser } from "@/hooks/auth";
+import { useEffect, useState } from "react";
+import {
+  Building2,
+  Menu,
+  X,
+  Settings,
+  BarChart3,
+  LogOut,
+  ChartBarBig,
+  UserRoundCog,
+  CookingPot,
+  Receipt,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export default function SidebarNav({ items, pathname }) {
+export default function SidebarNav({ pathname }) {
+  const router = useRouter();
+  const { loading: userLoading, user } = useGetUser();
+  const [menuItems, setMenuItems] = useState([]);
+  useEffect(() => {
+    if (user) {
+      if (user.role === "superadmin") {
+        console.log("supper admin checked ------");
+        setMenuItems([
+          {
+            title: "Admin Dashboard",
+            icon: ChartBarBig,
+            href: "/admin-dashboard",
+          },
+        ]);
+      } else {
+        setMenuItems([
+          {
+            title: "Live Orders",
+            icon: CookingPot,
+            href: `/order-page/${user?.hotelId}`,
+          },
+          {
+            title: "Dashboard",
+            icon: BarChart3,
+            href: "/dashboard",
+          },
+          {
+            title: "Bills",
+            icon: Receipt,
+            href: "/dashboard/bills",
+          },
+          {
+            title: "Configuration",
+            icon: Settings,
+            href: "/dashboard/configuration",
+          },
+          {
+            title: "Profile",
+            icon: UserRoundCog,
+            href: "/dashboard/profile",
+          },
+        ]);
+      }
+    }
+  }, [userLoading, user]);
   return (
     <div className="flex-1 overflow-y-auto py-4">
       <nav className="flex flex-col gap-1 px-2">
-        {items.map((item) => (
+        {menuItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}

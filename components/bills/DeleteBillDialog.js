@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function DeleteBillDialog({ open, onOpenChange, onConfirm }) {
+export default function DeleteBillDialog({ open, onOpenChange, onConfirm , loading}) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -27,7 +27,7 @@ export default function DeleteBillDialog({ open, onOpenChange, onConfirm }) {
             onClick={onConfirm}
             className="bg-red-500 hover:bg-red-600"
           >
-            Delete
+            {loading  ? <Spinner/> :  "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

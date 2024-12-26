@@ -67,6 +67,7 @@ const billSlice = createSlice({
             state.getAllBills.status = "pending";
         },
         getAllBillsSuccess: (state, action) => {
+            action?.payload?.bills?.reverse();
             state.getAllBills.status = "success";
             state.getAllBills.data = action.payload;
         },
@@ -155,7 +156,7 @@ const billSlice = createSlice({
             state.deleteBill.status = "success";
             if (state.getAllBills.data && state.getAllBills.data.bills) {
                 state.getAllBills.data.bills = state.getAllBills.data.bills.filter(
-                    (bill) => bill._id !== action.payload.bill
+                    (bill) => bill._id.toString() != action.payload.bill._id.toString()
                 );
             }
         },

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // ShadCN toast hook
-import { updateHotel } from "@/redux/actions/hotel";
+import { updateHotel } from "@/redux/actions/hotel/hotelAction";
 import { hotelActions } from "@/redux/slices/hotelSlice";
 
 export const useUpdateHotel = () => {
@@ -37,5 +37,5 @@ export const useUpdateHotel = () => {
         dispatch(updateHotel(hotelId, updateData));
     };
 
-    return { loading, data, handleUpdateHotel };
+    return { loading, handleUpdateHotel };
 };

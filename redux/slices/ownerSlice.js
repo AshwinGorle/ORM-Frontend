@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialUser = {
+    getOwner : {
+        status: null,
+        error: null,
+        data: null,
+    },
     approveOwner: {
         status: null,
         error: null,
@@ -20,6 +25,12 @@ const initialUser = {
     },
 
     getOwner: {
+        status: null,
+        error: null,
+        data: null,
+    },
+
+    updateOwner: {
         status: null,
         error: null,
         data: null,
@@ -59,6 +70,30 @@ const ownerSlice = createSlice({
             state.getAllOwners.status = "failed";
             state.getAllOwners.error = action.payload;
         },
+
+        getOwnerRequest: (state) => {
+            state.getOwner.status = "pending";
+        },
+        getOwnerSuccess: (state, action) => {
+            state.getOwner.status = "success";
+            state.getOwner.data = action.payload;
+        },
+        getOwnerFailure: (state, action) => {
+            state.getOwner.status = "failed";
+            state.getOwner.error = action.payload;
+        },
+
+        updateOwnerRequest: (state) => {
+            state.updateOwner.status = "pending";
+        },
+        updateOwnerSuccess: (state, action) => {
+            state.updateOwner.status = "success";
+            state.updateOwner.data = action.payload;
+        },
+        updateOwnerFailure: (state, action) => {
+            state.updateOwner.status = "failed";
+            state.updateOwner.error = action.payload;
+        },
         
         //extendOwnerMembership
         extendOwnerMembershipRequest: (state) => {
@@ -78,13 +113,17 @@ const ownerSlice = createSlice({
             state.extendOwnerMembership.error = action.payload;
         },
 
-        
-
         // Manual state cleaners
         clearApproveOwnerStats: (state) => {
             state.approveOwner.status = null;
             state.approveOwner.error = null;
             state.approveOwner.data = null;
+        },
+
+        clearUpdateOwnerStats: (state) => {
+            state.updateOwner.status = null;
+            state.updateOwner.error = null;
+            state.updateOwner.data = null;
         },
         
         clearExtendOwnerMembershipStats: (state) => {
@@ -102,6 +141,17 @@ const ownerSlice = createSlice({
         },
         clearGetAllOwnersError: (state) => {
             state.getAllOwners.error = null;
+        },
+        
+        //getAllOwners
+        clearGetOwnerStatus: (state) => {
+            state.getOwner.status = null;
+        },
+        clearGetOwnerData: (state) => {
+            state.getOwner.data = null;
+        },
+        clearGetOwnerError: (state) => {
+            state.getOwner.error = null;
         },
 
         // get owner profile

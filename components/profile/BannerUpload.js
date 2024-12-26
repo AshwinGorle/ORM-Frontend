@@ -5,8 +5,9 @@ import { ImageIcon, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { EditableImage } from "../ImageInput";
 
-export default function BannerUpload({ currentBanner, onBannerUpdate }) {
+export default function BannerUpload({ currentBanner, setCurrentBanner }) {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleUpload = async (e) => {
@@ -42,24 +43,13 @@ export default function BannerUpload({ currentBanner, onBannerUpdate }) {
             <Upload className="h-4 w-4 mr-2" />
             {isUploading ? "Uploading..." : "Upload New Banner"}
           </Button>
-          <input
-            id="banner-upload"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleUpload}
-          />
+       
         </div>
       </div>
 
       <div className="relative h-[200px] w-full rounded-lg overflow-hidden border-2 border-dashed border-gray-200">
         {currentBanner ? (
-          <Image
-            src={currentBanner}
-            alt="Hotel Banner"
-            fill
-            className="object-cover"
-          />
+             <EditableImage imageUrl={currentBanner} setImageUrl={setCurrentBanner} height={200} width={930} />
         ) : (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">

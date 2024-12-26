@@ -173,7 +173,7 @@ export const deleteBill = (billId) => async (dispatch) => {
         const { status, message, data } = response.data;
         console.log("action-delete-bill-res:", data);
         if (status === "success") {
-            dispatch(billActions.deleteBillSuccess({ deletedBillId: billId }));
+            dispatch(billActions.deleteBillSuccess(data));
         } else {
             dispatch(billActions.deleteBillFailure(message));
         }
