@@ -23,7 +23,18 @@ export function CreateOrderModel({ open, setOpen }) {
   const [status, setStatus] = useState("draft");
   const [customerName, setCustomerName] = useState("Customer");
   const [tableId, setTableId] = useState("");
-  const { loading: createLoading, handleCreateOrder } = useCreateOrder(setOpen);
+  
+ 
+
+  const handleClose = ()=>{
+       console.log("Close create order dialog");
+       setNotes("");
+       setTableId("");
+       setCustomerName("");
+       setSelectedDishes([]);
+       setOpen(false);
+  }
+  const { loading: createLoading, handleCreateOrder } = useCreateOrder(handleClose);
 
   const handleSubmit = () => {
     const selectedDishesInApiFormat = selectedDishes.map((dish) => ({
@@ -41,14 +52,7 @@ export function CreateOrderModel({ open, setOpen }) {
     });
   };
 
-  const handleClose = ()=>{
-       console.log("Close create order dialog");
-       setNotes("");
-       setTableId("");
-       setCustomerName("");
-       setSelectedDishes([]);
-       setOpen(false);
-  }
+
 
   return (
     <Dialog open={open} onOpenChange={()=>handleClose()}>

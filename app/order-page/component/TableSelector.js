@@ -87,7 +87,7 @@ const TableSelector = ({ selectedTable, setSelectedTable }) => {
       <TooltipProvider>
         <SelectContent className="space-y-2 flex flex-col">
           {tables.map((table) => (
-            <SelectItem value={table._id} className="flex flex-col items-start">
+            <SelectItem key={table?._id} value={table._id} className="flex flex-col items-start">
               <Tooltip key={table._id}>
                 <TooltipTrigger>
                   <div
