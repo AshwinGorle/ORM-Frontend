@@ -23,7 +23,7 @@ export function CreateOrderModel({ open, setOpen }) {
   const [status, setStatus] = useState("draft");
   const [customerName, setCustomerName] = useState("Customer");
   const [tableId, setTableId] = useState("");
-  const { loading: createLoading, handleCreateOrder } = useCreateOrder();
+  const { loading: createLoading, handleCreateOrder } = useCreateOrder(setOpen);
 
   const handleSubmit = () => {
     const selectedDishesInApiFormat = selectedDishes.map((dish) => ({

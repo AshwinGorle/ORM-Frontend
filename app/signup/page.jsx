@@ -33,6 +33,7 @@ import OtpVerification from "@/components/auth/OtpVerification";
 import { useSignup } from "@/hooks/auth";
 import { useVerifyEmail } from "@/hooks/auth";
 import { useResendOtp } from "@/hooks/auth";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 const formSchema = z
   .object({
@@ -219,7 +220,9 @@ const SignupContent = () => {
 export default function SignupPage() {
   return (
     <Provider store={store}>
+      <TooltipProvider>
       <SignupContent />
+      </TooltipProvider>
     </Provider>
   );
 }
