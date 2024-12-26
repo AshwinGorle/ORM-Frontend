@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast"; // ShadCN toast hook
 import { updateHotel } from "@/redux/actions/hotel/hotelAction";
 import { hotelActions } from "@/redux/slices/hotelSlice";
 
-export const useUpdateHotel = () => {
+export const useUpdateHotel = (setFormData, setDialog) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { status, error, data } = useSelector((state) => state.hotel.updateHotel);
@@ -20,6 +20,8 @@ export const useUpdateHotel = () => {
                 description: "Hotel updated successfully.",
                 variant: "success",
             });
+            // setFormData(data.hotel);
+            // setDialog(false);
             dispatch(hotelActions.clearUpdateHotelState());
         } else if (status === "failed") {
             setLoading(false);
@@ -33,7 +35,7 @@ export const useUpdateHotel = () => {
     }, [status, error, dispatch, toast]);
 
     const handleUpdateHotel = (hotelId, updateData) => {
-        console.log("hook-update-hotel-req:", { hotelId, updateData });
+        console.log("hook-update-hotel-req:", hotelId, updateData );
         dispatch(updateHotel(hotelId, updateData));
     };
 

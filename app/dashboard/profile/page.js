@@ -5,6 +5,9 @@ import { Building2, User } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserProfileSection from "@/components/profile/UserProfileSection";
 import HotelProfileSection from "@/components/profile/HotelProfileSection";
+import { useGetUser } from "@/hooks/auth";
+import { Spinner } from "@/components/ui/spinner";
+import { useGetHotel } from "@/hooks/hotel/useGetHotel";
 
 // Mock data - Replace with actual API calls
 const user = {
@@ -37,6 +40,9 @@ const hotel = {
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("user");
+  const {loading : ownerLoading, user : owner} = useGetUser();
+  const {loading : hotelLoading, hotel} = useGetHotel(owner?.hotelId);
+  console.log("ownerrrrrrrr", owner)
 
   const handleUserUpdate = (updatedUser) => {
     console.log("Updating user:", updatedUser);
@@ -73,11 +79,11 @@ export default function ProfilePage() {
         </TabsList>
 
         <TabsContent value="user" className="space-y-6">
-          <UserProfileSection user={user} onUpdate={handleUserUpdate} />
+          {(ownerLoading  ||  !owner ) ? <Spinner/> : <UserProfileSection owner={owner} />}
         </TabsContent>
 
         <TabsContent value="hotel" className="space-y-6">
-          <HotelProfileSection hotel={hotel} onUpdate={handleHotelUpdate} />
+          {(hotelLoading || ownerLoading) ? <Spinner/> : <HotelProfileSection hotel={hotel}  />}
         </TabsContent>
       </Tabs>
     </div>

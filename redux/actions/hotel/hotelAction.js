@@ -81,7 +81,7 @@ export const updateHotel = (hotelId, updateData) => async (dispatch) => {
     try {
         dispatch(hotelActions.updateHotelRequest());
         const response = await axios.put(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/hotel/${hotelId}`, 
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/hotels/${hotelId}`, 
             updateData, 
             {
                 headers: { "Content-Type": "application/json" },

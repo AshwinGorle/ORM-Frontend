@@ -58,8 +58,10 @@ const hotelSlice = createSlice({
             state.updateHotel.status = "pending";
         },
         updateHotelSuccess: (state, action) => {
+            console.log("hotel in updateHotelSuccess : ", action.payload.hotel)
             state.updateHotel.status = "success";
             state.updateHotel.data = action.payload;
+            state.getHotel.data = {hotel : action.payload.hotel}
         },
         updateHotelFailure: (state, action) => {
             state.updateHotel.status = "failed";

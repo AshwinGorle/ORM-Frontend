@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
 import { ownerActions } from "@/redux/slices/ownerSlice";
 import { updateOwner } from "@/redux/actions/auth";
 
-export const useUpdateOwner = () => {
+export const useUpdateOwner = (setDialog) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { status, error, data } = useSelector((state) => state.owner.updateOwner);

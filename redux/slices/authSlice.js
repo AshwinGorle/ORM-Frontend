@@ -38,6 +38,11 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
+        // when we update hotel owner we have to put it into user 
+        updateUser : (state, action) => {
+            state.getUser.data = {user : action.payload}
+        },
+
         clearAuthState : (state) => {
             state.authDetails = initialState.authDetails
             state.signup = initialState.signup

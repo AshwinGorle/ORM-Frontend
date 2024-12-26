@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ownerActions } from "@/redux/slices/ownerSlice";
 import { getActionErrorMessage } from "@/utils/getActionErrorMessage.js"; // Utility for error parsing
+import { authActions } from "@/redux/slices/authSlice";
 
 export const approveHotelOwner = (hotelOwnerId) => async (dispatch) => {
     console.log("action-approve-owner-req:", hotelOwnerId);
@@ -93,11 +94,11 @@ export const extendOwnerMembership = (ownerId, numberOfDays) => async (dispatch)
 };
 
 export const updateOwner = (ownerId, ownerData) => async (dispatch) => {
-    console.log("action-update-owner-req:", ingredientId);
+    console.log("action-update-owner-req:", ownerId);
     try {
-        dispatch(ownerActions.updateIngredientRequest());
+        dispatch(ownerActions.updateOwnerRequest());
         const response = await axios.patch(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/user/${ownerId}`,
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/users/owner/${ownerId}`,
             ownerData,
             {
                 headers: {
@@ -111,6 +112,7 @@ export const updateOwner = (ownerId, ownerData) => async (dispatch) => {
         console.log("action-update-owner-res:", data);
         if (status === "success") {
             dispatch(ownerActions.updateOwnerSuccess(data));
+            dispatch(authActions.updateUser(data.owner));   
         } else {
             dispatch(ownerActions.updateOwnerFailure(message));
         }

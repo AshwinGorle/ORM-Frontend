@@ -9,11 +9,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import ImageUploadButton from "./ImageUploadButton";
+import { defaultDishLogo } from "@/config/config";
+import { useUpdateHotel } from "@/hooks/hotel/useUpdateHotel";
+import { Spinner } from "../ui/spinner";
+import { EditableImage } from "../ImageInput";
+import { formatDate } from "@/lib/utils";
 
-export default function HotelProfileSection({ hotel, onUpdate }) {
-  const [isEditing, setIsEditing] = useState(false);
+export default function HotelProfileSection({ hotel }) {
   const [formData, setFormData] = useState(hotel);
+  const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const {loading : updateOwnerLoading, handleUpdateHotel} = useUpdateHotel();
+  const [logo, setLogo] = useState(hotel?.logo || defaultDishLogo)
+  console.log("hotel in hotel component ", hotel)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,8 +42,17 @@ export default function HotelProfileSection({ hotel, onUpdate }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData);
-    setIsEditing(false);
+    const updatedHotel = {
+      name : formData.name,
+      email : formData.email,
+      description : formData.description,
+      location : formData.location,
+      phone : formData.phone,
+      logo : logo
+    }
+    console.log("update data for hotel ::::::::::::", updatedHotel)
+    handleUpdateHotel(hotel._id.toString(), updatedHotel);
+  
   };
 
   return (
@@ -45,7 +62,7 @@ export default function HotelProfileSection({ hotel, onUpdate }) {
           <div className="space-y-6">
             <div className="relative h-48 sm:h-64 w-full">
               <Image
-                src={formData.logo}
+                src={formData.logo || defaultDishLogo}
                 alt={formData.name}
                 fill
                 className="object-cover"
@@ -72,14 +89,14 @@ export default function HotelProfileSection({ hotel, onUpdate }) {
               {!isEditing ? (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <InfoItem icon={Building2} label="Hotel Name" value={hotel.name} />
-                    <InfoItem icon={MapPin} label="Location" value={hotel.location} />
-                    <InfoItem icon={Phone} label="Phone" value={hotel.phone} />
-                    <InfoItem icon={Mail} label="Email" value={hotel.email} />
+                    <InfoItem icon={Building2} label="Hotel Name" value={formData.name} />
+                    <InfoItem icon={MapPin} label="Location" value={formData.location} />
+                    <InfoItem icon={Phone} label="Phone" value={formData.phone} />
+                    <InfoItem icon={Mail} label="Email" value={formData.email} />
                   </div>
                   <div className="space-y-2">
                     <Label>Description</Label>
-                    <p className="text-muted-foreground">{hotel.description}</p>
+                    <p className="text-muted-foreground">{formData.description}</p>
                   </div>
                   <Button 
                     onClick={() => setIsEditing(true)}
@@ -139,9 +156,10 @@ export default function HotelProfileSection({ hotel, onUpdate }) {
                       rows={4}
                     />
                   </div>
+                  <EditableImage imageUrl={logo} setImageUrl={setLogo} element={hotel} />
                   <div className="flex flex-col sm:flex-row gap-2">
                     <Button type="submit" className="flex-1 sm:flex-none">
-                      Save Changes
+                     {updateOwnerLoading ? <Spinner/> : 'Save Changes'}
                     </Button>
                     <Button
                       type="button"

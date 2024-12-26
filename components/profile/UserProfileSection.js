@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User, Mail, Phone, Calendar, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,10 +9,17 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import ProfileImage from "./ProfileImage";
+import { useGetUser } from "@/hooks/auth";
+import { useUpdateOwner } from "@/hooks/owner/useUpdateOwner";
+import { defaultDishLogo } from "@/config/config";
+import { EditableImage } from "../ImageInput";
+import { Spinner } from "../ui/spinner";
 
-export default function UserProfileSection({ user, onUpdate }) {
+export default function UserProfileSection({ owner }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(user);
+  const [formData, setFormData] = useState(owner);
+  const {loading : updateOwnerLoading, handleUpdateOwner} = useUpdateOwner(setIsEditing);
+  const [logo, setLogo] = useState(owner?.logo || defaultDishLogo)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,10 +30,18 @@ export default function UserProfileSection({ user, onUpdate }) {
     setFormData(prev => ({ ...prev, logo: imageUrl }));
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData);
-    setIsEditing(false);
+    const updatedUser = {
+      logo : logo,
+      name : formData.name,
+      email : formData.email,
+      phone : formData.phone,
+      gender : formData.gender
+    }
+    console.log("updated user : ", updatedUser)
+    handleUpdateOwner(owner._id.toString(), updatedUser);
   };
 
   return (
@@ -35,16 +50,17 @@ export default function UserProfileSection({ user, onUpdate }) {
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-8">
             <div className="flex flex-col items-center space-y-4">
-              <ProfileImage
+              {/* <ProfileImage
                 src={formData.logo}
                 alt={formData.name}
                 onImageUpdate={handleImageUpdate}
-              />
+              /> */}
+              <EditableImage imageUrl={logo} setImageUrl={setLogo} element={owner} />
               <div className="flex flex-wrap gap-2 justify-center">
                 <Badge variant="secondary">
-                  {user.role}
+                  {owner.role}
                 </Badge>
-                {user.isVerified && (
+                {owner.isVerified && (
                   <Badge variant="default" className="bg-green-500">
                     Verified
                   </Badge>
@@ -56,13 +72,13 @@ export default function UserProfileSection({ user, onUpdate }) {
               {!isEditing ? (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <InfoItem icon={User} label="Name" value={user.name} />
-                    <InfoItem icon={Mail} label="Email" value={user.email} />
-                    <InfoItem icon={Phone} label="Phone" value={user.phone} />
+                    <InfoItem icon={User} label="Name" value={owner.name} />
+                    <InfoItem icon={Mail} label="Email" value={owner.email} />
+                    <InfoItem icon={Phone} label="Phone" value={owner.phone} />
                     <InfoItem
                       icon={Calendar}
                       label="Membership Expires"
-                      value={formatDate(user.membershipExpires)}
+                      value={formatDate(owner.membershipExpires)}
                     />
                   </div>
                   <Button 
@@ -103,10 +119,19 @@ export default function UserProfileSection({ user, onUpdate }) {
                         onChange={handleChange}
                       />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone</Label>
+                      <Input
+                        id="gender"
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleChange}
+                      />
+                    </div>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <Button type="submit" className="flex-1 sm:flex-none">
-                      Save Changes
+                      {updateOwnerLoading ? <Spinner/> : "Save Changes"}
                     </Button>
                     <Button
                       type="button"
