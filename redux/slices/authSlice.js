@@ -38,7 +38,15 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        // Login actions
+        clearAuthState : (state) => {
+            state.authDetails = initialState.authDetails
+            state.signup = initialState.signup
+            state.verifyOTP = initialState.verifyOTP
+            state.logout = initialState.logout
+            state.getUser = initialState.getUser
+            state.forgotPassword = initialState.forgotPassword
+
+        },
         loginRequest: (state) => {
             state.authDetails.status = "pending";
         },

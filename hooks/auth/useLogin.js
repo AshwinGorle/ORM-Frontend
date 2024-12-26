@@ -8,22 +8,25 @@ export const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-  const { status, error, isAuthenticated } = useSelector((state) => state.auth.authDetails);
+  const { status, error, isAuthenticated, data } = useSelector((state) => state.auth.authDetails);
+  console.log('status-------------------------------------- : ', status);
   const { toast } = useToast();
 
   const handleLogin = async (loginData) => {
     try {
-      const success = await dispatch(login(loginData));
-      if (success) {
+      const status =   dispatch(login(loginData));
+      // if(successData.user.role == 'superadmin') router.push('/admin-dashboard')
+      // else router.push('/dashboard')
+
+      if (status) {
         toast({
           title: "Success",
           description: "Login successful",
           variant: "success",
         });
-        router.push('/dashboard');
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.log("Login error:", error);
       toast({
         title: "Error",
         description: "Failed to connect to server",
@@ -35,7 +38,12 @@ export const useLogin = () => {
   useEffect(() => {
     if (status === "pending") {
       setLoading(true);
-    } else if (status === "failed") {
+    } else if(status === "success") {
+      setLoading(false);
+      console.log("data in user effect user : ", data)
+      if(data.role == 'superadmin') router.push('/admin-dashboard');
+      else router.push('/dashboard')
+    }else if (status === "failed") {
       setLoading(false);
       toast({
         title: "Error",

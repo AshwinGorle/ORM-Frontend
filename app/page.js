@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     const cookies = parseCookies();
     if (cookies.authToken) {
-      router.push('/dashboard');
+      router.push('/');
     }
   }, [router]);
 

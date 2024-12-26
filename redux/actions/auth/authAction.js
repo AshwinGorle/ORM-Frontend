@@ -35,10 +35,10 @@ export const login = (loginData) => async(dispatch) => {
                 role: data.role,
                 email: data.email
             }));
-            return true;
+            return false
         } else {
             dispatch(authActions.loginFailure(message || "Login failed"));
-            return false;
+            return false 
         }
     } catch (error) {
         console.log("Login error:", error.response?.data || error.message);
@@ -132,27 +132,44 @@ export const signup = (signupData) => async(dispatch) => {
 };
 
 
+// export const logout = () => async (dispatch) => {
+//     try {
+//         dispatch(authActions.logoutRequest());
+        
+//         // Remove auth cookie
+//         document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+//         dispatch(authActions.logoutSuccess());
+//         document.location.reload();
+//         return true;
+//     } catch (error) {
+//         console.error('Logout error:', error);
+//         const errorMessage = getActionErrorMessage(error);
+//         dispatch(authActions.logoutFailure(errorMessage));
+//         return false;
+//     }
+// };
+
 export const logout = () => async (dispatch) => {
     try {
         dispatch(authActions.logoutRequest());
-        const response = await axios.post(
-            `${route}/logout`,
-            {},
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                withCredentials: true,
-            }
-        );
-        
-        // Remove auth cookie
-        document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+        // Clear auth token cookie
+        document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+
+        // Clear local storage
+        localStorage.clear();
+
+        // Clear Redux state (optional, if you have a reset action)
+        dispatch(authActions.clearAuthState()); // Replace with your actual Redux reset action if needed
+
+        // Reload the page to ensure all states are cleared
         dispatch(authActions.logoutSuccess());
-        document.location.reload();
+        window.location.href = "/";
+        
         return true;
     } catch (error) {
-        console.error('Logout error:', error);
+        console.error("Logout error:", error);
         const errorMessage = getActionErrorMessage(error);
         dispatch(authActions.logoutFailure(errorMessage));
         return false;

@@ -46,7 +46,7 @@ export default function LoginPage() {
   useEffect(() => {
     const cookies = parseCookies();
     if (cookies.authToken) {
-      router.push('/dashboard');
+      // router.push('/dashboard');
       return;
     }
   }, [router]);
