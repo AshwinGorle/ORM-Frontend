@@ -1,50 +1,85 @@
 "use client";
 
 import { useState } from "react";
-import { Building2 } from "lucide-react";
-import ProfileHeader from "@/components/profile/ProfileHeader";
-import ProfileForm from "@/components/profile/ProfileForm";
-import BannerUpload from "@/components/profile/BannerUpload";
-import { Card, CardContent } from "@/components/ui/card";
+import { Building2, User } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import UserProfileSection from "@/components/profile/UserProfileSection";
+import HotelProfileSection from "@/components/profile/HotelProfileSection";
+
+// Mock data - Replace with actual API calls
+const user = {
+  logo: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60",
+  gender: "M",
+  name: "John Doe",
+  email: "johndoe@example.com",
+  phone: "+1234567890",
+  password: "password123",
+  role: "Manager",
+  hotelId: "64a7bcf7f2b2c48d7e8a9d6f",
+  isApproved: true,
+  isVerified: true,
+  otpDetails: {
+    value: null,
+    expiry: null
+  },
+  membershipExpires: "2025-12-31T00:00:00.000Z"
+};
+
+const hotel = {
+  name: "Luxury Stay Hotel",
+  location: "123 Main Street, Springfield",
+  phone: "+1234567890",
+  email: "info@luxurystay.com",
+  ownerId: "64a8d2e4a5b3c79f1a8e5c2d",
+  logo: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1470",
+  description: "A premium hotel offering luxurious stays and world-class amenities."
+};
 
 export default function ProfilePage() {
-  const [profile, setProfile] = useState({
-    hotelName: "The Grand Hotel & Resort",
-    ownerName: "Manali Thakur",
-    description: "Experience luxury redefined at The Grand Hotel & Resort. Nestled in the heart of the city, we offer world-class amenities, exceptional dining, and unparalleled service for an unforgettable stay.",
-    location: "Mall road , manali",
-    profilePhoto: "https://images.trvl-media.com/lodging/35000000/34920000/34914700/34914632/0902a974.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill",
-    bannerImage: "https://images.trvl-media.com/lodging/31000000/30060000/30056300/30056226/fc4a7feb.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill",
-    contactEmail: "hotelmanali@gmail.com",
-    phone: "+91 98765 43210",
-    cuisine: "Fine Dining & Family restaurant",
-    openingHours: "24/7 Service"
-  });
+  const [activeTab, setActiveTab] = useState("user");
 
-  const handleProfileUpdate = (updatedProfile) => {
-    setProfile({ ...profile, ...updatedProfile });
+  const handleUserUpdate = (updatedUser) => {
+    console.log("Updating user:", updatedUser);
+    // Implement user update logic here
+  };
+
+  const handleHotelUpdate = (updatedHotel) => {
+    console.log("Updating hotel:", updatedHotel);
+    // Implement hotel update logic here
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <ProfileHeader profile={profile} />
-      
-      <div className="mt-8 space-y-6">
-        <Card>
-          <CardContent className="p-6">
-            <ProfileForm profile={profile} onUpdate={handleProfileUpdate} />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <BannerUpload 
-              currentBanner={profile.bannerImage}
-              onBannerUpdate={(url) => handleProfileUpdate({ bannerImage: url })}
-            />
-          </CardContent>
-        </Card>
+    <div className="p-6 max-w-6xl mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-bold">Profile Settings</h1>
+          <p className="text-muted-foreground">
+            Manage your personal and hotel information
+          </p>
+        </div>
+        <Building2 className="h-8 w-8 text-primary" />
       </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="user" className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            User Profile
+          </TabsTrigger>
+          <TabsTrigger value="hotel" className="flex items-center gap-2">
+            <Building2 className="h-4 w-4" />
+            Hotel Profile
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="user" className="space-y-6">
+          <UserProfileSection user={user} onUpdate={handleUserUpdate} />
+        </TabsContent>
+
+        <TabsContent value="hotel" className="space-y-6">
+          <HotelProfileSection hotel={hotel} onUpdate={handleHotelUpdate} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
