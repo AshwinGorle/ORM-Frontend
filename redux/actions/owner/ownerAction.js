@@ -92,3 +92,31 @@ export const extendOwnerMembership = (ownerId, numberOfDays) => async (dispatch)
     }
 };
 
+export const updateOwner = (ownerId, ownerData) => async (dispatch) => {
+    console.log("action-update-owner-req:", ingredientId);
+    try {
+        dispatch(ownerActions.updateIngredientRequest());
+        const response = await axios.patch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/user/${ownerId}`,
+            ownerData,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        const { status, message, data } = response.data;
+        console.log("action-update-owner-res:", data);
+        if (status === "success") {
+            dispatch(ownerActions.updateOwnerSuccess(data));
+        } else {
+            dispatch(ownerActions.updateOwnerFailure(message));
+        }
+    } catch (error) {
+        console.log("action-update-ingredient-error:", error);
+        const errorMessage = getActionErrorMessage(error);
+        dispatch(ownerActions.updateOwnerFailure(errorMessage));
+    }
+};

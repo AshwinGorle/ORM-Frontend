@@ -16,6 +16,11 @@ const initialHotelState = {
         error: null,
         data: null,
     },
+    getHotel : {
+        status: null,
+        error: null,
+        data: null,
+    }
 };
 
 const hotelSlice = createSlice({
@@ -59,6 +64,29 @@ const hotelSlice = createSlice({
         updateHotelFailure: (state, action) => {
             state.updateHotel.status = "failed";
             state.updateHotel.error = action.payload;
+        },
+
+        //Get Hotel
+        getHotelRequest: (state) => {
+            state.getHotel.status = "pending";
+        },
+        getHotelSuccess: (state, action) => {
+            state.getHotel.status = "success";
+            state.getHotel.data = action.payload;
+        },
+        getHotelFailure: (state, action) => {
+            state.getHotel.status = "failed";
+            state.getHotel.error = action.payload;
+        },
+
+        clearGetHotelData : (state, action) => {
+            state.getHotel.data = null
+        },
+        clearGetHotelError : (state, action) => {
+            state.getHotel.error = null
+        },
+        clearGetHotelStatus : (state, action) => {
+            state.getHotel.status = null
         },
 
         // Manual State Cleaners

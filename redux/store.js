@@ -13,6 +13,7 @@ import { uploadReducer } from "./slices/uploadSlice.js";
 import { billReducer } from "./slices/billSlice.js";
 import { dashboardReducer } from "./slices/dashboardSlice.js";
 import { QrReducer } from "./slices/qrSlice.js";
+import { hotelReducer } from "./slices/hotelSlice.js";
 
 export const store = configureStore({
     reducer: {
@@ -29,7 +30,8 @@ export const store = configureStore({
         connection: connectionReducer,
         upload: uploadReducer,
         bill: billReducer,
-        qr : QrReducer
+        qr : QrReducer,
+        hotel : hotelReducer
     }
 })
 

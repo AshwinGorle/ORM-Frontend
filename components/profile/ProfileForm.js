@@ -5,25 +5,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ImageUpload } from "@/components/profile/ImageUpload";
+import { Spinner } from "../ui/spinner";
 
-export default function ProfileForm({ profile, onUpdate }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(profile);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onUpdate(formData);
-    setIsEditing(false);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
+export default function ProfileForm({
+  hotelName,
+  setHotelName,
+  hotelPhone,
+  setHotelPhone,
+  hotelEmail,
+  setHotelEmail,
+  ownerEmail,
+  setOwnerEmail,
+  ownerName,
+  setOwnerName,
+  hotelLocation,
+  setHotelLocation,
+  hotelDescription,
+  setHotelDescription,
+  handleUpdateOwnerAndHotel,
+  updateHotelLoading,
+  updateUserLoading
+  
+}) {
+  const[isEditing, setIsEditing] = useState(false);
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">Hotel Information</h2>
         {!isEditing ? (
@@ -35,8 +41,8 @@ export default function ProfileForm({ profile, onUpdate }) {
             <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
               Cancel
             </Button>
-            <Button type="submit">
-              Save Changes
+            <Button type="submit" onClick={()=>handleUpdateOwnerAndHotel()}>
+              { updateHotelLoading ||updateUserLoading ? <Spinner/> : 'Save Changes'}
             </Button>
           </div>
         )}
@@ -48,8 +54,8 @@ export default function ProfileForm({ profile, onUpdate }) {
           <Input
             id="hotelName"
             name="hotelName"
-            value={formData.hotelName}
-            onChange={handleChange}
+            value={hotelName}
+            onChange={(e)=>setHotelName(e.target.value)}
             disabled={!isEditing}
           />
         </div>
@@ -59,8 +65,8 @@ export default function ProfileForm({ profile, onUpdate }) {
           <Input
             id="ownerName"
             name="ownerName"
-            value={formData.ownerName}
-            onChange={handleChange}
+            value={ownerName}
+            onChange={(e)=>setOwnerName(e.target.value)}
             disabled={!isEditing}
           />
         </div>
@@ -71,8 +77,8 @@ export default function ProfileForm({ profile, onUpdate }) {
             id="contactEmail"
             name="contactEmail"
             type="email"
-            value={formData.contactEmail}
-            onChange={handleChange}
+            value={ownerEmail}
+            onChange={(e)=>setOwnerEmail(e.target.value)}
             disabled={!isEditing}
           />
         </div>
@@ -82,8 +88,8 @@ export default function ProfileForm({ profile, onUpdate }) {
           <Input
             id="phone"
             name="phone"
-            value={formData.phone}
-            onChange={handleChange}
+            value={hotelPhone}
+            onChange={(e)=>setHotelPhone(e.target.value)}
             disabled={!isEditing}
           />
         </div>
@@ -93,8 +99,8 @@ export default function ProfileForm({ profile, onUpdate }) {
           <Input
             id="cuisine"
             name="cuisine"
-            value={formData.cuisine}
-            onChange={handleChange}
+            value={"-----"}
+          
             disabled={!isEditing}
           />
         </div>
@@ -104,9 +110,9 @@ export default function ProfileForm({ profile, onUpdate }) {
           <Input
             id="openingHours"
             name="openingHours"
-            value={formData.openingHours}
-            onChange={handleChange}
-            disabled={!isEditing}
+            value={"24/7"}
+            // onChange={handleChange}
+            disabled={true}
           />
         </div>
 
@@ -115,8 +121,8 @@ export default function ProfileForm({ profile, onUpdate }) {
           <Input
             id="location"
             name="location"
-            value={formData.location}
-            onChange={handleChange}
+            value={hotelLocation}
+            onChange={(e)=>setHotelLocation(e.target.value)}
             disabled={!isEditing}
           />
         </div>
@@ -126,8 +132,8 @@ export default function ProfileForm({ profile, onUpdate }) {
           <Textarea
             id="description"
             name="description"
-            value={formData.description}
-            onChange={handleChange}
+            value={hotelDescription}
+            onChange={(e)=>setHotelDescription(e.target.value)}
             disabled={!isEditing}
             rows={4}
           />

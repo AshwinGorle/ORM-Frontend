@@ -1,11 +1,32 @@
 "use client";
 
-import { Building2, MapPin, Phone, Mail, Clock, UtensilsCrossed } from "lucide-react";
+import {
+  Building2,
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  UtensilsCrossed,
+} from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { EditableImage } from "../ImageInput";
+import { Input } from "../ui/input";
 
-export default function ProfileHeader({ profile }) {
+export default function  ProfileHeader({
+  ownerProfile,
+  setOwnerProfile,
+  ownerEmail,
+  setOwnerEmail,
+  ownerPhone,
+  setOwnerPhone,
+  hotelName,
+  hotelLocation,
+  setHotelLocation,
+  hotelBanner,
+  hotelDescription
+}) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -21,7 +42,7 @@ export default function ProfileHeader({ profile }) {
       <Card className="overflow-hidden">
         <div className="relative h-64 w-full">
           <Image
-            src={profile.bannerImage}
+            src={hotelBanner}
             alt="Hotel Banner"
             fill
             className="object-cover"
@@ -31,12 +52,12 @@ export default function ProfileHeader({ profile }) {
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <Badge className="mb-2 bg-primary/80 hover:bg-primary/90">
               <UtensilsCrossed className="w-3 h-3 mr-1" />
-              {profile.cuisine}
+              {"-----"}
             </Badge>
-            <h2 className="text-3xl font-bold mb-1">{profile.hotelName}</h2>
+            <h2 className="text-3xl font-bold mb-1">{hotelName}</h2>
             <div className="flex items-center text-sm">
               <MapPin className="h-4 w-4 mr-1" />
-              {profile.location}
+              {hotelLocation}
             </div>
           </div>
         </div>
@@ -44,17 +65,17 @@ export default function ProfileHeader({ profile }) {
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="relative h-32 w-32 rounded-xl overflow-hidden border-4 border-background shadow-lg flex-shrink-0">
-              <Image
-                src={profile.profilePhoto}
-                alt={profile.hotelName}
-                fill
-                className="object-cover"
+              <EditableImage
+                imageUrl={ownerProfile}
+                setImageUrl={setOwnerProfile}
+                height={120}
+                width={120}
               />
             </div>
 
             <div className="flex-1 space-y-4">
-              <p className="text-muted-foreground">{profile.description}</p>
-              
+              <input type='text' className="text-muted-foreground">{hotelDescription}</input>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-2 text-sm">
                   <div className="p-2 bg-primary/10 rounded-full">
@@ -62,7 +83,7 @@ export default function ProfileHeader({ profile }) {
                   </div>
                   <div>
                     <p className="text-muted-foreground">Phone</p>
-                    <p className="font-medium">{profile.phone}</p>
+                    <Input value={ownerPhone}  onChange={(e)=>setOwnerPhone(e.target.value)} />
                   </div>
                 </div>
 
@@ -72,7 +93,8 @@ export default function ProfileHeader({ profile }) {
                   </div>
                   <div>
                     <p className="text-muted-foreground">Email</p>
-                    <p className="font-medium">{profile.contactEmail}</p>
+                    <Input value={ownerEmail} onChange={(e)=>setOwnerEmail(e.target.value)} />
+
                   </div>
                 </div>
 
@@ -82,7 +104,7 @@ export default function ProfileHeader({ profile }) {
                   </div>
                   <div>
                     <p className="text-muted-foreground">Hours</p>
-                    <p className="font-medium">{profile.openingHours}</p>
+                    <p className="font-medium">{"24/7"}</p>
                   </div>
                 </div>
 
@@ -92,7 +114,8 @@ export default function ProfileHeader({ profile }) {
                   </div>
                   <div>
                     <p className="text-muted-foreground">Location</p>
-                    <p className="font-medium">{profile.location}</p>
+                    <Input value={hotelLocation} onChange={(e)=>setHotelLocation(e.target.value)} />
+
                   </div>
                 </div>
               </div>
