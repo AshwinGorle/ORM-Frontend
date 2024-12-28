@@ -27,7 +27,7 @@ function EditOfferPage() {
   const form = useForm({
     resolver: zodResolver(offerSchema),
     defaultValues: {
-      title: "",
+      name: "",
       type: "global",
       appliedAbove: 0,
       disable: false,
@@ -42,7 +42,7 @@ function EditOfferPage() {
   useEffect(()=>{
     if(offer){
         form.reset({
-            title: offer.title || "",
+            name: offer.name || "",
             type: offer.type || "global",
             appliedAbove: offer.appliedAbove || 0,
             disable: offer.disable || false,
@@ -78,7 +78,7 @@ function EditOfferPage() {
     <div className="p-6">
       <div className="flex justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Add New Offer</h1>
+          <h1 className="text-3xl font-bold">Edit Dish</h1>
           <p className="text-muted-foreground">
             Create and manage your special offers and discounts here.
           </p>

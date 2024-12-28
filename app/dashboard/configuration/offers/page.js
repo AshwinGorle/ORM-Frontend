@@ -80,12 +80,12 @@ import { DeleteOfferDialog } from "@/components/offers/DeleteOfferDialog";
           onOpenChange={setIsAddDialogOpen}
         />
 
-        <EditOfferDialog
+        {/* <EditOfferDialog
           open={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
           offer={selectedOffer}
           onEdit={handleEditOffer}
-        />
+        /> */}
       </div>
     );
   }

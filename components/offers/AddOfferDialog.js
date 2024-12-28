@@ -26,7 +26,7 @@ export function AddOfferDialog({ open, onOpenChange }) {
   const form = useForm({
     resolver: zodResolver(offerSchema),
     defaultValues: {
-      title: "",
+      name: "",
       // appliedOn : [],
       type: "global",
       appliedAbove: 0,

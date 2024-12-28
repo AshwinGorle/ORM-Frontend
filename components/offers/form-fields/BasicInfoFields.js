@@ -41,7 +41,7 @@ export default function BasicInfoFields({ form }) {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Title</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
               <Input placeholder="Enter offer title" {...field} />
             </FormControl>

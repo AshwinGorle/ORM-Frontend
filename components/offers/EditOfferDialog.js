@@ -12,7 +12,7 @@ import { EditableImage } from "../ImageInput";
 import { useUpdateOffer } from "@/hooks/offer/useUpdateOffer";
 
 const offerSchema = z.object({
-  title: z.string().min(1, "Title is required"),
+  name: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
   type: z.enum(["global", "specific"]),
   discountType: z.enum(["percentage", "amount"]),
@@ -25,11 +25,11 @@ const offerSchema = z.object({
 
 export function EditOfferDialog({ open, onOpenChange, offer }) {
   const [logo, setLogo] = useState("");
-  const {loading , handleUpdateOffer} = useUpdateOffer(onOpenChange);
+  // const {loading , handleUpdateOffer} = useUpdateOffer(onOpenChange);
   const form = useForm({
     resolver: zodResolver(offerSchema),
     defaultValues: {
-      title: "",
+      name: "",
       description: "",
       type: "global",
       discountType: "percentage",
