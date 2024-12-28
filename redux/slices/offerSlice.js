@@ -30,12 +30,29 @@ const initialOffer = {
         error: null,
         data: null,
     },
+
+    deleteOfferDialogDetails : {
+        open : false,
+        offer : null
+    }
 };
 
 const offerSlice = createSlice({
     name: "offer",
     initialState: initialOffer,
     reducers: {
+        // for deleteOffer dialog
+        openDeleteOfferDialog : (state, action) => {
+            state.deleteOfferDialogDetails.offer = action.payload;
+            state.deleteOfferDialogDetails.open = true;
+        },
+        closeDeleteOfferDialog : (state) => {
+            state.deleteOfferDialogDetails.open = false;
+            state.deleteOfferDialogDetails.offer = null;
+        },
+
+    
+
         // createOffer
         createOfferRequest: (state) => {
             state.createOffer.status = "pending";
@@ -105,9 +122,10 @@ const offerSlice = createSlice({
         },
         deleteOfferSuccess: (state, action) => {
             state.deleteOffer.status = "success";
-            state.getAllOffers.data.offers = state.getAllOffers.data.offers.filter(
-                (offer) => offer._id !== action.payload.offer
-            );
+            if(state?.getAllOffers?.data?.offers)
+                state.getAllOffers.data.offers = state.getAllOffers.data.offers.filter(
+                    (offer) => offer?._id?.toString() !== action.payload?.offer?._id?.toString()
+                );
         },
         deleteOfferFailure: (state, action) => {
             state.deleteOffer.status = "failed";

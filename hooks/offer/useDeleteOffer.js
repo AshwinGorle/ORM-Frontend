@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
-import { deleteOffer} from "@/redux/actions/offer";
-import { offerActions } from "@/redux/slices/offersSlice";
+import { deleteOffer } from "@/redux/actions/offer";
+import { offerActions } from "@/redux/slices/offerSlice";
 
-export const useDeleteOffer = (setDialog) => {
+export const useDeleteOffer = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { status, error } = useSelector((state) => state.offer.deleteOffer);
@@ -21,7 +21,8 @@ export const useDeleteOffer = (setDialog) => {
                 variant: "success", // Optional, for success styling
             });
             dispatch(offerActions.clearDeleteOfferStats());
-            setDialog(false) // to close dialog
+            dispatch(offerActions.closeDeleteOfferDialog());
+            
         } else if (status === "failed") {
             setLoading(false);
             toast({
@@ -30,7 +31,7 @@ export const useDeleteOffer = (setDialog) => {
                 variant: "destructive", // Optional, for error styling
             });
             dispatch(offerActions.clearDeleteOfferStats());
-            setDialog(false) // to close dialog
+            // to close dialog
 
         }
     }, [status, error, dispatch, toast]);

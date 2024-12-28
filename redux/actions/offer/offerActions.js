@@ -139,7 +139,8 @@ export const deleteOffer = (offerId) => async (dispatch) => {
         const { status, message, data } = response.data;
         console.log("action-delete-offer-res:", data);
         if (status === "success") {
-            dispatch(offerActions.deleteOfferSuccess({ deletedOfferId: offerId }));
+            dispatch(offerActions.deleteOfferSuccess(data));
+            dispatch(offerActions.closeDeleteOfferDialog())
         } else {
             dispatch(offerActions.deleteOfferFailure(message));
         }

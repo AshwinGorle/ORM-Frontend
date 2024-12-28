@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import getExpiryTimeInWords from "@/utils/getExpiryInWords";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { offerActions } from "@/redux/slices/offerSlice";
 
 export default function OfferCard({ offer, onEdit, onDelete }) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const getDiscountText = () => {
     return offer.discountType === 'percentage' 
       ? `${offer.value}% off`
@@ -44,7 +47,7 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={()=>router.push(`/dashboard/configuration/offers/offer-details/${offer._id}`)}>Edit Offer</DropdownMenuItem>
             <DropdownMenuItem 
-              onClick={onDelete}
+              onClick={()=>dispatch(offerActions.openDeleteOfferDialog(offer))}
               className="text-red-600 focus:text-red-600"
             >
               Delete Offer

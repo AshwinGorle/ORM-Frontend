@@ -9,6 +9,7 @@
   import { useGetAllOffers } from "@/hooks/offer/useGetAllOffers";
   import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
+import { DeleteOfferDialog } from "@/components/offers/DeleteOfferDialog";
 
   export default function OffersPage() {
     const router = useRouter();
@@ -70,6 +71,8 @@ import { useRouter } from "next/navigation";
           )}
         </div>
 
+
+       <DeleteOfferDialog />
    
 
         <AddOfferDialog
