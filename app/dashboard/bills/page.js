@@ -6,6 +6,7 @@ import BillsTable from "@/components/bills/BillsTable";
 import BillInfoModal from "@/components/bills/BillInfoModal";
 import { useGetAllBills } from "@/hooks/bill/useGetAllTableBills";
 import { Spinner } from "@/components/ui/spinner";
+import DateFilter from "@/components/bills/DateFilter";
 
 // Dummy data for testing
 const initialBills = [
@@ -45,6 +46,7 @@ export default function BillsPage() {
   const {bills, loading : billsLoading} = useGetAllBills();
   const [selectedBill, setSelectedBill] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filteredBills, setFilteredBills] = useState(bills);
 
 
   const handleViewBill = (bill) => {
@@ -52,7 +54,34 @@ export default function BillsPage() {
     setIsModalOpen(true);
   };
 
+  const handleDeleteBill = (billId) => {
+    const updatedBills = bills.filter(bill => bill._id !== billId);
+    setBills(updatedBills);
+    setFilteredBills(updatedBills);
+  };
 
+  const handleFilterChange = ({ date, month }) => {
+    let filtered = [...bills];
+
+    if (date) {
+      const selectedDate = new Date(date);
+      filtered = filtered.filter(bill => {
+        const billDate = new Date(bill.createdAt);
+        return (
+          billDate.getDate() === selectedDate.getDate() &&
+          billDate.getMonth() === selectedDate.getMonth() &&
+          billDate.getFullYear() === selectedDate.getFullYear()
+        );
+      });
+    } else if (month) {
+      filtered = filtered.filter(bill => {
+        const billDate = new Date(bill.createdAt);
+        return billDate.getMonth() === parseInt(month) - 1;
+      });
+    }
+
+    setFilteredBills(filtered);
+  };
 
   return (
     <div className="p-6">
@@ -65,10 +94,15 @@ export default function BillsPage() {
         </div>
         <Building2 className="h-8 w-8 text-primary" />
       </div>
+
+      <DateFilter onFilterChange={handleFilterChange} />
+
        { billsLoading ? <Spinner/> : <>
       <BillsTable 
-        bills={bills}
+        // bills={bills}
+        bills={filteredBills}
         onViewBill={handleViewBill}
+        onDeleteBill={handleDeleteBill}
       />
 
       <BillInfoModal
