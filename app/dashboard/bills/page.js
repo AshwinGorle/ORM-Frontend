@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Building2 } from "lucide-react";
 import BillsTable from "@/components/bills/BillsTable";
 import BillInfoModal from "@/components/bills/BillInfoModal";
@@ -9,45 +9,16 @@ import { Spinner } from "@/components/ui/spinner";
 import DateFilter from "@/components/bills/DateFilter";
 
 // Dummy data for testing
-const initialBills = [
-  {
-    createdAt: "2024-12-25T07:42:12.141Z",
-    customDiscount: 50,
-    customerName: "Customer 2",
-    finalAmount: 170,
-    hotelId: {
-      _id: "6765297893596bb4eb953cba",
-      name: "Aswin Ow's Hotel"
-    },
-    orderedItems: [
-      {
-        dishId: {
-          name: "Pasta",
-          price: 80,
-          quantity: 1,
-        },
-        quantity: 1,
-        _id: "676bb7542673e55bb1c3d821"
-      },
-    ],
-    status: "unpaid",
-    tableId: {
-      _id: "67679e95443a6b856071e384",
-      sequence: 5
-    },
-    totalAmount: 170,
-    totalDiscount: 0,
-    updatedAt: "2024-12-25T07:42:12.329Z",
-    _id: "676bb7542673e55bb1c3d820"
-  }
-];
 
 export default function BillsPage() {
-  const {bills, loading : billsLoading} = useGetAllBills();
+  const { bills, loading: billsLoading } = useGetAllBills();
   const [selectedBill, setSelectedBill] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredBills, setFilteredBills] = useState(bills);
 
+  useEffect(() => {
+    if (bills) setFilteredBills(bills);
+  }, [bills]);
 
   const handleViewBill = (bill) => {
     setSelectedBill(bill);
@@ -55,7 +26,7 @@ export default function BillsPage() {
   };
 
   const handleDeleteBill = (billId) => {
-    const updatedBills = bills.filter(bill => bill._id !== billId);
+    const updatedBills = bills.filter((bill) => bill._id !== billId);
     setBills(updatedBills);
     setFilteredBills(updatedBills);
   };
@@ -65,7 +36,7 @@ export default function BillsPage() {
 
     if (date) {
       const selectedDate = new Date(date);
-      filtered = filtered.filter(bill => {
+      filtered = filtered.filter((bill) => {
         const billDate = new Date(bill.createdAt);
         return (
           billDate.getDate() === selectedDate.getDate() &&
@@ -74,7 +45,7 @@ export default function BillsPage() {
         );
       });
     } else if (month) {
-      filtered = filtered.filter(bill => {
+      filtered = filtered.filter((bill) => {
         const billDate = new Date(bill.createdAt);
         return billDate.getMonth() === parseInt(month) - 1;
       });
@@ -97,20 +68,24 @@ export default function BillsPage() {
 
       <DateFilter onFilterChange={handleFilterChange} />
 
-       { billsLoading ? <Spinner/> : <>
-      <BillsTable 
-        // bills={bills}
-        bills={filteredBills}
-        onViewBill={handleViewBill}
-        onDeleteBill={handleDeleteBill}
-      />
+      {billsLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          <BillsTable
+            // bills={bills}
+            bills={filteredBills}
+            onViewBill={handleViewBill}
+            onDeleteBill={handleDeleteBill}
+          />
 
-      <BillInfoModal
-        bill={selectedBill}
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-      />
-      </>}
+          <BillInfoModal
+            bill={selectedBill}
+            open={isModalOpen}
+            onOpenChange={setIsModalOpen}
+          />
+        </>
+      )}
     </div>
   );
 }
