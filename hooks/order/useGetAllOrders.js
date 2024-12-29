@@ -21,14 +21,15 @@ export const useGetAllOrders = (type="order", params = {}) => {
     }, [dispatch]);
 
     const fetchAllOrders = useCallback(() => {
-        if (type === 'order') {
+        if ( type === 'order') {
             dispatch(getAllOrders());
         }
     }, [dispatch, type]);
 
     // Initial fetch and refresh handling
     useEffect(() => {
-        if (!data ) {
+        if (refresh || !data ) {
+            setRefresh(false);
             fetchAllOrders();
         }
     }, [fetchAllOrders, data, refresh]);
