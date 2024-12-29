@@ -61,7 +61,7 @@ export function MyKanbanBoard({ orders, type="global", tableId, hotelName }) {
         <Plus className="h-4 w-4" />
       </Button>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 w-full">
         <MyKanbanColumn title="Pending" orders={orders?.pending} onEditOrder={handleEditOrder} />
         <MyKanbanColumn title="Preparing" orders={orders?.preparing} onEditOrder={handleEditOrder} />
         <MyKanbanCompletedColumn title="Completed" orders={orders?.completed} onEditOrder={handleEditOrder} />
