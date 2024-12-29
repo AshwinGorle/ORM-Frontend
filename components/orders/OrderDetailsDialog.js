@@ -1,148 +1,171 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { safeGet, formatPrice } from "@/lib/utils";
 import { Clock, MapPin, User, Building2, Receipt } from "lucide-react";
 
-export function OrderDetailsDialog({ open, onOpenChange, orderDetails, loading }) {
+export function OrderDetailsDialog({
+  open,
+  onOpenChange,
+  orderDetails,
+  loading,
+}) {
   if (loading) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>Order Details</DialogTitle>
+            <DialogTitle>Loading Order Details</DialogTitle>
           </DialogHeader>
           <div className="flex justify-center items-center h-40">
-            <Spinner size="lg" />
+            <Spinner />
           </div>
         </DialogContent>
       </Dialog>
     );
   }
 
-  const getStatusColor = (status) => {
+  const getStatusVariant = (status) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-50 text-yellow-700 border-yellow-200';
-      case 'preparing':
-        return 'bg-blue-50 text-blue-700 border-blue-200';
+      case "pending":
+        return "warning";
+      case "preparing":
+        return "info";
       default:
-        return 'bg-green-50 text-green-700 border-green-200';
+        return "success";
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            Order #{safeGet(orderDetails, '_id', 'N/A').slice(-6)}
+          <DialogTitle>
+            <div className="flex gap-4">
+              Order #{safeGet(orderDetails, "_id", "N/A").slice(-6)}
+              <Badge variant={getStatusVariant(orderDetails?.status)}>
+                {orderDetails?.status?.toUpperCase() || "N/A"}
+              </Badge>
+            </div>
           </DialogTitle>
         </DialogHeader>
-        <ScrollArea className="max-h-[80vh]">
-          <div className="space-y-6 p-6">
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center gap-2 text-gray-500 mb-1">
-                        <User className="h-4 w-4" />
-                        <span className="text-sm">Customer</span>
-                      </div>
-                      <p className="font-medium text-lg">{safeGet(orderDetails, 'customerId.name', 'N/A')}</p>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 text-gray-500 mb-1">
-                        <MapPin className="h-4 w-4" />
-                        <span className="text-sm">Table</span>
-                      </div>
-                      <p className="font-medium text-lg">
-                        Table {safeGet(orderDetails, 'tableId.sequence', 'N/A')}
-                        <span className="text-sm text-gray-500 ml-2">
-                          ({safeGet(orderDetails, 'tableId.position', 'N/A')})
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center gap-2 text-gray-500 mb-1">
-                        <Building2 className="h-4 w-4" />
-                        <span className="text-sm">Hotel</span>
-                      </div>
-                      <p className="font-medium text-lg">{safeGet(orderDetails, 'hotelId.name', 'N/A')}</p>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 text-gray-500 mb-1">
-                        <Clock className="h-4 w-4" />
-                        <span className="text-sm">Created At</span>
-                      </div>
-                      <p className="font-medium">
-                        {new Date(orderDetails?.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
+        <ScrollArea className="max-h-[80vh] space-y-6">
+          {/* Order Info */}
+          <Card className="rounded-lg border shadow-sm">
+            <div className="grid grid-cols-2 gap-4 p-4">
+              <div>
+                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Customer
                 </div>
-                <div className="mt-6 flex justify-between items-center">
-                  <Badge 
-                    className={`px-3 py-1.5 text-sm font-medium ${getStatusColor(orderDetails?.status)}`}
-                  >
-                    {orderDetails?.status?.toUpperCase() || 'N/A'}
-                  </Badge>
-                  {orderDetails?.note && (
-                    <p className="text-sm text-gray-500 italic">
-                      Note: {orderDetails.note}
-                    </p>
-                  )}
+                <p className="font-medium">
+                  {safeGet(orderDetails, "customerId.name", "N/A")}
+                </p>
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Table
                 </div>
-              </CardContent>
-            </Card>
+                <p className="font-medium">
+                  Table {safeGet(orderDetails, "tableId.sequence", "N/A")}{" "}
+                  <span className="text-sm text-muted-foreground">
+                    ({safeGet(orderDetails, "tableId.position", "N/A")})
+                  </span>
+                </p>
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  Hotel
+                </div>
+                <p className="font-medium">
+                  {safeGet(orderDetails, "hotelId.name", "N/A")}
+                </p>
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  Created At
+                </div>
+                <p className="font-medium">
+                  {new Date(orderDetails?.createdAt).toLocaleString()}
+                </p>
+              </div>
+            </div>
+            {/* <div className="flex items-center justify-between p-4 border-t">
+              <Badge variant={getStatusVariant(orderDetails?.status)}>
+                {orderDetails?.status?.toUpperCase() || "N/A"}
+              </Badge>
+              {orderDetails?.note && (
+                <p className="text-sm italic text-muted-foreground">Note: {orderDetails.note}</p>
+              )}
+            </div> */}
+          </Card>
 
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-6">
-                  <Receipt className="h-5 w-5 text-gray-500" />
-                  <h3 className="font-semibold text-lg">Order Items</h3>
-                </div>
-                <div className="space-y-4">
-                  {(orderDetails?.dishes || []).map((item, index) => (
-                    <div 
-                      key={index} 
-                      className="flex justify-between items-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-                    >
+          {/* Order Items */}
+          <Card className="rounded-lg border shadow-sm mt-4">
+            <div className="p-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Receipt className="h-4 w-4" /> Order Items
+              </h3>
+              <div className="mt-4 space-y-3">
+                {(orderDetails?.dishes || []).map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center p-2 rounded-md border hover:bg-muted transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={safeGet(item, "dishId.logo", "/default-logo.png")}
+                        alt="Item Logo"
+                        className="h-12 w-12 rounded-md object-cover border"
+                      />
                       <div>
-                        <p className="font-medium text-lg">{safeGet(item, 'dishId.name')}</p>
-                        <p className="text-sm text-gray-500">
-                          {item.quantity || 0} × {formatPrice(safeGet(item, 'dishId.price', 0))}
+                        <p className="font-medium">
+                          {safeGet(item, "dishId.name", "N/A")}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {item.quantity || 0} ×{" "}
+                          {formatPrice(safeGet(item, "dishId.price", 0))}
                         </p>
                       </div>
-                      <p className="font-semibold text-lg">
-                        {formatPrice((item.quantity || 0) * (safeGet(item, 'dishId.price', 0)))}
-                      </p>
                     </div>
-                  ))}
-                </div>
-                <div className="mt-6 pt-6 border-t flex justify-end">
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">Total Amount</p>
-                    <p className="text-2xl font-bold">
+                    <p className="font-medium">
                       {formatPrice(
-                        (orderDetails?.dishes || []).reduce(
-                          (total, item) => total + ((item.quantity || 0) * (safeGet(item, 'dishId.price', 0))),
-                          0
-                        )
+                        (item.quantity || 0) * safeGet(item, "dishId.price", 0)
                       )}
                     </p>
                   </div>
+                ))}
+              </div>
+              <div className="mt-6 flex justify-end border-t pt-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Amount</p>
+                  <p className="text-lg font-bold">
+                    {formatPrice(
+                      (orderDetails?.dishes || []).reduce(
+                        (total, item) =>
+                          total +
+                          (item.quantity || 0) *
+                            safeGet(item, "dishId.price", 0),
+                        0
+                      )
+                    )}
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </div>
+          </Card>
         </ScrollArea>
       </DialogContent>
     </Dialog>
   );
-} 
+}
