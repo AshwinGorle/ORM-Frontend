@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useGetUser } from "@/hooks/auth";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { DeleteOrderModal } from "@/app/order-page/component/DeleteOrderModal";
 
 export default function TableBillPage() {
   const { id } = useParams();
@@ -193,6 +194,7 @@ export default function TableBillPage() {
                 Generate Final Bill
               </Button>
             </div>
+            <DeleteOrderModal />
           </div>
         </section>
       

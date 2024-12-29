@@ -1,12 +1,16 @@
-import { useEffect, useRef } from 'react';
-import * as Ably from 'ably';
-import { useDispatch } from 'react-redux';
+import { useEffect, useRef } from "react";
+import * as Ably from "ably";
+import { useDispatch } from "react-redux";
 
-
-import { setConnectionStatus, setConnectionError, clearConnectionError } from '@/redux/slices/connectionSlice';
-import axios from 'axios';
-import { getBaseUrl } from '@/utils/api-config';
-import { orderActions } from '@/redux/slices/orderSlice';
+import {
+  setConnectionStatus,
+  setConnectionError,
+  clearConnectionError,
+} from "@/redux/slices/connectionSlice";
+import axios from "axios";
+import { getBaseUrl } from "@/utils/api-config";
+import { orderActions } from "@/redux/slices/orderSlice";
+import { tableActions } from "@/redux/slices/tableSlice";
 
 const useAbly = (hotelId, isSystemOnline) => {
   const dispatch = useDispatch();
@@ -18,7 +22,7 @@ const useAbly = (hotelId, isSystemOnline) => {
     const setupAbly = async () => {
       if (!isSystemOnline || !hotelId) {
         dispatch(setConnectionStatus(false));
-        console.log('System going offline or no hotelId provided');
+        console.log("System going offline or no hotelId provided");
         cleanup();
         return;
       }
@@ -33,19 +37,19 @@ const useAbly = (hotelId, isSystemOnline) => {
             suspendedRetryTimeout: 10000,
           });
 
-          ablyRef.current.connection.on('connected', () => {
-            console.log('Ably connection established successfully');
+          ablyRef.current.connection.on("connected", () => {
+            console.log("Ably connection established successfully");
             dispatch(setConnectionStatus(true));
             dispatch(clearConnectionError());
           });
 
-          ablyRef.current.connection.on('failed', (error) => {
-            console.error('Ably connection failed:', error);
+          ablyRef.current.connection.on("failed", (error) => {
+            console.error("Ably connection failed:", error);
             dispatch(setConnectionError(error.message));
           });
 
-          ablyRef.current.connection.on('disconnected', () => {
-            console.log('Ably connection disconnected');
+          ablyRef.current.connection.on("disconnected", () => {
+            console.log("Ably connection disconnected");
             dispatch(setConnectionStatus(false));
           });
         }
@@ -53,8 +57,8 @@ const useAbly = (hotelId, isSystemOnline) => {
         if (!channelRef.current) {
           channelRef.current = ablyRef.current.channels.get(channelName);
           console.log(`Subscribed to channel: ${channelName}`);
-          channelRef.current.subscribe('new-order', async (message) => {
-            console.log('New individual order received :', message.data);
+          channelRef.current.subscribe("new-order", async (message) => {
+            console.log("New individual order received :", message.data);
             const orderData = message.data;
             if (orderData && orderData.orderId) {
               try {
@@ -66,25 +70,30 @@ const useAbly = (hotelId, isSystemOnline) => {
                     withCredentials: true,
                   }
                 );
-                console.log("response--------", response)
-                if (response.data.status == 'success') {
+                console.log("response--------", response);
+                if (response.data.status == "success") {
                   const completeOrderData = response.data.data.order;
                   console.log("completedOrderData : ", completeOrderData);
                   dispatch(orderActions.setNewOrder(response.data.data.order));
+                  dispatch(
+                    tableActions.updateTableOnFirstOrder(
+                      response.data.data.order
+                    )
+                  ); //updating table if it is first order
                 }
               } catch (error) {
-                console.error('Error fetching complete order details:', error);
+                console.error("Error fetching complete order details:", error);
               }
             }
           });
 
-          channelRef.current.subscribe('order-update', (message) => {
-            console.log('Order sync received:', message.data);
+          channelRef.current.subscribe("order-update", (message) => {
+            console.log("Order sync received:", message.data);
             if (message.data && message.data.orders) {
               const formattedOrders = {
                 new: message.data.orders.new || [],
                 inProgress: message.data.orders.inProgress || [],
-                completed: message.data.orders.completed || []
+                completed: message.data.orders.completed || [],
               };
               dispatch(orderActions.syncOrders(formattedOrders));
             }
@@ -104,7 +113,7 @@ const useAbly = (hotelId, isSystemOnline) => {
         try {
           ablyRef.current.close();
         } catch (error) {
-          console.error('Error closing Ably connection:', error);
+          console.error("Error closing Ably connection:", error);
         }
         ablyRef.current = null;
       }

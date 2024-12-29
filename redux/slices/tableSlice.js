@@ -30,6 +30,22 @@ const tableSlice = createSlice({
     name: "table",
     initialState: initialTable,
     reducers: {
+         //updating table on receiving first order from Ebly
+         updateTableOnFirstOrder : (state, action) => {
+             const order = action.payload
+             if(order.isFirstOrder){
+                console.log("first Order")
+                state.getAllTables.data.tables = state.getAllTables.data?.tables?.map((table)=>{
+                    if(table._id.toString() == order.tableId._id.toString()){
+                        console.log("on first order table status changed")
+                        return {...table, status : 'occupied' };
+                    }else{
+                        return table;
+                    }
+                })
+             }
+         },
+
         // Insert updated  table
         insertUpdatedTable : (state, action) => {
             const updatedTable = action.payload

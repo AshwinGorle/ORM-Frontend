@@ -10,7 +10,7 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     const cookies = parseCookies();
-    if (cookies.authToken) {
+    if (cookies.authToken) {J
       router.push('/');
     }
   }, [router]);
