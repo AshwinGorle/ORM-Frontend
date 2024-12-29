@@ -22,8 +22,8 @@ import { useUpdateOrderStatus } from "@/hooks/order/useUpdateOrderStatus";
 import { Spinner } from "@/components/ui/spinner";
 import { useDispatch } from "react-redux";
 import { orderActions } from "@/redux/slices/orderSlice";
-import { OrderDetailsDialog } from '@/components/orders/OrderDetailsDialog';
-import { useGetOrderDetails } from '@/hooks/order/useGetOrderDetails';
+import { OrderDetailsDialog } from "@/components/orders/OrderDetailsDialog";
+import { useGetOrderDetails } from "@/hooks/order/useGetOrderDetails";
 import { cn } from "@/lib/utils";
 
 export function MyKanbanCard({ order, onEditOrder }) {
@@ -76,7 +76,11 @@ export function MyKanbanCard({ order, onEditOrder }) {
   };
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const { loading: detailsLoading, orderDetails, fetchOrderDetails } = useGetOrderDetails();
+  const {
+    loading: detailsLoading,
+    orderDetails,
+    fetchOrderDetails,
+  } = useGetOrderDetails();
 
   const handleCardClick = async (e) => {
     e.stopPropagation();
@@ -93,21 +97,21 @@ export function MyKanbanCard({ order, onEditOrder }) {
 
   return (
     <>
-      <Card 
+      <Card
         className={cn(
-          "w-full mb-2 flex flex-col h-full cursor-pointer transition-all duration-200",
+          "w-full flex flex-col h-full cursor-pointer transition-all duration-200",
           "hover:shadow-md hover:translate-y-[-2px]",
           "border-l-4",
           {
             "border-l-yellow-500": order.status === "pending",
             "border-l-blue-500": order.status === "preparing",
             "border-l-green-500": order.status === "completed",
-            "border-l-gray-500": order.status === "draft"
+            "border-l-gray-500": order.status === "draft",
           }
         )}
         onClick={handleCardClick}
       >
-        <CardHeader className="pb-2">
+        <CardHeader className="py-2">
           <CardTitle className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Button
@@ -131,7 +135,7 @@ export function MyKanbanCard({ order, onEditOrder }) {
               <div className="flex items-center gap-2 bg-gray-50/80 px-2.5 py-1.5 rounded-md">
                 <User className="h-4 w-4 text-gray-500" />
                 <span className="text-sm font-medium">
-                  Table {order.tableId?.sequence}
+                  Table{` ${order.tableId?.sequence} : ${order.customerId?.name}`}
                 </span>
               </div>
               <span className="text-xs text-gray-500">
@@ -141,24 +145,22 @@ export function MyKanbanCard({ order, onEditOrder }) {
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="p-4 flex-grow">
+        <CardContent className="flex-grow py-2">
           <div className="space-y-4 h-full flex flex-col">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-gray-500">Customer:</span>
-              <span className="font-medium truncate">
-                {order.customerId?.name || 'Guest'}
-              </span>
-            </div>
-
-            <div className="flex-grow space-y-2 divide-y">
+            <div className="flex-grow  divide-y">
               {order.dishes.map((dish) => (
                 <div
                   key={dish._id}
-                  className="flex justify-between items-center py-2.5"
+                  className="flex justify-between items-center py-1"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{dish.dishId?.name}</span>
-                    <Badge variant="secondary" className="text-[11px] px-1.5 py-0.5">
+                    <span className="text-sm font-medium">
+                      {dish.dishId?.name}
+                    </span>
+                    <Badge
+                      variant="secondary"
+                      className="text-[11px] px-1.5 py-0.5"
+                    >
                       ×{dish.quantity}
                     </Badge>
                   </div>
@@ -180,30 +182,35 @@ export function MyKanbanCard({ order, onEditOrder }) {
                 <div className="p-1.5 bg-primary/10 rounded-full">
                   <CreditCard className="h-4 w-4 text-primary" />
                 </div>
-                <span className="text-sm font-bold">₹{totalAmount.toFixed(2)}</span>
+                <span className="text-sm font-bold">
+                  ₹{totalAmount.toFixed(2)}
+                </span>
               </div>
             </div>
           </div>
         </CardContent>
 
-        <CardFooter className="p-4 pt-0">
+        <CardFooter className="p-6 pt-2">
           <div className="w-full flex justify-between gap-2">
             <Button
               variant="outline"
               onClick={handlePrevStatus}
               size="icon"
               disabled={loading || order.status === "draft"}
-              className={cn(
-                "h-8 w-8 transition-colors group relative",
-                {
-                  "opacity-50 cursor-not-allowed": order.status === "draft",
-                  "hover:border-yellow-500 hover:text-yellow-600": order.status === "preparing",
-                  "hover:border-blue-500 hover:text-blue-600": order.status === "completed",
-                  "hover:border-gray-500 hover:text-gray-600": order.status === "pending"
-                }
-              )}
+              className={cn("h-8 w-8 transition-colors group relative min-w-40", {
+                "opacity-50 cursor-not-allowed": order.status === "draft",
+                "hover:border-yellow-500 hover:text-yellow-600":
+                  order.status === "preparing",
+                "hover:border-blue-500 hover:text-blue-600":
+                  order.status === "completed",
+                "hover:border-gray-500 hover:text-gray-600":
+                  order.status === "pending",
+              })}
             >
-              {loading && updatingOrderId && leftLoading && updatingOrderId === order._id.toString() ? (
+              {loading &&
+              updatingOrderId &&
+              leftLoading &&
+              updatingOrderId === order._id.toString() ? (
                 <Spinner className="h-4 w-4" />
               ) : (
                 <>
@@ -221,17 +228,20 @@ export function MyKanbanCard({ order, onEditOrder }) {
               onClick={handleNextStatus}
               size="icon"
               disabled={loading || order.status === "completed"}
-              className={cn(
-                "h-8 w-8 transition-colors group relative",
-                {
-                  "opacity-50 cursor-not-allowed": order.status === "completed",
-                  "hover:border-green-500 hover:text-green-600": order.status === "preparing",
-                  "hover:border-blue-500 hover:text-blue-600": order.status === "pending",
-                  "hover:border-yellow-500 hover:text-yellow-600": order.status === "draft"
-                }
-              )}
+              className={cn("h-8 w-8 transition-colors group relative min-w-40", {
+                "opacity-50 cursor-not-allowed": order.status === "completed",
+                "hover:border-green-500 hover:text-green-600":
+                  order.status === "preparing",
+                "hover:border-blue-500 hover:text-blue-600":
+                  order.status === "pending",
+                "hover:border-yellow-500 hover:text-yellow-600":
+                  order.status === "draft",
+              })}
             >
-              {loading && updatingOrderId && rightLoading && updatingOrderId === order._id.toString() ? (
+              {loading &&
+              updatingOrderId &&
+              rightLoading &&
+              updatingOrderId === order._id.toString() ? (
                 <Spinner className="h-4 w-4" />
               ) : (
                 <>
