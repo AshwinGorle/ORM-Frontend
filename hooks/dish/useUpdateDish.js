@@ -24,9 +24,10 @@ export const useUpdateDish = () => {
             // setDialog(false) // to close dialog
         } else if (status === "failed") {
             setLoading(false);
+            console.log("errrrrrrr : ", error)
             toast({
                 title: "Error",
-                description: error || "Failed to update Dishs.",
+                description: error || "Failed to update Dish.",
                 variant: "destructive", // Optional, for error styling
             });
             dispatch(dishActions.clearUpdateDishStats());

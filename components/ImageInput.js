@@ -13,7 +13,8 @@ export function EditableImage({ imageUrl = null, setImageUrl, height = 200, elem
   const fileInputRef = useRef(null)
   const {loading : uploadLoading, handleCreateUpload} = useCreateUpload(setImageUrl);
 
-  const handleImageClick = () => {
+  const handleImageClick = (e) => {
+    e.preventDefault()
     fileInputRef.current?.click()
   }
 

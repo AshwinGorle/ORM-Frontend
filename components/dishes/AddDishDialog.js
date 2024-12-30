@@ -17,8 +17,9 @@ import SelectMultiple from "./component/SectMultiple";
 import SelectOne from "./component/SelectOne";
 import { EditableImage } from "../ImageInput";
 import { Switch } from "@/components/ui/switch"; // Import Switch for toggle buttons
+import { toast } from "@/hooks/use-toast";
 
-export function AddDishDialog({ open, onOpenChange, onAdd }) {
+export function AddDishDialog({ open, onOpenChange }) {
   // Initial states
   const initialState = {
     name: "",
@@ -50,11 +51,22 @@ export function AddDishDialog({ open, onOpenChange, onAdd }) {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("handle submit called!")
+    // e.preventDefault();
     const ingredientIds = selectedIngredients.map(
       (ingredient) => ingredient._id
     );
     const categoryId = selectedCategory?._id?.toString() || null;
     const offerId = selectedOffer?._id?.toString() || null;
+
+    if(!categoryId){
+      toast({
+        tittle : "Client Error",
+        variant : "destructive",
+        description : "Category is Required to create dish"
+      })
+      return;
+    }
 
     handleCreateDish({
       name,
@@ -69,7 +81,8 @@ export function AddDishDialog({ open, onOpenChange, onAdd }) {
   };
 
   // Handle reset
-  const handleReset = () => {
+  const handleReset = (e) => {
+    e.preventDefault();
     setName(initialState.name);
     setPrice(initialState.price);
     setLogo(initialState.logo);
@@ -88,7 +101,7 @@ export function AddDishDialog({ open, onOpenChange, onAdd }) {
         </DialogHeader>
 
         <div className="flex gap-5">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form className="space-y-4">
             <EditableImage imageUrl={logo} setImageUrl={setLogo} size={200} />
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
@@ -133,7 +146,7 @@ export function AddDishDialog({ open, onOpenChange, onAdd }) {
 
             <DialogFooter>
               {/* Reset Button */}
-              <Button variant="outline" onClick={handleReset}>
+              <Button variant="outline" type="button" onClick={handleReset}>
                 Reset
               </Button>
               <Button
@@ -143,7 +156,7 @@ export function AddDishDialog({ open, onOpenChange, onAdd }) {
               >
                 Cancel
               </Button>
-              <Button type="submit">
+              <Button type="button" onClick={(e)=>handleSubmit(e)}>
                 {loading ? <Spinner /> : "Add Dish"}
               </Button>
             </DialogFooter>
