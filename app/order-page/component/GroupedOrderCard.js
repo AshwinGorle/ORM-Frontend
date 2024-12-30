@@ -6,6 +6,7 @@ import { Utensils, User, Table, Receipt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export function GroupedOrderCard({ orders, tableSequence, customerName, totalAmount, billId }) {
   const router = useRouter();
@@ -40,23 +41,38 @@ export function GroupedOrderCard({ orders, tableSequence, customerName, totalAmo
           </Badge>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mt-4 bg-white p-3 rounded-lg border">
+        <div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between mt-4 bg-white p-2 rounded-lg border">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-primary/10 rounded-full shrink-0">
+            <div className="p-1.5 bg-primary/10 rounded-full ">
               <Utensils className="h-4 w-4 text-primary" />
             </div>
-            <span className="text-lg font-bold">₹{totalAmount.toFixed(2)}</span>
+            <span className="text-md font-bold">₹{totalAmount.toFixed(2)}</span>
           </div>
+          <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
           <Button 
             variant={billId ? "outline" : "default"} 
             onClick={handleBillClick}
-            className={`gap-2 w-full sm:w-auto shrink-0 ${
-              billId ? 'hover:bg-green-50 hover:text-green-600' : 'bg-green-600 hover:bg-green-700'
-            }`}
+            className={`
+              gap-1 p-1.5 
+              md:flex md:flex-wrap
+              ${billId ? 'hover:bg-green-50 hover:text-green-600' : 'bg-green-600 hover:bg-green-700'}
+              w-10 h-10 rounded-full p-0 justify-center items-center
+              md:w-auto md:h-auto md:rounded-md md:p-1.5
+            `}
           >
-            <Receipt className="h-4 w-4 shrink-0" />
-            <span className="truncate">{billId ? "View Bill" : "Generate Bill"}</span>
+            <Receipt className="h-5 w-5 lg:h-4 lg:w-4" />
+            <span className="text-wrap text-sm hidden lg:inline">
+              {billId ? "View Bill" : "Generate Bill"}
+            </span>
           </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="lg:hidden">
+          <p>{billId ? "View Bill" : "Generate Bill"}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
         </div>
       </CardHeader>
 
