@@ -3,11 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { hotelActions } from "@/redux/slices/hotelSlice";
 import { getHotel } from "@/redux/actions/hotel/hotelAction";
+import { ownerActions } from "@/redux/slices/ownerSlice";
 
 export const useGetHotel = (hotelId) => {
     console.log("useGetHotel hotelId --------", hotelId)
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+    // const profileRefresh = useSelector((state)=>state.owner.profileRefresh);
+
     // const { refresh = false, setRefresh = null } = params;
 
     const { status, error, data } = useSelector((state) => state.hotel.getHotel); // Directly use this
@@ -17,10 +20,12 @@ export const useGetHotel = (hotelId) => {
         // Check if hotelId is valid and if we need to fetch data
         if (
             hotelId && 
-            (!data || data?.hotel?._id?.toString() !== hotelId.toString())
+            ( !data || data?.hotel?._id?.toString() !== hotelId.toString())
         ) {
+            // console.log("profile refresh ::::::::::::", profileRefresh)
             console.log("Calling getHotel with hotelId:", hotelId);
             dispatch(getHotel(hotelId));
+            
         }
     }, [dispatch, data, hotelId]);
 

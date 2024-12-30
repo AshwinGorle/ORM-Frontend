@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import ImageUploadButton from "./ImageUploadButton";
-import { defaultDishLogo } from "@/config/config";
+import { defaultBannerLogo, defaultDishLogo } from "@/config/config";
 import { useUpdateHotel } from "@/hooks/hotel/useUpdateHotel";
 import { Spinner } from "../ui/spinner";
 import { EditableImage } from "../ImageInput";
@@ -20,7 +20,7 @@ export default function HotelProfileSection({ hotel }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const {loading : updateOwnerLoading, handleUpdateHotel} = useUpdateHotel();
-  const [logo, setLogo] = useState(hotel?.logo || defaultDishLogo)
+  const [logo, setLogo] = useState(hotel?.logo || defaultBannerLogo)
   console.log("hotel in hotel component ", hotel)
 
   const handleChange = (e) => {
@@ -62,8 +62,8 @@ export default function HotelProfileSection({ hotel }) {
           <div className="space-y-6">
             <div className="relative h-48 sm:h-64 w-full">
               <Image
-                src={formData.logo || defaultDishLogo}
-                alt={formData.name}
+                src={formData?.logo || defaultBannerLogo}
+                alt={formData?.name}
                 fill
                 className="object-cover"
               />

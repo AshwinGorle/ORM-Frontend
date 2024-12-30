@@ -1,6 +1,7 @@
 import axios from "axios";
 import { hotelActions } from "@/redux/slices/hotelSlice";
 import { getActionErrorMessage } from "@/utils";
+import { ownerActions } from "@/redux/slices/ownerSlice";
 
 export const getHotel = (hotelId) => async (dispatch) => {
     console.log("action-get-hotel-req: ", hotelId);
@@ -20,6 +21,7 @@ export const getHotel = (hotelId) => async (dispatch) => {
         console.log("action-get-hotel-res:", data);
         if (status === "success") {
             dispatch(hotelActions.getHotelSuccess(data));
+            dispatch(ownerActions.setProfileRefresh(true));
         } else {
             dispatch(hotelActions.getHotelFailure(message));
         }

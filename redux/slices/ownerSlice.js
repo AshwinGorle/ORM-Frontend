@@ -35,12 +35,19 @@ const initialUser = {
         error: null,
         data: null,
     },
+
+    profileRefresh : false
 };
 
 const ownerSlice = createSlice({
     name: "owner",
     initialState: initialUser,
     reducers: {
+        // to update profile changes in ui
+        setProfileRefresh : (state, action)=>{
+            state.profileRefresh = action.payload;
+        },
+
         approveOwnerRequest: (state) => {
             state.approveOwner.status = "pending";
         },

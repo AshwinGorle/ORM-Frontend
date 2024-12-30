@@ -90,7 +90,7 @@ export const useGetAllTables = (params = {}) => {
   useEffect(() => {
     if (refresh || !data) {
       fetchAllTables();
-      setRefresh(false);
+      if(setRefresh) setRefresh(false);
     }
   }, [fetchAllTables, refresh]);
 

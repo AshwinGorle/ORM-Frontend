@@ -112,7 +112,9 @@ export const updateOwner = (ownerId, ownerData) => async (dispatch) => {
         console.log("action-update-owner-res:", data);
         if (status === "success") {
             dispatch(ownerActions.updateOwnerSuccess(data));
-            dispatch(authActions.updateUser(data.owner));   
+            console.log('updating user from update owner : ', data.owner)
+            dispatch(authActions.updateUser(data.owner));  
+            dispatch(ownerActions.setProfileRefresh(true)); 
         } else {
             dispatch(ownerActions.updateOwnerFailure(message));
         }

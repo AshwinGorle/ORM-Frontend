@@ -11,23 +11,27 @@ import { formatDate } from "@/lib/utils";
 import ProfileImage from "./ProfileImage";
 import { useGetUser } from "@/hooks/auth";
 import { useUpdateOwner } from "@/hooks/owner/useUpdateOwner";
-import { defaultDishLogo } from "@/config/config";
+import { defaultDishLogo, defaultProfileLogo } from "@/config/config";
 import { EditableImage } from "../ImageInput";
 import { Spinner } from "../ui/spinner";
+import { useDispatch } from "react-redux";
 
 export default function UserProfileSection({ owner }) {
+  console.log(":::::::::::re rendeting after update:::::::::::::", owner)
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(owner);
   const {loading : updateOwnerLoading, handleUpdateOwner} = useUpdateOwner(setIsEditing);
-  const [logo, setLogo] = useState(owner?.logo || defaultDishLogo)
+  const [logo, setLogo] = useState(owner?.logo || defaultProfileLogo)
+
+  useEffect(()=>{
+    setFormData(owner)
+    setLogo(owner?.logo || defaultProfileLogo);
+  },[owner])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleImageUpdate = (imageUrl) => {
-    setFormData(prev => ({ ...prev, logo: imageUrl }));
   };
 
 
@@ -42,6 +46,7 @@ export default function UserProfileSection({ owner }) {
     }
     console.log("updated user : ", updatedUser)
     handleUpdateOwner(owner._id.toString(), updatedUser);
+    
   };
 
   return (

@@ -4,32 +4,34 @@ import { useToast } from "@/hooks/use-toast";
 import { categoryActions } from "@/redux/slices/categorySlice";
 import { getUser } from "@/redux/actions/auth";
 import { authActions } from "@/redux/slices/authSlice";
+import { ownerActions } from "@/redux/slices/ownerSlice";
 
 
 export const useGetUser = () => {
     const params = {}
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { refresh = false, setRefresh = null } = params;
+    const profileRefresh = useSelector((state)=>state.owner.profileRefresh);
     const { status, error, data } = useSelector((state) => state.auth.getUser); 
     const { toast } = useToast();
 
     const fetchUser = useCallback(() => {
-        if (!data || refresh) {
+        if (!data || profileRefresh) {
             dispatch(getUser());
+            dispatch(ownerActions.setProfileRefresh(false));
         }
-    }, [dispatch, data, refresh]);
+    }, [dispatch, data, profileRefresh]);
 
     useEffect(() => {
         fetchUser();
-    }, [fetchUser]);
+    }, [fetchUser, profileRefresh]);
 
     useEffect(() => {
         if (status === "pending") {
             setLoading(true);
         } else if (status === "success") {
             setLoading(false);
-            setRefresh && setRefresh(false);
+            
             // toast({
             //     title: "Success",
             //     description: "Users fetched successfully.",
@@ -47,7 +49,7 @@ export const useGetUser = () => {
             dispatch(authActions.clearGetUserStatus());
             dispatch(authActions.clearGetUserError());
         }
-    }, [status, data, error, dispatch, toast, setRefresh]);
+    }, [status, data, error, dispatch]);
 
     const transformedUsers = useMemo(() => {
         return data?.user || null;
