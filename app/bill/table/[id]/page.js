@@ -193,7 +193,18 @@ export default function TableBillPage() {
                 <Receipt className="h-5 w-5 mr-2" />
                 Generate Final Bill
               </Button>
-            </div>
+              </div>
+              {!allOrdersCompleted && (
+                  <div className="flex items-center bg-red-50 border border-red-300 text-red-600 rounded-lg p-3 gap-3 shadow-sm">
+                      <div className="flex-shrink-0">
+                        <Ban className="h-6 w-6 text-red-500" />
+                      </div>
+                     <span className=" font-medium">
+                      Please complete all orders to generate the bill – a few are still pending or being prepared!
+                    </span>
+                </div>
+              )}
+
             <DeleteOrderModal />
           </div>
         </section>

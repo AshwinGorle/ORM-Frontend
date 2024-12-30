@@ -100,6 +100,7 @@ const offerSlice = createSlice({
     updateOfferSuccess: (state, action) => {
       state.updateOffer.status = "success";
       state.updateOffer.data = action.payload;
+      state.getOffer.data = action.payload;
       if (!state.getAllOffers?.data?.offers) {
         state.getAllOffers.data = { offers: [] };
         state.getAllOffers.data.offers.push(action.payload?.offer);

@@ -197,7 +197,7 @@ export function MyKanbanCard({ order, onEditOrder }) {
               onClick={handlePrevStatus}
               size="icon"
               disabled={loading || order.status === "draft"}
-              className={cn("h-8 w-8 transition-colors group relative min-w-40", {
+              className={cn("h-8 w-8 transition-colors group relative ", {
                 "opacity-50 cursor-not-allowed": order.status === "draft",
                 "hover:border-yellow-500 hover:text-yellow-600":
                   order.status === "preparing",
@@ -228,7 +228,7 @@ export function MyKanbanCard({ order, onEditOrder }) {
               onClick={handleNextStatus}
               size="icon"
               disabled={loading || order.status === "completed"}
-              className={cn("h-8 w-8 transition-colors group relative min-w-40", {
+              className={cn("h-8 w-8 transition-colors group relative", {
                 "opacity-50 cursor-not-allowed": order.status === "completed",
                 "hover:border-green-500 hover:text-green-600":
                   order.status === "preparing",
