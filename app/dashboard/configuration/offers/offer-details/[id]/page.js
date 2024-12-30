@@ -86,6 +86,13 @@ function EditOfferPage() {
       </div>
 
       <div className="flex gap-6 flex-wrap">
+      <div className="mt-6   ">
+          <EditableImage imageUrl={logo} setImageUrl={setLogo} element={null} />
+          {showDishSelector && <SelectMultipleDishesForOffer
+            selectedInputs={selectedDishes}
+            setSelectedInputs={setSelectedDishes}
+          />}
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <OfferForm setShowDishSelector={setShowDishSelector} form={form} />
@@ -103,14 +110,6 @@ function EditOfferPage() {
             </div>
           </form>
         </Form>
-
-        <div className="mt-6 flex flex-col justify-center self-center ">
-          <EditableImage imageUrl={logo} setImageUrl={setLogo} element={null} />
-          {showDishSelector && <SelectMultipleDishesForOffer
-            selectedInputs={selectedDishes}
-            setSelectedInputs={setSelectedDishes}
-          />}
-        </div>
       </div>
     </div>
   );

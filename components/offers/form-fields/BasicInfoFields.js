@@ -95,11 +95,11 @@ export default function BasicInfoFields({ form, setShowDishSelector }) {
             <FormLabel>Offer Type</FormLabel>
             <Select
               onValueChange={(value) => {
-                field.onChange(value); // Update the form field value
+                field?.onChange(value); // Update the form field value
                 if (value === "specific") {
-                  setShowDishSelector(true); // Set to true when value is 'specific'
+                  if(setShowDishSelector) setShowDishSelector(true); // Set to true when value is 'specific'
                 } else {
-                  setShowDishSelector(false); // Set to false for other values
+                  if(setShowDishSelector) setShowDishSelector(false); // Set to false for other values
                 }
               }}
               defaultValue={field.value}
