@@ -3,6 +3,7 @@ import { MyKanbanCard } from "./MyKanbanCard";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGetAllTables } from "@/hooks/table/useGetAllTables";
 
 export const TableOrderList = ({ orders, tableId }) => {
   const [openSections, setOpenSections] = useState({
@@ -28,6 +29,12 @@ export const TableOrderList = ({ orders, tableId }) => {
   tableOrders.completed = orders.completed?.filter(
     (order) => order.tableId._id.toString() === tableId
   ) || [];
+
+  const allTables = useGetAllTables();
+
+  const table = allTables.tables.find((table) => table._id === tableId); 
+
+  const tableSequence = table.sequence ||  "N/A";
 
   const shortTableId = tableId.slice(-5);
 
@@ -62,7 +69,12 @@ export const TableOrderList = ({ orders, tableId }) => {
   return (
     <div className="relative bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="absolute -right-12 top-4 bg-gradient-to-r from-violet-500 to-purple-600 text-white px-14 py-1 transform rotate-45 shadow-md">
-        <span className="text-xs font-medium tracking-wider">#{shortTableId}</span>
+        {/* <span className="text-xs font-medium tracking-wider">#{shortTableId}</span> */}
+        <span className="text-xs font-medium tracking-wider">
+          {tableSequence === "N/A" ? "#" +shortTableId : "Table #" + tableSequence}
+        
+          </span>
+
       </div>
 
       <div className="p-6">
