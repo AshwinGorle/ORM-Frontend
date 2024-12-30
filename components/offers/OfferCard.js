@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreVertical, Calendar, Tag, Percent } from "lucide-react";
+import { MoreVertical, Calendar, Tag, Percent , CalendarCheck, CalendarX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,12 +16,22 @@ import { useDispatch } from "react-redux";
 import { offerActions } from "@/redux/slices/offerSlice";
 
 export default function OfferCard({ offer, onEdit, onDelete }) {
+  console.log(offer);
   const router = useRouter();
   const dispatch = useDispatch();
   const getDiscountText = () => {
     return offer.discountType === 'percentage' 
       ? `${offer.value}% off`
       : `₹${offer.value} off`;
+  };
+
+  const formatDate = (date) => {
+    if (!date) return 'Not Available';
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0'); // Add leading zero if day is single digit
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Add leading zero if month is single digit
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`; // Return date in DD/MM/YYYY format
   };
 
   return (
@@ -82,6 +92,17 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
             </span>
           </div>
         </div>
+
+        <div className="flex flex-wrap gap-2 text-sm">
+            <p className="text-green-500 flex items-center gap-1">
+              <CalendarCheck className="h-4 w-4" />
+              <strong>Start Date:</strong> {formatDate(offer.startDate)}
+            </p>
+            <p className="text-red-500 flex items-center gap-1">
+              <CalendarX className="h-4 w-4" />
+              <strong>End Date:</strong> {formatDate(offer.endDate)}
+            </p>
+          </div>
 
         {!offer.disable && (
           <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
