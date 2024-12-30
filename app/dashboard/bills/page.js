@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Building2 } from "lucide-react";
+import { Building2, RotateCw } from "lucide-react";
 import BillsTable from "@/components/bills/BillsTable";
 import BillInfoModal from "@/components/bills/BillInfoModal";
 import { useGetAllBills } from "@/hooks/bill/useGetAllTableBills";
 import { Spinner } from "@/components/ui/spinner";
 import DateFilter from "@/components/bills/DateFilter";
+import { Button } from "@/components/ui/button";
 
 // Dummy data for testing
 
 export default function BillsPage() {
-  const { bills, loading: billsLoading } = useGetAllBills();
+  const [refresh, setRefresh] = useState(false);
+  const { bills, loading: billsLoading } = useGetAllBills({refresh, setRefresh});
   const [selectedBill, setSelectedBill] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredBills, setFilteredBills] = useState(bills);
@@ -65,9 +67,17 @@ export default function BillsPage() {
         </div>
         <Building2 className="h-8 w-8 text-primary" />
       </div>
-
+      <div>
+        <div className="flex gap-2 justify-between">
       <DateFilter onFilterChange={handleFilterChange} />
+      <Button  variant="default" onClick={() => setRefresh(true)}>
+          {refresh ? <Spinner className="animate-spin" /> : "Refresh"}
+          <RotateCw/>
+        </Button>
+        </div>
+      </div>
 
+       
       {billsLoading ? (
         <Spinner />
       ) : (

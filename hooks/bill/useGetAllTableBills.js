@@ -5,8 +5,7 @@ import { getAllBills } from "@/redux/actions/bill/billAction";
 import { billActions } from "@/redux/slices/billSlice";
 
 
-export const useGetAllBills = () => {
-    const params = {}
+export const useGetAllBills = (params = {}) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { refresh = false, setRefresh = null } = params;
@@ -15,14 +14,15 @@ export const useGetAllBills = () => {
     const { toast } = useToast();
 
     const fetchAllBills = useCallback(() => {
-        if ((!data || refresh)) {
+        if (( refresh || !data )) {
             dispatch(getAllBills());
+            setRefresh(false);
         }
     }, [dispatch, data, refresh]);
 
     useEffect(() => {
         fetchAllBills();
-    }, [fetchAllBills]);
+    }, [fetchAllBills, refresh]);
 
     useEffect(() => {
         if (status === "pending") {

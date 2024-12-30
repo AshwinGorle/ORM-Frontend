@@ -67,66 +67,69 @@ import { tableActions } from "@/redux/slices/tableSlice";
 import { getAllTables } from "@/redux/actions/table";
 
 export const useGetAllTables = (params = {}) => {
+  const { refresh = false, setRefresh } = params;
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-    const [loading, setLoading] = useState(false);
-    const dispatch = useDispatch();
+  // Using shallowEqual to prevent unnecessary re-renders due to object reference changes
+  const { status, error, data } = useSelector(
+    (state) => state.table.getAllTables,
+    shallowEqual
+  );
 
-    // Using shallowEqual to prevent unnecessary re-renders due to object reference changes
-    const { status, error, data } = useSelector(
-        (state) => state.table.getAllTables,
-        shallowEqual
-    );
+  const { toast } = useToast();
 
-    const { toast } = useToast();
+  // Fetch tables only when necessary
+  const fetchAllTables = useCallback(() => {
+    if (refresh || !data) {
+      dispatch(getAllTables());
+    }
+  }, [dispatch, data, refresh]);
 
-    // Fetch tables only when necessary
-    const fetchAllTables = useCallback(() => {
-        if (!data) {
-            dispatch(getAllTables());
-        }
-    }, [dispatch, data]);
+  // Trigger fetch effect on mount or refresh
+  useEffect(() => {
+    if (refresh || !data) {
+      fetchAllTables();
+      setRefresh(false);
+    }
+  }, [fetchAllTables, refresh]);
 
-    // Trigger fetch effect on mount or refresh
-    useEffect(() => {
-        fetchAllTables();
-    }, [fetchAllTables]);
+  // Handle status and errors without triggering state changes during rendering
+  useEffect(() => {
+    let timeout;
+    if (status === "pending") {
+      setLoading(true);
+    } else if (status === "success") {
+      timeout = setTimeout(() => {
+        setLoading(false);
+        toast({
+          title: "Success",
+          description: "Tables fetched successfully.",
+          variant: "success",
+        });
+        dispatch(tableActions.clearGetAllTablesStatus());
+        dispatch(tableActions.clearGetAllTablesError());
+      }, 0);
+    } else if (status === "failed") {
+      timeout = setTimeout(() => {
+        setLoading(false);
+        toast({
+          title: "Error",
+          description: error || "Failed to Fetch Tables.",
+          variant: "destructive",
+        });
+        dispatch(tableActions.clearGetAllTablesStatus());
+        dispatch(tableActions.clearGetAllTablesError());
+      }, 0);
+    }
 
-    // Handle status and errors without triggering state changes during rendering
-    useEffect(() => {
-        let timeout;
-        if (status === "pending") {
-            setLoading(true);
-        } else if (status === "success") {
-            timeout = setTimeout(() => {
-                setLoading(false);
-                toast({
-                    title: "Success",
-                    description: "Tables fetched successfully.",
-                    variant: "success",
-                });
-                dispatch(tableActions.clearGetAllTablesStatus());
-                dispatch(tableActions.clearGetAllTablesError());
-            }, 0);
-        } else if (status === "failed") {
-            timeout = setTimeout(() => {
-                setLoading(false);
-                toast({
-                    title: "Error",
-                    description: error || "Failed to Fetch Tables.",
-                    variant: "destructive",
-                });
-                dispatch(tableActions.clearGetAllTablesStatus());
-                dispatch(tableActions.clearGetAllTablesError());
-            }, 0);
-        }
+    return () => clearTimeout(timeout);
+  }, [status, error, dispatch]);
 
-        return () => clearTimeout(timeout);
-    }, [status, error, dispatch]);
+  // Transform data
+  const transformedTables = useMemo(() => {
+    return data?.tables || [];
+  }, [data]);
 
-    // Transform data
-    const transformedTables = useMemo(() => {
-        return data?.tables || [];
-    }, [data]);
-
-    return { tables: transformedTables, loading };
+  return { tables: transformedTables, loading };
 };

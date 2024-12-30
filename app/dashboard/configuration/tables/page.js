@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TableCard from "@/components/tables/TableCard";
 import { AddTableDialog } from "@/components/tables/AddTableDialog";
@@ -11,11 +11,10 @@ import { useGetAllTables } from "@/hooks/table/useGetAllTables";
 import { Spinner } from "@/components/ui/spinner";
 import { useCallback } from "react";
 
-
 export default function ManageTablesPage() {
-
   const { loading: tableLoading, tables: fetchedTables } = useGetAllTables();
- 
+  const [refresh, setRefresh] = useState(false);
+
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -61,13 +60,19 @@ export default function ManageTablesPage() {
             Manage restaurant tables and their status
           </p>
         </div>
-        <Button
-          onClick={() => setIsAddDialogOpen(true)}
-          className="flex items-center gap-2 w-full sm:w-auto shadow-sm"
-        >
-          <Plus className="h-4 w-4" />
-          Add Table
-        </Button>
+        <div className="flex  gap-4">
+          <Button
+            onClick={() => setIsAddDialogOpen(true)}
+            className="flex items-center gap-2 w-full sm:w-auto shadow-sm"
+          >
+            <Plus className="h-4 w-4" />
+            Add Table
+          </Button>
+          <Button variant="default" onClick={() => setRefresh(true)}>
+            {refresh ? <Spinner className="animate-spin" /> : "Refresh"}
+            <RotateCw/>
+          </Button>
+        </div>
       </div>
 
       {tableLoading ? (
@@ -76,7 +81,7 @@ export default function ManageTablesPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
           {fetchedTables.map((table) => (
             <TableCard
-            key={table._id}
+              key={table._id}
               table={table}
               onStatusChange={handleStatusChange}
               onEdit={() => {
@@ -91,7 +96,7 @@ export default function ManageTablesPage() {
           ))}
         </div>
       )}
-{/* 
+      {/* 
       {fetchedTables && fetchedTables.length > 0 &&
        <div>
         <AddTableDialog
@@ -100,12 +105,11 @@ export default function ManageTablesPage() {
         onAdd={handleAddTable}
       /> */}
 
-        <AddTableDialog
-          open={isAddDialogOpen}
-          onOpenChange={setIsAddDialogOpen}
-          onAdd={handleAddTable}
-        />
-          
+      <AddTableDialog
+        open={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+        onAdd={handleAddTable}
+      />
 
       <EditTableDialog
         open={isEditDialogOpen}
@@ -120,7 +124,6 @@ export default function ManageTablesPage() {
         table={selectedTable}
         onConfirm={handleDeleteTable}
       />
-      </div>
+    </div>
   );
 }
-
