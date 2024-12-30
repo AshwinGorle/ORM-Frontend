@@ -7,7 +7,7 @@ import { orderActions } from "@/redux/slices/orderSlice";
 export const useGetAllOrders = (type="order", params = {}) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { refresh = false, setRefresh } = params;
+    const { refresh = false, setRefresh = null } = params;
 
     const { status, error, data } = useSelector((state) => state.order.getAllOrders);
     const { toast } = useToast();
@@ -29,7 +29,7 @@ export const useGetAllOrders = (type="order", params = {}) => {
     // Initial fetch and refresh handling
     useEffect(() => {
         if (refresh || !data ) {
-            setRefresh(false);
+            if(setRefresh) setRefresh(false);
             fetchAllOrders();
         }
     }, [fetchAllOrders, data, refresh]);
