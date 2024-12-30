@@ -41,8 +41,9 @@ export default function StatusField({ form }) {
         name="startDate"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Start Date</FormLabel>
+            <FormLabel>Start Date: </FormLabel>
             {/* <FormControl> */}
+            {console.log("field" ,field)}
               <DatePicker value={field.value} onChange={field.onChange} />
             {/* </FormControl> */}
             <FormMessage />
@@ -56,7 +57,7 @@ export default function StatusField({ form }) {
         name="endDate"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>End Date</FormLabel>
+            <FormLabel>End Date: </FormLabel>
             <FormControl>
               <DatePicker value={field.value} onChange={field.onChange} />
             </FormControl>

@@ -23,6 +23,7 @@ function EditOfferPage() {
   const {loading , offer} = useGetOffer(id);
   const {loading :updateLoading, handleUpdateOffer} = useUpdateOffer();
   const [selectedDishes, setSelectedDishes] = useState([]);
+  const [showDishSelector, setShowDishSelector] = useState(false);
   
   const form = useForm({
     resolver: zodResolver(offerSchema),
@@ -56,6 +57,7 @@ function EditOfferPage() {
           // Set additional state values
           setLogo(offer.logo || null);
           setSelectedDishes(offer.appliedOn || []);
+          setShowDishSelector(offer?.type == 'specific')
     }
   },[offer])
   
@@ -70,25 +72,23 @@ function EditOfferPage() {
     if(logo) data["logo"] = logo;
 
     handleUpdateOffer(offer._id, data)
-
-   
   };
 
   return (
     <div className="p-6">
       <div className="flex justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Edit Dish</h1>
+          <h1 className="text-3xl font-bold">Edit Offer</h1>
           <p className="text-muted-foreground">
             Create and manage your special offers and discounts here.
           </p>
         </div>
       </div>
 
-      <div className="flex gap-10">
+      <div className="flex gap-6 flex-wrap">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <OfferForm form={form} />
+            <OfferForm setShowDishSelector={setShowDishSelector} form={form} />
             <div className="flex justify-end gap-2">
               <Button
                 type="button"
@@ -106,10 +106,10 @@ function EditOfferPage() {
 
         <div className="mt-6 flex flex-col justify-center self-center ">
           <EditableImage imageUrl={logo} setImageUrl={setLogo} element={null} />
-          <SelectMultipleDishesForOffer
+          {showDishSelector && <SelectMultipleDishesForOffer
             selectedInputs={selectedDishes}
             setSelectedInputs={setSelectedDishes}
-          />
+          />}
         </div>
       </div>
     </div>

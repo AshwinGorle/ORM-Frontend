@@ -76,7 +76,7 @@ const SelectMultipleDishesForOffer = ({
       </div>
       <div>
         
-        <ScrollArea className="h-[800px]  rounded-md border p-4">
+        <ScrollArea className="h-[400px]  rounded-md border p-4">
           {loading && <Spinner></Spinner>}
           <Command>
             <CommandInput placeholder={`Type a ${type} or search...`} />

@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useState , useEffect} from "react";
 
 // export function DatePicker({ value, onChange }) {
 //   const [open, setOpen] = React.useState(false);
@@ -51,8 +52,12 @@ import {
 
 
 export function DatePicker({ value, onChange }) {
-  const [date, setDate] = React.useState(value || new Date(Date.now()));
-
+  const [date, setDate] = useState(value|| new Date(Date.now()))
+  console.log("value in date picker ---", value)
+  useEffect(()=>{
+    setDate(value)
+  },[value])
+  
   const handleChange = (selectedDate)=>{
     console.log("Selected Date", selectedDate)
     setDate(selectedDate);
@@ -66,7 +71,7 @@ export function DatePicker({ value, onChange }) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[240px] justify-start text-left font-normal",
+            "bg-transparent w-[240px] justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
         >
