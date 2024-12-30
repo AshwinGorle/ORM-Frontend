@@ -41,12 +41,12 @@ export function GroupedOrderCard({ orders, tableSequence, customerName, totalAmo
           </Badge>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between mt-4 bg-white p-2 rounded-lg border">
+        <div className="flex flex-col flex-wrap sm:flex-row gap-0 sm:items-center sm:justify-between mt-4 bg-white p-2 rounded-lg border">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-primary/10 rounded-full ">
+            <div className="p-1.5 hidden lg:inline bg-primary/10 rounded-full ">
               <Utensils className="h-4 w-4 text-primary" />
             </div>
-            <span className="text-md font-bold">₹{totalAmount.toFixed(2)}</span>
+            <span className="sm:text-xl font-bold">₹{totalAmount.toFixed(2)}</span>
           </div>
           <TooltipProvider>
       <Tooltip>
@@ -56,7 +56,7 @@ export function GroupedOrderCard({ orders, tableSequence, customerName, totalAmo
             onClick={handleBillClick}
             className={`
               gap-1 p-1.5 
-              md:flex md:flex-wrap
+              md:flex 
               ${billId ? 'hover:bg-green-50 hover:text-green-600' : 'bg-green-600 hover:bg-green-700'}
               w-10 h-10 rounded-full p-0 justify-center items-center
               md:w-auto md:h-auto md:rounded-md md:p-1.5
