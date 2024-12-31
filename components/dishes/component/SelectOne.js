@@ -21,7 +21,7 @@ import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
 import { useState, useEffect } from "react";
 
 //////////
-const SelectOne = ({ setSelectedInput, selectedInput, type }) => {
+const SelectOne = ({ setSelectedInput, selectedInput, type, offerType }) => {
   let inputs;
   let loading;
 
@@ -57,6 +57,14 @@ const SelectOne = ({ setSelectedInput, selectedInput, type }) => {
   console.log(`${type} in select one : ${type}`, inputs);
 
   useEffect(() => {
+    // if the type is offer then we have to check wheather to display specific or global offers
+    if(type == 'offer'){
+      if(offerType && offerType == 'global'){
+        inputs = inputs.filter((input)=>input.type == 'global')
+      }else{
+        inputs = inputs.filter((input)=>input.type == 'specific')
+      }
+    }
     setFilteredInputs(inputs);
   }, [inputs]);
 
