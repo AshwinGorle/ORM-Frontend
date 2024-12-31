@@ -82,7 +82,7 @@ function EditOfferPage() {
       </div>
 
       <div className="flex gap-6 flex-wrap p-4">
-        <div className="lg:mt-6 w-full md:w-fit  ">
+        <div className="lg:mt-6 w-full lg:w-fit md:w-fit  ">
           
             <div className="flex align-middle justify-center">
             <EditableImage

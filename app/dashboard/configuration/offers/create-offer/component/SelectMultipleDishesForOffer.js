@@ -59,7 +59,7 @@ const SelectMultipleDishesForOffer = ({
   };
 
   return (
-    <div className="flex flex-col justify-items-center ">
+    <div className="flex flex-col justify-items-center md:max-w-sm ">
       <div className="flex flex-wrap w-full gap-2 mt-2 p-2 my-2 border border-gray-200 rounded-md">
         {selectedInputs?.map((input) => (
           <Badge
