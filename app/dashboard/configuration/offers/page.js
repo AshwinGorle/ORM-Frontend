@@ -64,7 +64,7 @@ import { DeleteOfferDialog } from "@/components/offers/DeleteOfferDialog";
               onDelete={() => handleDeleteOffer(offer.id)}
             />
           ))}
-          {offers.length === 0 && (
+          {myOffers.length === 0 && (
             <div className="col-span-full text-center py-12 text-muted-foreground">
               No offers available. Click &apos;Add Offer&apos; to create one.
             </div>
