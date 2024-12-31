@@ -88,7 +88,7 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span>
-              {getExpiryTimeInWords(offer.endDate) + " remaining"}
+              {getExpiryTimeInWords(offer.endDate)}
             </span>
           </div>
         </div>

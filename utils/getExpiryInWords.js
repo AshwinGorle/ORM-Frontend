@@ -29,7 +29,7 @@ function getExpiryTimeInWords(expiryDateStr) {
     if (months > 0) result.push(`${months}M`);
     if (days > 0) result.push(`${days}D`);
   
-    return result.join(" ") + "remaining" || "0D";
+    return result.join(" ") + " remaining" || "0D";
   }
   
   
