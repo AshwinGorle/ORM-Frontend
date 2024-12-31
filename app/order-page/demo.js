@@ -34,7 +34,7 @@ export default function OrderPage() {
       description: newStatus 
         ? "Now receiving new orders" 
         : "Order system is now offline",
-      variant: newStatus ? "success" : "default",
+      variant: newStatus ? "success" : "destructive",
     });
   };
 
