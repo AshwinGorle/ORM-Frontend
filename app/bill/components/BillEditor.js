@@ -197,7 +197,7 @@ import { useSendBillToEmail } from "@/hooks/bill/useSendBillToEmail";
 
 // Zod validation schema
 const BillFormSchema = z.object({
-  email: z.string().email("Please enter a valid email address").optional(),
+  // email: z.string().email("Please enter a valid email address").optional(),
   customDiscount: z.number().min(0, "Discount cannot be negative").nullable(),
 });
 
@@ -229,7 +229,6 @@ const BillEditor = ({ bill }) => {
   const handleUpdateBillLocal = () => {
     // Validate the form inputs using Zod
     const result = BillFormSchema.safeParse({
-      email,
       customDiscount,
     });
 
