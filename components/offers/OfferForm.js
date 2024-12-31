@@ -6,7 +6,7 @@ import StatusField from "./form-fields/StatusField";
 
 export default function OfferForm({ form , setShowDishSelector}) {
   return (
-    <div className="space-y-4 gap-5">
+    <div className=" space-y-4 gap-4 ">
 
       <BasicInfoFields setShowDishSelector={setShowDishSelector} form={form} />
       <DiscountFields form={form} />

@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -19,12 +17,12 @@ import { useUpdateOffer } from "@/hooks/offer/useUpdateOffer";
 
 function EditOfferPage() {
   const [logo, setLogo] = useState(null);
-  const {id} = useParams();
-  const {loading , offer} = useGetOffer(id);
-  const {loading :updateLoading, handleUpdateOffer} = useUpdateOffer();
+  const { id } = useParams();
+  const { loading, offer } = useGetOffer(id);
+  const { loading: updateLoading, handleUpdateOffer } = useUpdateOffer();
   const [selectedDishes, setSelectedDishes] = useState([]);
   const [showDishSelector, setShowDishSelector] = useState(false);
-  
+
   const form = useForm({
     resolver: zodResolver(offerSchema),
     defaultValues: {
@@ -40,42 +38,40 @@ function EditOfferPage() {
     },
   });
 
-  useEffect(()=>{
-    if(offer){
-        form.reset({
-            name: offer.name || "",
-            type: offer.type || "global",
-            appliedAbove: offer.appliedAbove || 0,
-            disable: offer.disable || false,
-            discountType: offer.discountType || "percent",
-            value: offer.value || 0,
-            startDate: new Date(offer.startDate) || null,
-            endDate:  new Date(offer.endDate) || null,
-            description: offer.description || "",
-          });
-    
-          // Set additional state values
-          setLogo(offer.logo || null);
-          setSelectedDishes(offer.appliedOn || []);
-          setShowDishSelector(offer?.type == 'specific')
+  useEffect(() => {
+    if (offer) {
+      form.reset({
+        name: offer.name || "",
+        type: offer.type || "global",
+        appliedAbove: offer.appliedAbove || 0,
+        disable: offer.disable || false,
+        discountType: offer.discountType || "percent",
+        value: offer.value || 0,
+        startDate: new Date(offer.startDate) || null,
+        endDate: new Date(offer.endDate) || null,
+        description: offer.description || "",
+      });
+
+      // Set additional state values
+      setLogo(offer.logo || null);
+      setSelectedDishes(offer.appliedOn || []);
+      setShowDishSelector(offer?.type == "specific");
     }
-  },[offer])
-  
-  
+  }, [offer]);
 
   const onSubmit = (data) => {
     const selectedDishesIds = selectedDishes?.map((dish) =>
-      dish?._id.toString()
+      dish?._id?.toString()
     );
     console.log("update-offer-data----------", data, selectedDishesIds);
     data["appliedOn"] = selectedDishesIds;
-    if(logo) data["logo"] = logo;
+    if (logo) data["logo"] = logo;
 
-    handleUpdateOffer(offer._id, data)
+    handleUpdateOffer(offer._id, data);
   };
 
   return (
-    <div className="p-6">
+    <div className="p-4">
       <div className="flex justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold">Edit Offer</h1>
@@ -85,16 +81,26 @@ function EditOfferPage() {
         </div>
       </div>
 
-      <div className="flex gap-6 flex-wrap">
-      <div className="mt-6   ">
-          <EditableImage imageUrl={logo} setImageUrl={setLogo} element={null} />
-          {showDishSelector && <SelectMultipleDishesForOffer
-            selectedInputs={selectedDishes}
-            setSelectedInputs={setSelectedDishes}
-          />}
+      <div className="flex gap-6 flex-wrap p-4">
+        <div className="lg:mt-6 w-full md:w-fit  ">
+          
+            <div className="flex align-middle justify-center">
+            <EditableImage
+              imageUrl={logo}
+              setImageUrl={setLogo}
+              element={null}
+            />
+            </div>
+            {showDishSelector && (
+              <SelectMultipleDishesForOffer
+                selectedInputs={selectedDishes}
+                setSelectedInputs={setSelectedDishes}
+              />
+            )}
+        
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form  onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <OfferForm setShowDishSelector={setShowDishSelector} form={form} />
             <div className="flex justify-end gap-2">
               <Button
