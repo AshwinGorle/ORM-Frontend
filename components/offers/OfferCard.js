@@ -77,6 +77,15 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
             <Percent className="h-3 w-3" />
             {getDiscountText()}
           </Badge>
+           {offer.disable ? (
+                      <Badge variant="default" className="flex items-center gap-1">
+            Inactive
+              </Badge>
+          ) : (
+            <Badge variant="secondary" className="flex items-center gap-1">
+              Active
+            </Badge>
+          )}
         </div>
 
         <div className="space-y-2 text-sm">
