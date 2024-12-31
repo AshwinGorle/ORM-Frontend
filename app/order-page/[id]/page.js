@@ -109,12 +109,12 @@ export default function OrderPage() {
             )}
 
             <Card className="p-4 px-6 rounded-xl shadow-sm">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="flex flex-row md:items-center justify-between gap-6">
                 <div className="flex flex-col gap-2">
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className=" lg:text-2xl font-bold text-gray-900">
                     Order Management
                   </h1>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-row lg:flex-row items-center gap-2">
                     <Button
                       variant="outline"
                       size="sm"
@@ -137,7 +137,7 @@ export default function OrderPage() {
                     </Button>
 
                     {user?.hotelName && (
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex hidden lg:block items-center gap-2 text-gray-600">
                         <Building2 className="h-4 w-4" />
                         <span className="text-lg">{user.hotelName}</span>
                         <Badge

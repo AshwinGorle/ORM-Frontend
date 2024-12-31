@@ -14,11 +14,11 @@ const BillPage = () => {
   return (
     <>
       {billLoading || !bill ? <BillShimmer/> : (
-        <div className="flex h-screen">
-          <div className="  w-3/5 p-4 overflow-auto self-center">
+        <div className="lg:flex h-screen">
+          <div className="  lg:w-3/5 p-4 overflow-auto self-center">
             <MyBillCard bill={bill} />
           </div>
-          <div className=" w-2/5 border-l">
+          <div className=" lg:w-2/5 sm:m-4 border-l">
             <BillEditor bill={bill} />
           </div>
         </div>
