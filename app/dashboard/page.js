@@ -23,73 +23,82 @@ export default function DashboardPage() {
       setRevenueByDate(data?.revenueByDate);
       setThisMonthDishes(data?.thisMonthDishes);
     }
-  })
-
+  });
+  
   return (
-    <div className="p-6">
-     
-
-      {loading ?
-        <DashboardLoading/> :
+    <div className=" lg:p-6">
+      {loading ? (
+        <DashboardLoading />
+      ) : (
         <>
-         <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <div className="p-2 bg-primary/10 rounded-full">
-          <TrendingUp className="h-8 w-8 text-primary" />
-        </div>
-      </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {/* Today's Customers */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          {/* Dashboard Header */}
+          <div className="flex items-center justify-between mb-6 flex-wrap">
+            <h1 className=" text-xl lg:text-3xl font-bold">Dashboard</h1>
+            <div className="p-2 bg-primary/10 rounded-full mt-4 sm:mt-0">
+              <TrendingUp className="h-8 w-8 text-primary" />
+            </div>
+          </div>
+
+          {/* Dashboard Cards - Flex/Grid Layout */}
+          <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-4">
+            {/* Today's Customers Card */}
+            <Card >
+              <CardHeader className="py-2 flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Today's Customers</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
+              <CardContent className=" py-2 lg:py-4">
                 <div className="text-2xl font-bold">{customers?.today}</div>
               </CardContent>
             </Card>
 
-            {/* Today's Revenue */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            {/* Today's Revenue Card */}
+            <Card >
+              <CardHeader className=" py-2 flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Today's Revenue</CardTitle>
                 <IndianRupee className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
+              <CardContent className=" py-2 lg:py-4">
                 <div className="text-2xl font-bold">₹{revenue?.today}</div>
               </CardContent>
             </Card>
 
-            {/* Monthly Customers */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            {/* Monthly Customers Card */}
+            <Card >
+              <CardHeader className=" py-2 flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Monthly Customers</CardTitle>
                 <UserCheck className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
+              <CardContent className="py-2 lg:py-4">
                 <div className="text-2xl font-bold">{customers?.monthly}</div>
               </CardContent>
             </Card>
 
-            {/* Monthly Revenue */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            {/* Monthly Revenue Card */}
+            <Card >
+              <CardHeader className=" py-2 flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Monthly Revenue</CardTitle>
                 <div className="flex items-center justify-center h-4 w-4 text-muted-foreground">
                   <IndianRupee className="h-4 w-4" />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="py-2 lg:py-4">
                 <div className="text-2xl font-bold">₹{revenue?.monthly}</div>
               </CardContent>
             </Card>
           </div>
 
-          <DashboardCharts data={{ revenueByDate, customersByDate }} />
-          <TopDishesCard data={thisMonthDishes} />
+          {/* Dashboard Charts */}
+          <div className="mt-4">
+            <DashboardCharts data={{ revenueByDate, customersByDate }} />
+          </div>
+
+          {/* Top Dishes */}
+          <div className="mt-4">
+            <TopDishesCard data={thisMonthDishes} />
+          </div>
         </>
-      }
+      )}
     </div>
   );
 }
