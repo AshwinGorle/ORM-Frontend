@@ -325,7 +325,7 @@ const BillEditor = ({ bill }) => {
             offerType="global"
           />
         </div>
-        {showEmailInput && (
+        {true && (
           <div>
             <Label htmlFor="email">Customer Email</Label>
             <div className="flex gap-4">
