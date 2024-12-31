@@ -12,8 +12,10 @@ import SelectMultiple from "@/components/dishes/component/SectMultiple";
 import { useState } from "react";
 import { EditableImage } from "@/components/ImageInput";
 import SelectMultipleDishesForOffer from "./component/SelectMultipleDishesForOffer";
+import { Label } from "@radix-ui/react-dropdown-menu";
 
 function AddOfferPage() {
+  const [showDishSelector, setShowDishSelector] = useState(false);
   const { loading, handleCreateOffer } = useCreateOffer();
   const [selectedDishes, setSelectedDishes] = useState([]);
   const [logo, setLogo] = useState(null);
@@ -56,16 +58,25 @@ function AddOfferPage() {
       <div className="flex flex-col lg:flex-row gap-10">
         <div className=" justify-center self-center ">
           <div className="flex justify-center ">
-          <EditableImage imageUrl={logo} setImageUrl={setLogo} element={null} />
+            <EditableImage
+              imageUrl={logo}
+              setImageUrl={setLogo}
+              element={null}
+            />
           </div>
-          <SelectMultipleDishesForOffer
-            selectedInputs={selectedDishes}
-            setSelectedInputs={setSelectedDishes}
-          />
+          {showDishSelector && (
+            <div className="mt-4 w-full">
+              <div className=" font-semibold w-full">Select Dish</div>
+              <SelectMultipleDishesForOffer
+                selectedInputs={selectedDishes}
+                setSelectedInputs={setSelectedDishes}
+              />
+            </div>
+          )}
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <OfferForm form={form} />
+            <OfferForm setShowDishSelector={setShowDishSelector} form={form} />
             <div className="flex justify-end gap-2">
               <Button
                 type="button"
