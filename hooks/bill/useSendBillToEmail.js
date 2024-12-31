@@ -1,17 +1,14 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
-import { payBill } from "@/redux/actions/bill/billAction";
 import { billActions } from "@/redux/slices/billSlice";
-import { useRouter } from "next/navigation";
+import { sendBillToEmail } from "@/redux/actions/bill/billAction";
 
-export const usePayBill = (setShowEmailInput) => {
-  
+export const useSendBillToEmail = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const { status, error, data } = useSelector((state) => state.bill.payBill);
+    const { status, error } = useSelector((state) => state.bill.sendBillToEmail);
     const { toast } = useToast();
-    const router = useRouter();
 
     useEffect(() => {
         if (status === "pending") {
@@ -20,26 +17,25 @@ export const usePayBill = (setShowEmailInput) => {
             setLoading(false);
             toast({
                 title: "Success",
-                description: "Bill paid successfully.",
+                description: "Email sent successfully.",
                 variant: "success", // Optional, for success styling
             });
-            dispatch(billActions.clearPayBillStats());
-            setShowEmailInput(true);
+            dispatch(billActions.clearSendBillToEmailStats());
         } else if (status === "failed") {
             setLoading(false);
             toast({
                 title: "Error",
-                description: error || "Failed to pay bill.",
+                description: error || "Failed to Send bill.",
                 variant: "destructive", // Optional, for error styling
             });
-            dispatch(billActions.clearPayBillStats());
+            dispatch(billActions.clearSendBillToEmailStats());
         }
     }, [status, error, dispatch, toast]);
 
-    const handlePayBill = (billId) => {
-        console.log("hook-pay-bill-req:" , billId);
-        dispatch(payBill(billId, data));
+    const handleSendBillToEmail = (email, billId) => {
+        console.log("hook-send-email-bill-req:" ,email, billId);
+        dispatch(sendBillToEmail(email, billId));
     };
 
-    return {loading, handlePayBill};
+    return {loading, handleSendBillToEmail};
 };

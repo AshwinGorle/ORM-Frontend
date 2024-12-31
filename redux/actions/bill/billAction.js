@@ -185,4 +185,31 @@ export const deleteBill = (billId) => async (dispatch) => {
 
 };
 
+export const sendBillToEmail = (email, billId) => async (dispatch) => {
+    console.log("action-send-email-bill-req: ", email, billId);
+    try {
+        dispatch(billActions.sendBillToEmailRequest());
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/bills/send-bill/${billId}/${email}`,
+            {},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
 
+        const { status, message, data } = response.data;
+        console.log("action-send-email-bill-res:", data);
+        if (status === "success") {
+            dispatch(billActions.sendBillToEmailSuccess(data));
+        } else {
+            dispatch(billActions.sendBillToEmailFailure(message));
+        }
+    } catch (error) {
+        console.log("action-send-email-bills-error:", error);
+        const errorMessage = getActionErrorMessage(error);
+        dispatch(billActions.sendBillToEmailFailure(errorMessage));
+    }
+};

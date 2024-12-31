@@ -173,7 +173,7 @@
 
 "use client";
 import { useState, useEffect } from "react";
-import { RefreshCw, DollarSign, XCircle } from "lucide-react";
+import { RefreshCw, DollarSign, XCircle, Notebook } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -192,6 +192,8 @@ import { useGetUser } from "@/hooks/auth";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import SelectOne from "@/components/dishes/component/SelectOne";
+import { isValidEmail } from "@/utils/checkEmail";
+import { useSendBillToEmail } from "@/hooks/bill/useSendBillToEmail";
 
 // Zod validation schema
 const BillFormSchema = z.object({
@@ -202,13 +204,18 @@ const BillFormSchema = z.object({
 const BillEditor = ({ bill }) => {
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [editedBill, setEditedBill] = useState(bill);
-  const [customDiscount, setCustomDiscount] = useState(0);
-  const [selectedDishes, setSelectedDishes] = useState([]);
-  const [customerName, setCustomerName] = useState("");
   const [email, setEmail] = useState("");
+  const [showEmailInput, setShowEmailInput] = useState(false);
+
+  const [customDiscount, setCustomDiscount] = useState(0);
+  const [customerName, setCustomerName] = useState("");
+
+  const [selectedDishes, setSelectedDishes] = useState([]);
   const { loading: updateBillLoading, handleUpdateBill } = useUpdateBill();
-  const { loading: payBillLoading, handlePayBill } = usePayBill();
+  const { loading: payBillLoading, handlePayBill } = usePayBill(setShowEmailInput);
   const { loading: userLoading, user } = useGetUser();
+  const { loading: sendEmailLoading, handleSendBillToEmail } =
+    useSendBillToEmail();
   const router = useRouter();
 
   useEffect(() => {
@@ -262,6 +269,26 @@ const BillEditor = ({ bill }) => {
     if (user.hotelId) router.push(`/order-page/${user.hotelId}`);
   };
 
+  const handleSendBill = (email, billId, status) => {
+    if (!isValidEmail(email)) {
+      toast({
+        title: "Email Info",
+        description: "Invalid Email!",
+        variant: "destructive",
+      });
+      return;
+    }
+    // if(status != 'paid'){
+    //   toast({
+    //     title: "Email Info",
+    //     description: "Bill is not paid!",
+    //     variant: "destructive",
+    //   });
+    //   return;
+    // }
+    handleSendBillToEmail(email, billId);
+  };
+
   return (
     <Card className="h-screen overflow-auto">
       <CardHeader>
@@ -291,20 +318,33 @@ const BillEditor = ({ bill }) => {
           />
         </div>
         <div>
-          <Label htmlFor="email">Customer Email</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+          <Label htmlFor="customDiscount">Select offer </Label>
+          <SelectOne
+            selectedInput={selectedOffer || null}
+            setSelectedInput={setSelectedOffer}
+            type="offer"
+            offerType="global"
           />
         </div>
-        <SelectOne
-          selectedInput={selectedOffer || null}
-          setSelectedInput={setSelectedOffer}
-          type="offer"
-          offerType="global"
-        />
+        {showEmailInput && (
+          <div>
+            <Label htmlFor="email">Customer Email</Label>
+            <div className="flex gap-4">
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Button
+                className="bg-green-600"
+                onClick={() => handleSendBill(email, bill._id.toString())}
+              >
+                {sendEmailLoading ? <Spinner /> : "Send Bill"} <Notebook />
+              </Button>
+            </div>
+          </div>
+        )}
       </CardContent>
       <CardFooter>
         <div className="flex flex-col gap-2 w-full">

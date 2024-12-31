@@ -36,12 +36,38 @@ const initialBill = {
         error: null,
         data: null,
     },
+
+    sendBillToEmail : {
+        status: null,
+        error: null,
+        data: null,
+
+    }
 };
 
 const billSlice = createSlice({
     name: "bill",
     initialState: initialBill,
     reducers: {
+        // to send bill at email
+        sendBillToEmailRequest: (state) => {
+            state.sendBillToEmail.status = "pending";
+        },
+        sendBillToEmailSuccess: (state, action) => {
+            state.sendBillToEmail.status = "success";
+            state.sendBillToEmail.data = action.payload;
+        },
+        sendBillToEmailFailure: (state, action) => {
+            state.sendBillToEmail.status = "failed";
+            state.sendBillToEmail.error = action.payload;
+        },
+
+        clearSendBillToEmailStats : (state)=>{
+            state.sendBillToEmail.status = null;
+            state.sendBillToEmail.data = null;
+            state.sendBillToEmail.error = null;
+        },
+
         // createBill
         createBillRequest: (state) => {
             state.createBill.status = "pending";
