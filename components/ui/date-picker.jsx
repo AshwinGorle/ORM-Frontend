@@ -76,6 +76,7 @@ export function DatePicker({ value, onChange }) {
           )}
         >
           <CalendarIcon />
+          {/* {date ? format(date, "PPP") : <span>Pick a date</span>} */}
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>

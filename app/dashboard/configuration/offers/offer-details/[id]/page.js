@@ -49,8 +49,8 @@ function EditOfferPage() {
             disable: offer.disable || false,
             discountType: offer.discountType || "percent",
             value: offer.value || 0,
-            startDate: offer.startDate || null,
-            endDate: offer.endDate || null,
+            startDate: new Date(offer.startDate) || null,
+            endDate:  new Date(offer.endDate) || null,
             description: offer.description || "",
           });
     
