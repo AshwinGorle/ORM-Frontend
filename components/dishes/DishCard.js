@@ -83,7 +83,7 @@
 // added best seller , offer and out of stock tags
 "use client";
 
-import { MoreVertical } from 'lucide-react';
+import { MoreVertical, Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -96,8 +96,10 @@ import {
 import Image from "next/image";
 const defaultDishLogo = "https://static.vecteezy.com/system/resources/previews/010/354/788/original/main-dish-icon-colorful-flat-design-illustration-graphics-free-vector.jpg"
 import { useRouter } from "next/navigation";
+import { useDeleteDish } from '@/hooks/dish/useDeleteDish';
 
 export default function DishCard({ dish, onEdit }) {
+  const {loading , handleDeleteDish} = useDeleteDish();
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -105,6 +107,10 @@ export default function DishCard({ dish, onEdit }) {
       maximumFractionDigits: 0,
     }).format(price);
   };
+
+  const handleDeleteDishLocal = (dishId)=>{
+    handleDeleteDish(dishId)
+  }
   
   const router = useRouter();
 
@@ -145,6 +151,9 @@ export default function DishCard({ dish, onEdit }) {
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => router.push(`/dashboard/configuration/dishes/dish-details/${dish._id}`)}>
               Edit Dish
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDeleteDishLocal(dish?._id?.toString())}>
+             <span className="text-red-600">Delete Dish</span>  <Trash2 color='red'/>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

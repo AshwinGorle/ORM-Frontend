@@ -141,7 +141,7 @@ const dishSlice = createSlice({
         deleteDishSuccess: (state, action) => {
             state.deleteDish.status = "success";
             state.getAllDishes.data.dishes = state.getAllDishes.data.dishes.filter(
-                (dish) => dish._id !== action.payload.dish
+                (dish) => dish._id.toString() !== action.payload.dish._id.toString()
             );
         },
         deleteDishFailure: (state, action) => {

@@ -208,7 +208,7 @@ export const deleteDish = (dishId) => async (dispatch) => {
         const { status, message, data } = response.data;
         console.log("action-delete-dish-res:", data);
         if (status === "success") {
-            dispatch(dishActions.deleteDishSuccess({ deletedDishId: dishId }));
+            dispatch(dishActions.deleteDishSuccess(data));
         } else {
             dispatch(dishActions.deleteDishFailure(message));
         }

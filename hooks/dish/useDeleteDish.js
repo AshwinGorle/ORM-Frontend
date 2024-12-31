@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
-import { approveHotelOwner } from "@/redux/actions/owner";
-import { ownerActions } from "@/redux/slices/ownerSlice";
-import { createDish, deleteDish, updateDish } from "@/redux/actions/dish";
-import { dishActions } from "@/redux/slices/dishsSlice";
+import { deleteDish } from "@/redux/actions/dish";
+import { dishActions } from "@/redux/slices/dishSlice";
 
-export const useDeleteDish = (setDialog) => {
+export const useDeleteDish = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { status, error } = useSelector((state) => state.dish.deleteDish);
@@ -23,7 +21,6 @@ export const useDeleteDish = (setDialog) => {
                 variant: "success", // Optional, for success styling
             });
             dispatch(dishActions.clearDeleteDishStats());
-            setDialog(false) // to close dialog
         } else if (status === "failed") {
             setLoading(false);
             toast({
@@ -32,7 +29,6 @@ export const useDeleteDish = (setDialog) => {
                 variant: "destructive", // Optional, for error styling
             });
             dispatch(dishActions.clearDeleteDishStats());
-            setDialog(false) // to close dialog
 
         }
     }, [status, error, dispatch, toast]);
