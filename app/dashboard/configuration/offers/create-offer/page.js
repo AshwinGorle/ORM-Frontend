@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -55,7 +53,16 @@ function AddOfferPage() {
         </div>
       </div>
 
-      <div className="flex gap-10">
+      <div className="flex flex-col lg:flex-row gap-10">
+        <div className=" justify-center self-center ">
+          <div className="flex justify-center ">
+          <EditableImage imageUrl={logo} setImageUrl={setLogo} element={null} />
+          </div>
+          <SelectMultipleDishesForOffer
+            selectedInputs={selectedDishes}
+            setSelectedInputs={setSelectedDishes}
+          />
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <OfferForm form={form} />
@@ -73,14 +80,6 @@ function AddOfferPage() {
             </div>
           </form>
         </Form>
-
-        <div className="mt-6 flex flex-col justify-center self-center ">
-          <EditableImage imageUrl={logo} setImageUrl={setLogo} element={null} />
-          <SelectMultipleDishesForOffer
-            selectedInputs={selectedDishes}
-            setSelectedInputs={setSelectedDishes}
-          />
-        </div>
       </div>
     </div>
   );
