@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreVertical, Calendar, Tag, Percent , CalendarCheck, CalendarX } from "lucide-react";
+import { MoreVertical, Calendar, Tag, Percent , CalendarCheck, CalendarX, Ban , CircleCheckBig } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -78,11 +78,13 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
             {getDiscountText()}
           </Badge>
            {offer.disable ? (
-                      <Badge variant="default" className="flex items-center gap-1">
-            Inactive
+                      <Badge variant="default" className="flex items-center gap-1 ">
+                        <Ban className="h-3 w-3" />
+                   Inactive
               </Badge>
           ) : (
-            <Badge variant="secondary" className="flex items-center gap-1">
+            <Badge variant="secondary" className="flex items-center gap-1 bg-green-500/10 text-green-500 hover:bg-green-500/20">
+              <CircleCheckBig className="h-3 w-3" />
               Active
             </Badge>
           )}
@@ -113,11 +115,11 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
             </p>
           </div>
 
-        {!offer.disable && (
+        {/* {!offer.disable && (
           <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
             Active
           </Badge>
-        )}
+        )} */}
       </CardContent>
     </Card>
   ); 
