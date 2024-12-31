@@ -104,7 +104,7 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 text-sm">
+        {/* <div className="flex flex-wrap gap-2 text-sm">
             <p className="text-green-500 flex items-center gap-1">
               <CalendarCheck className="h-4 w-4" />
               <strong>Start Date:</strong> {formatDate(offer.startDate)}
@@ -113,7 +113,7 @@ export default function OfferCard({ offer, onEdit, onDelete }) {
               <CalendarX className="h-4 w-4" />
               <strong>End Date:</strong> {formatDate(offer.endDate)}
             </p>
-          </div>
+          </div> */}
 
         {/* {!offer.disable && (
           <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
