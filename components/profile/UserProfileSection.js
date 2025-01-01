@@ -60,7 +60,7 @@ export default function UserProfileSection({ owner }) {
                 alt={formData.name}
                 onImageUpdate={handleImageUpdate}
               /> */}
-              <EditableImage imageUrl={logo} setImageUrl={setLogo} element={owner} />
+              <EditableImage imageUrl={logo} setImageUrl={setLogo} element={owner} disableEdit={!isEditing} />
               <div className="flex flex-wrap gap-2 justify-center">
                 <Badge variant="secondary">
                   {owner.role}

@@ -7,7 +7,7 @@ import { Pencil, Loader2 } from 'lucide-react'
 import { defaultDishLogo } from '@/config/config'
 import { useCreateUpload } from '@/hooks/upload/useCreateUpload'
 
-export function EditableImage({ imageUrl = null, setImageUrl, height = 200, element, width = 200 }) {
+export function EditableImage({ imageUrl = null, setImageUrl, height = 200, element, width = 200 , disableEdit }) {
   const [loading, setLoading] = useState(false)
   // const [previewUrl, setPreviewUrl] = useState(imageUrl)
   const fileInputRef = useRef(null)
@@ -69,14 +69,14 @@ export function EditableImage({ imageUrl = null, setImageUrl, height = 200, elem
           />
         )}
       </div>
-      <Button
+      { !disableEdit && <Button
         size="icon"
         variant="secondary"
         className="absolute bottom-2 right-2 rounded-full shadow-md"
         onClick={handleImageClick}
       >
         <Pencil className="h-4 w-4" />
-      </Button>
+      </Button>}
       <input
         type="file"
         ref={fileInputRef}
