@@ -98,6 +98,11 @@ const useAbly = (hotelId, isSystemOnline) => {
               dispatch(orderActions.syncOrders(formattedOrders));
             }
           });
+
+          channelRef.current.subscribe("delete-order", (message) => {
+            console.log("Order deleted:", message.data);
+            //add your logic here ashwin to delete order from redux
+          });
         }
       } catch (error) {
         dispatch(setConnectionError(error.message));
