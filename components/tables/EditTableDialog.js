@@ -26,6 +26,7 @@ export function EditTableDialog({ open, onOpenChange, table }) {
   const [capacity, setCapacity] = useState("");
   const [position, setPosition] = useState("");
   // const [status, setStatus] = useState("");
+  const [errors, setErrors] = useState({ sequence: "", capacity: "" });
 
   const { loading: updateTableLoading, handleUpdateTable } = useUpdateTable(onOpenChange);
 
@@ -42,12 +43,24 @@ export function EditTableDialog({ open, onOpenChange, table }) {
       setSequence(table?.sequence);
       setCapacity(table?.capacity.toString());
       setPosition(table?.position);
+      setErrors({ sequence: "", capacity: "" });
       onOpenChange(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {
+      sequence: sequence < 0 ? "Table number cannot be negative" : "",
+      capacity: capacity < 0 ? "Capacity cannot be negative" : "",
+    };
+
+    if (newErrors.sequence || newErrors.capacity) {
+      setErrors(newErrors);
+      return;
+    }
+
     const updatedTable = {
       sequence,
       capacity: parseInt(capacity),
@@ -74,6 +87,7 @@ export function EditTableDialog({ open, onOpenChange, table }) {
               placeholder="Enter table sequence"
               required
             />
+            {errors.sequence && <p className="text-red-500 text-sm">{errors.sequence}</p>}
           </div>
 
           <div className="space-y-2">
@@ -86,6 +100,7 @@ export function EditTableDialog({ open, onOpenChange, table }) {
               placeholder="Enter table capacity"
               required
             />
+              {errors.capacity && <p className="text-red-500 text-sm">{errors.capacity}</p>}
           </div>
 
           <div className="space-y-2">
