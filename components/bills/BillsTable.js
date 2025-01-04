@@ -17,6 +17,8 @@ import DeleteBillDialog from "./DeleteBillDialog";
 import { useState } from "react";
 import BillCard from "./BillCard";
 import { useDeleteBill } from "@/hooks/bill/useDeleteBIll";
+import { Printer } from "lucide-react";
+import { usePrintBill } from "./print/usePrintBill";
 
 export default function BillsTable({ bills, onViewBill, onDeleteBill }) {
   const [billToDelete, setBillToDelete] = useState(null);
@@ -32,6 +34,8 @@ export default function BillsTable({ bills, onViewBill, onDeleteBill }) {
       setBillToDelete(null);
     }
   };
+
+  const {printBill} = usePrintBill();
 
   // Mobile view
   if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -105,6 +109,12 @@ export default function BillsTable({ bills, onViewBill, onDeleteBill }) {
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
+              </TableCell>
+              <TableCell className="text-right">
+                {/* print bill button */}
+                <Button variant="ghost" size="icon" onClick={() => printBill(bill)}> 
+                  <Printer className="h-4 w-4" />
+                  </Button>
               </TableCell>
             </TableRow>
           ))}
