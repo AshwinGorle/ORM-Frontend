@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+
 export default function DateFilter({ onFilterChange }) {
   const [date, setDate] = useState(null);
   const [month, setMonth] = useState("");
@@ -53,7 +54,7 @@ export default function DateFilter({ onFilterChange }) {
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : "Pick a date"}
+            {date ? format(date, "PPP") : "Pick a date for bill"}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -68,7 +69,7 @@ export default function DateFilter({ onFilterChange }) {
 
       <Select value={month} onValueChange={handleMonthSelect}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select month" />
+          <SelectValue placeholder="Select month for bill" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="1">January</SelectItem>
