@@ -65,13 +65,20 @@ export const generatePrintTemplate = (billData) => `
       }
       table th, table td {
         padding: 0.5rem;
-        text-align: right;
       }
+    table td {
+        text-align: left;
+    }
       table th {
         text-align: left;
         background-color: #f9f9f9;
         font-weight: bold;
       }
+
+        .table-total-row {
+            text-align: right;
+        }
+
       .total-section {
         margin-top: 1rem;
         font-size: 0.9rem;
@@ -127,7 +134,7 @@ export const generatePrintTemplate = (billData) => `
               <th>Item</th>
               <th>Qty</th>
               <th>Price</th>
-              <th>Total</th>
+              <th style="text-align:right">Total</th>
             </tr>
           </thead>
           <tbody>
@@ -136,7 +143,7 @@ export const generatePrintTemplate = (billData) => `
                 <td>${item.dishId.name}</td>
                 <td>${item.quantity}</td>
                 <td>₹${item.dishId.price.toFixed(2)}</td>
-                <td>₹${(item.quantity * item.dishId.price).toFixed(2)}</td>
+                <td style="text-align:right" >₹${(item.quantity * item.dishId.price).toFixed(2)}</td>
               </tr>
             `).join('')}
           </tbody>
