@@ -173,7 +173,7 @@
 
 "use client";
 import { useState, useEffect } from "react";
-import { RefreshCw, DollarSign, XCircle, Notebook } from "lucide-react";
+import { RefreshCw, DollarSign, XCircle, Notebook, Printer } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -194,6 +194,7 @@ import { z } from "zod";
 import SelectOne from "@/components/dishes/component/SelectOne";
 import { isValidEmail } from "@/utils/checkEmail";
 import { useSendBillToEmail } from "@/hooks/bill/useSendBillToEmail";
+import { usePrintBill } from "@/components/bills/print/usePrintBill";
 
 // Zod validation schema
 const BillFormSchema = z.object({
@@ -288,6 +289,8 @@ const BillEditor = ({ bill }) => {
     handleSendBillToEmail(email, billId);
   };
 
+  const {printBill} = usePrintBill();
+
   return (
     <Card className="h-screen overflow-auto">
       <CardHeader>
@@ -346,11 +349,11 @@ const BillEditor = ({ bill }) => {
         )}
       </CardContent>
       <CardFooter>
-        <div className="flex flex-col gap-2 w-full">
+        <div className="grid grid-cols-2 grid-rows-2 gap-4 items-center w-full"> 
           <Button
             onClick={handleUpdateBillLocal}
             variant="default"
-            className="w-full"
+            
           >
             {updateBillLoading ? (
               <Spinner />
@@ -362,7 +365,7 @@ const BillEditor = ({ bill }) => {
           <Button
             onClick={handlePayBillLocal}
             variant="default"
-            className="w-full bg-green-700 text-white hover:bg-green-800"
+            className=" bg-green-700 text-white hover:bg-green-800"
           >
             {payBillLoading ? (
               <Spinner />
@@ -374,13 +377,19 @@ const BillEditor = ({ bill }) => {
           <Button
             onClick={handleCancelBill}
             variant="default"
-            className={`w-full ${
+            className={`${
               bill.status === "paid" ? "bg-black" : "bg-red-700"
             } text-white hover:bg-red-800`}
           >
             <XCircle className="mr-2 h-4 w-4" />
             {bill?.status === "paid" ? "Return to Dashboard" : "Cancel Bill"}
           </Button>
+
+          <Button onClick={() => printBill(bill)} >
+            <Printer className="mr-2 h-4 w-4" />
+            Print Bill
+          </Button>
+          
         </div>
       </CardFooter>
     </Card>
