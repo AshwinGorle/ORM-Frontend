@@ -15,10 +15,13 @@ export function AddTableDialog({ open, onOpenChange }) {
   const [capacity, setCapacity] = useState("");
   const [position, setPosition] = useState("");
 
+  const [errors, setErrors] = useState({ sequence: "", capacity: "" });
+
   const handleClose = ()=>{
     setSequence("");
     setCapacity("");
     setPosition("");
+    setErrors({ sequence: "", capacity: "" });
     onOpenChange(false)
   }
 
@@ -27,6 +30,17 @@ export function AddTableDialog({ open, onOpenChange }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {
+      sequence: sequence < 0 ? "Table number cannot be negative" : "",
+      capacity: capacity < 0 ? "Capacity cannot be negative" : "",
+    };
+
+    if (newErrors.sequence || newErrors.capacity) {
+      setErrors(newErrors);
+      return;
+    }
+
     const tableData = {
       sequence,
       capacity: parseInt(capacity),
@@ -80,6 +94,7 @@ export function AddTableDialog({ open, onOpenChange }) {
               placeholder="Enter table sequence"
               required
             />
+            {errors.sequence && <p className="text-red-500 text-sm">{errors.sequence}</p>} {/* Error message */}
           </div>
           
           <div className="space-y-2">
@@ -92,6 +107,7 @@ export function AddTableDialog({ open, onOpenChange }) {
               placeholder="Enter table capacity"
               required
             />
+              {errors.capacity && <p className="text-red-500 text-sm">{errors.capacity}</p>} {/* Error message */}
           </div>
 
           <div className="space-y-2">
