@@ -13,111 +13,164 @@ export const generatePrintTemplate = (billData) => `
         size: A4;
         margin: 0;
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
       body {
         font-family: 'Poppins', sans-serif;
-        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
         color: #333;
-        background-color: #f0f0f0;
+        line-height: 1.5;
       }
-      .page-container {
-        width: 210mm;
-        height: 297mm;
-        position: relative;
-        overflow: hidden;
-        background-color: #ffffff;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        padding: 2rem;
+      .card {
+        width: 100%;
+        max-width: 600px;
+        margin: 2rem auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: none;
       }
-      .header {
+      .card-header {
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
       }
-      .hotel-name {
-        font-size: 2.5rem;
-        font-weight: 700;
+      .card-header h1 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
         color: #2c3e50;
       }
-      .bill-info {
-        margin-bottom: 2rem;
+      .card-header p {
+        font-size: 0.9rem;
+        color: #6c757d;
       }
-      .bill-info p {
-        font-size: 1.2rem;
+      .card-content {
+        margin-bottom: 1.5rem;
+      }
+      .card-content .info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
         margin-bottom: 0.5rem;
       }
-      .table {
+      .separator {
+        height: 1px;
+        background-color: #eaeaea;
+        margin: 1rem 0;
+      }
+      table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 2rem;
+        font-size: 0.9rem;
       }
-      .table th, .table td {
-        border: 1px solid #ddd;
-        padding: 0.8rem;
+      table th, table td {
+        padding: 0.5rem;
+        text-align: right;
+      }
+      table th {
         text-align: left;
+        background-color: #f9f9f9;
+        font-weight: bold;
       }
-      .table th {
-        background-color: #f4f4f4;
-        font-weight: 600;
+      .total-section {
+        margin-top: 1rem;
+        font-size: 0.9rem;
       }
-      .footer {
-        margin-top: auto;
+      .total-section .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+      .total-section .row.bold {
+        font-weight: bold;
+      }
+      .card-footer {
         text-align: center;
-        font-size: 1rem;
-        color: #34495e;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 4px;
+        color: #fff;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      .badge.success {
+        background-color: #28a745;
+      }
+      .badge.destructive {
+        background-color: #dc3545;
       }
     </style>
   </head>
   <body>
-    <div class="page-container">
-      <header class="header">
-        <h1 class="hotel-name">${billData.hotelId.name}</h1>
-        <p>Table ${billData.tableId.sequence}</p>
-      </header>
-
-      <section class="bill-info">
-        <p><strong>Customer Name:</strong> ${billData.customerName}</p>
-        <p><strong>Bill ID:</strong> ${billData._id}</p>
-        <p><strong>Date:</strong> ${new Date(billData.createdAt).toLocaleDateString()}</p>
-      </section>
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Item</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${billData.orderedItems.map((item, index) => `
+    <div class="card">
+      <div class="card-header">
+        <h1>${billData.hotelId.name}</h1>
+        <p>Order #${billData._id.slice(-6)}</p>
+      </div>
+      <div class="card-content">
+        <div class="info">
+          <span>Date: ${new Date(billData.createdAt).toLocaleString()}</span>
+          <span>Table: ${billData.tableId.sequence}</span>
+        </div>
+        <div class="info">
+          <span>Paid by: ${billData.customerName}</span>
+        </div>
+        <div class="separator"></div>
+        <table>
+          <thead>
             <tr>
-              <td>${index + 1}</td>
-              <td>${item.dishId.name}</td>
-              <td>${item.quantity}</td>
-              <td>₹${item.dishId.price.toFixed(2)}</td>
-              <td>₹${(item.quantity * item.dishId.price).toFixed(2)}</td>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Total</th>
             </tr>
-          `).join('')}
-        </tbody>
-      </table>
-
-      <section class="bill-summary">
-        <p><strong>Total Amount:</strong> ₹${billData.totalAmount.toFixed(2)}</p>
-        <p><strong>Discount:</strong> ₹${billData.totalDiscount.toFixed(2)}</p>
-        <p><strong>Final Amount:</strong> ₹${billData.finalAmount.toFixed(2)}</p>
-        <p><strong>Status:</strong> ${billData.status.charAt(0).toUpperCase() + billData.status.slice(1)}</p>
-      </section>
-
-      <footer class="footer">
+          </thead>
+          <tbody>
+            ${billData.orderedItems.map((item) => `
+              <tr>
+                <td>${item.dishId.name}</td>
+                <td>${item.quantity}</td>
+                <td>₹${item.dishId.price.toFixed(2)}</td>
+                <td>₹${(item.quantity * item.dishId.price).toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="separator"></div>
+        <div class="total-section">
+          <div class="row">
+            <span>Subtotal:</span>
+            <span>₹${billData.totalAmount.toFixed(2)}</span>
+          </div>
+          <div class="row">
+            <span>Discount:</span>
+            <span>-₹${billData.totalDiscount.toFixed(2)}</span>
+          </div>
+          ${billData.customDiscount ? `
+            <div class="row">
+              <span>Custom Discount:</span>
+              <span>-₹${billData.customDiscount.toFixed(2)}</span>
+            </div>
+          ` : ''}
+          <div class="row bold">
+            <span>Total:</span>
+            <span>₹${billData.finalAmount.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="badge ${billData.status === 'paid' ? 'success' : 'destructive'}">
+          ${billData.status.toUpperCase()}
+        </div>
         <p>Thank you for dining with us!</p>
-      </footer>
+      </div>
     </div>
   </body>
 </html>
 `;
+
