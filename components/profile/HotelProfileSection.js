@@ -75,14 +75,14 @@ export default function HotelProfileSection({ hotel }) {
                   <span className="truncate">{formData.location}</span>
                 </div>
               </div>
-              {isEditing && (
+              {/* {isEditing && (
                 <div className="absolute top-4 right-4">
                   <ImageUploadButton 
                     onImageSelect={handleImageSelect}
                     loading={isUploading}
                   />
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className="p-6">
