@@ -34,7 +34,7 @@ export const TableOrderList = ({ orders, tableId }) => {
 
   const table = allTables.tables.find((table) => table._id === tableId); 
 
-  const tableSequence = table.sequence ||  "N/A";
+  const tableSequence = table?.sequence ||  "N/A";
 
   const shortTableId = tableId.slice(-5);
 
