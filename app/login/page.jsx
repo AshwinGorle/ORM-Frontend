@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
-import { Building2 } from "lucide-react";
+import { Building2, Eye, EyeOff } from "lucide-react";
 import { parseCookies } from "nookies";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
@@ -42,6 +42,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const {loading, handleLogin} = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -62,6 +63,10 @@ export default function LoginPage() {
   const onSubmit = async (values) => {
     console.log("hook-login-req : ", values);
     handleLogin(values)
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -106,7 +111,23 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                    <div className="relative">
+                      <Input type={showPassword ? "text" : "password"}
+                      placeholder="••••••••" {...field} />
+                           <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={togglePasswordVisibility}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 text-gray-500" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-gray-500" />
+                          )}
+                        </Button>
+                        </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
