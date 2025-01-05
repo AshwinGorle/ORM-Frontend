@@ -19,7 +19,7 @@
 
 // export function CreateOrderModel({ open, setOpen }) {
 //   const [selectedDishes, setSelectedDishes] = useState([]);
-//   const [notes, setNotes] = useState("");
+//   const [note, setNote] = useState("");
 //   const [status, setStatus] = useState("draft");
 //   const [customerName, setCustomerName] = useState("Customer");
 //   const [tableId, setTableId] = useState("");
@@ -28,7 +28,7 @@
 
 //   const handleClose = ()=>{
 //        console.log("Close create order dialog");
-//        setNotes("");
+//        setNote("");
 //        setTableId("");
 //        setCustomerName("");
 //        setSelectedDishes([]);
@@ -46,7 +46,7 @@
 //     handleCreateOrder({
 //       dishes: selectedDishesInApiFormat,
 //       customerName,
-//       notes,
+//       note,
 //       status,
 //       tableId,
 //     });
@@ -89,11 +89,11 @@
 
 //             {/* Notes Field */}
 //             <div className="space-y-2">
-//               <Label htmlFor="notes">Notes</Label>
+//               <Label htmlFor="note">Notes</Label>
 //               <Input
-//                 id="notes"
-//                 value={notes}
-//                 onChange={(e) => setNotes(e.target.value)}
+//                 id="note"
+//                 value={note}
+//                 onChange={(e) => setNote(e.target.value)}
 //                 placeholder="Add any special instructions"
 //                 className="w-full"
 //               />
@@ -172,14 +172,14 @@ import TableSelector from "./TableSelector";
 
 export function CreateOrderModel({ open, setOpen }) {
   const [selectedDishes, setSelectedDishes] = useState([]);
-  const [notes, setNotes] = useState("");
+  const [note, setNote] = useState("");
   const [status, setStatus] = useState("draft");
   const [customerName, setCustomerName] = useState("Customer");
   const [tableId, setTableId] = useState("");
 
   const handleClose = () => {
     console.log("Close create order dialog");
-    setNotes("");
+    setNote("");
     setTableId("");
     setCustomerName("");
     setSelectedDishes([]);
@@ -198,7 +198,7 @@ export function CreateOrderModel({ open, setOpen }) {
     handleCreateOrder({
       dishes: selectedDishesInApiFormat,
       customerName,
-      notes,
+      note,
       status,
       tableId,
     });
@@ -236,11 +236,11 @@ export function CreateOrderModel({ open, setOpen }) {
 
             {/* Notes Field */}
             <div className="space-y-2">
-              <Label htmlFor="notes">Notes</Label>
+              <Label htmlFor="note">Notes</Label>
               <Input
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                id="note"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
                 placeholder="Add any special instructions"
                 className="w-full"
               />

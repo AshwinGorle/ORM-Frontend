@@ -21,6 +21,7 @@ export const useUpdateOrder = () => {
                 variant: "success",
             });
             dispatch(orderActions.clearUpdateOrderStats());
+            dispatch(orderActions.setEditOrderDialog({order : null, open : false}));
         } else if (status === "failed") {
             setLoading(false);
             toast({

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useParams, useRouter } from "next/navigation";
 import { useGetTableBill } from "@/hooks/bill/useGetTableBill";
@@ -6,7 +6,17 @@ import { useGetTableOrders } from "@/hooks/order/useGetTableOrders";
 import { BillCard } from "../../components/BillCard";
 import { BillPreview } from "../../components/BillPreview";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Receipt, Check, Ban, CreditCard, Clock, ChefHat, Flag, ArrowRight } from "lucide-react";
+import {
+  ArrowLeft,
+  Receipt,
+  Check,
+  Ban,
+  CreditCard,
+  Clock,
+  ChefHat,
+  Flag,
+  ArrowRight,
+} from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { useMemo, useState } from "react";
@@ -15,8 +25,13 @@ import { billActions } from "@/redux/actions/bill/billAction.js";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useGetUser } from "@/hooks/auth";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { DeleteOrderModal } from "@/app/order-page/component/DeleteOrderModal";
+import { UpdateOrderModal } from "@/app/order-page/component/UpdateOrderModel";
 
 export default function TableBillPage() {
   const { id } = useParams();
@@ -25,66 +40,68 @@ export default function TableBillPage() {
   // const { loading: billLoading, bill, handleGenerateBill } = useGetTableBill(id);
   const { loading: ordersLoading, orders } = useGetTableOrders(id);
 
-  const initialAllOrdersCompleted = orders?.pending?.length === 0 && 
-                            orders?.preparing?.length === 0 && 
-                            orders?.completed?.length > 0;
+  const initialAllOrdersCompleted =
+    orders?.pending?.length === 0 &&
+    orders?.preparing?.length === 0 &&
+    orders?.completed?.length > 0;
 
-  const [allOrdersCompleted, setAllOrdersCompleted] = useState(initialAllOrdersCompleted);
+  const [allOrdersCompleted, setAllOrdersCompleted] = useState(
+    initialAllOrdersCompleted
+  );
 
-  //tentative amount is the total amount of all completed orders , do not use memo here 
+  //tentative amount is the total amount of all completed orders , do not use memo here
   const tentativeAmount = orders?.completed?.reduce((total, order) => {
     return total + order.totalAmount;
   }, 0);
 
-  const [billGenerated, setBillGenerated] = useState(false);
-
-  const [isProgressOpen, setIsProgressOpen] = useState(false);
-
   const handleBillGeneration = async () => {
     if (!allOrdersCompleted) return;
     try {
-      router.push('/bill/generate/' + id);
+      router.push("/bill/generate/" + id);
     } catch (error) {
       console.error("Failed to generate bill:", error);
     }
   };
 
-  const handleCancelBill = async () => {
-    router.push('/bill/table/' + id);
-  };
+
   
+ 
+
   //when order change the status , check if all orders are completed and if all orders are completed then update state of allOrdersCompleted
   useEffect(() => {
-    if (orders?.pending?.length === 0 && orders?.preparing?.length === 0 && orders?.completed?.length > 0) {
+    if (
+      orders?.pending?.length === 0 &&
+      orders?.preparing?.length === 0 &&
+      orders?.completed?.length > 0
+    ) {
       setAllOrdersCompleted(true);
-      console.log("All orders are completed",allOrdersCompleted);
-    }
-    else {
+      console.log("All orders are completed", allOrdersCompleted);
+    } else {
       setAllOrdersCompleted(false);
-      console.log("All orders are not completed",allOrdersCompleted);
+      console.log("All orders are not completed", allOrdersCompleted);
     }
   }, [orders]);
-  
-  const {user} = useGetUser();
-  
-  
+
+  const { user } = useGetUser();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8">
       <div className="max-w-7xl mx-auto space-y-8 px-4">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => {
-              console.log("in button click of table bill page",user);
-              router.push('/order-page/'+user?.hotelId)}
-            }>
-              
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                console.log("in button click of table bill page", user);
+                router.push("/order-page/" + user?.hotelId);
+              }}
+            >
               <ArrowLeft className="h-5 w-5" />
             </Button>
 
-            <h1 className="text-2xl font-bold text-gray-900">
-              Table Bill
-            </h1>
-          
+            <h1 className="text-2xl font-bold text-gray-900">Table Bill</h1>
+
             {/* <span className="text-xs text-gray-500 font-normal"> {id}</span> */}
           </div>
         </header>
@@ -116,18 +133,31 @@ export default function TableBillPage() {
                             fill="none"
                             strokeLinecap="round"
                             strokeDasharray={113.1}
-                            strokeDashoffset={113.1 - ((orders?.completed?.length || 0) / 
-                              Math.max(1, (orders?.pending?.length || 0) + 
-                              (orders?.preparing?.length || 0) + 
-                              (orders?.completed?.length || 0)) * 113.1)}
+                            strokeDashoffset={
+                              113.1 -
+                              ((orders?.completed?.length || 0) /
+                                Math.max(
+                                  1,
+                                  (orders?.pending?.length || 0) +
+                                    (orders?.preparing?.length || 0) +
+                                    (orders?.completed?.length || 0)
+                                )) *
+                                113.1
+                            }
                             className="transition-all duration-700 ease-in-out"
                           />
                         </svg>
                       </div>
                       <div className="z-10 text-sm font-medium flex items-center gap-0.5">
-                        <span className="text-green-600">{orders?.completed?.length || 0}</span>
+                        <span className="text-green-600">
+                          {orders?.completed?.length || 0}
+                        </span>
                         <span className="text-gray-400">/</span>
-                        <span className="text-gray-600">{(orders?.pending?.length || 0) + (orders?.preparing?.length || 0) + (orders?.completed?.length || 0)}</span>
+                        <span className="text-gray-600">
+                          {(orders?.pending?.length || 0) +
+                            (orders?.preparing?.length || 0) +
+                            (orders?.completed?.length || 0)}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -139,25 +169,32 @@ export default function TableBillPage() {
                           title: "Pending",
                           count: orders?.pending?.length || 0,
                           icon: Clock,
-                          color: "amber"
+                          color: "amber",
                         },
                         {
                           title: "Preparing",
                           count: orders?.preparing?.length || 0,
                           icon: ChefHat,
-                          color: "blue"
+                          color: "blue",
                         },
                         {
                           title: "Completed",
                           count: orders?.completed?.length || 0,
                           icon: Flag,
-                          color: "green"
-                        }
+                          color: "green",
+                        },
                       ].map((stage) => (
-                        <div key={stage.title} className="flex items-center gap-2 p-1 rounded-md hover:bg-gray-50 transition-colors duration-200">
-                          <stage.icon className={`h-3 w-3 text-${stage.color}-600`} />
+                        <div
+                          key={stage.title}
+                          className="flex items-center gap-2 p-1 rounded-md hover:bg-gray-50 transition-colors duration-200"
+                        >
+                          <stage.icon
+                            className={`h-3 w-3 text-${stage.color}-600`}
+                          />
                           <span className="text-xs">{stage.title}</span>
-                          <span className={`text-xs ml-auto text-${stage.color}-600 font-medium`}>
+                          <span
+                            className={`text-xs ml-auto text-${stage.color}-600 font-medium`}
+                          >
                             {stage.count}
                           </span>
                         </div>
@@ -167,16 +204,16 @@ export default function TableBillPage() {
                 </div>
               </div>
               <Badge variant="secondary" className="px-3">
-                {orders?.pending?.length + orders?.preparing?.length || 0} Active
+                {orders?.pending?.length + orders?.preparing?.length || 0}{" "}
+                Active
               </Badge>
             </div>
-            
-              <TableOrderList orders={orders} tableId={id} />
-            
+
+            <TableOrderList orders={orders} tableId={id} />
           </div>
 
           <div className="space-y-4">
-            <BillPreview 
+            <BillPreview
               // tentativeAmount={tentativeAmount}
               orders={orders}
             />
@@ -187,32 +224,34 @@ export default function TableBillPage() {
                 onClick={handleBillGeneration}
                 className={`
                   relative overflow-hidden transition-all duration-300
-                  ${allOrdersCompleted 
-                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
-                    : "bg-gray-100 text-gray-400"
+                  ${
+                    allOrdersCompleted
+                      ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
+                      : "bg-gray-100 text-gray-400"
                   }
                 `}
               >
                 <Receipt className="h-5 w-5 mr-2" />
                 Generate Final Bill
               </Button>
-              </div>
-              {!allOrdersCompleted && (
-                  <div className="flex items-center bg-red-50 border border-red-300 text-red-600 rounded-lg p-3 gap-3 shadow-sm">
-                      <div className="flex-shrink-0">
-                        <Ban className="h-6 w-6 text-red-500" />
-                      </div>
-                     <span className=" font-medium">
-                      Please complete all orders to generate the bill – a few are still pending or being prepared!
-                    </span>
+            </div>
+            {!allOrdersCompleted && (
+              <div className="flex items-center bg-red-50 border border-red-300 text-red-600 rounded-lg p-3 gap-3 shadow-sm">
+                <div className="flex-shrink-0">
+                  <Ban className="h-6 w-6 text-red-500" />
                 </div>
-              )}
+                <span className=" font-medium">
+                  Please complete all orders to generate the bill – a few are
+                  still pending or being prepared!
+                </span>
+              </div>
+            )}
 
             <DeleteOrderModal />
           </div>
         </section>
-      
-      {/* { ) : (
+
+        {/* { ) : (
         <div className="max-w-4xl mx-auto">
           <BillCard bill={bill} />
           <div className="flex justify-end gap-4 mt-6">
@@ -238,8 +277,7 @@ export default function TableBillPage() {
           </div>
         </div>
       )} */}
-
-    </div>
+      </div>
     </div>
   );
 }

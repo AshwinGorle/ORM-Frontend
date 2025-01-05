@@ -25,6 +25,8 @@ import { orderActions } from "@/redux/slices/orderSlice";
 import { OrderDetailsDialog } from "@/components/orders/OrderDetailsDialog";
 import { useGetOrderDetails } from "@/hooks/order/useGetOrderDetails";
 import { cn } from "@/lib/utils";
+import { EditOfferDialog } from "@/components/offers/EditOfferDialog";
+import { UpdateOrderModal } from "./UpdateOrderModel";
 
 export function MyKanbanCard({ order, onEditOrder }) {
   const dispatch = useDispatch();
@@ -90,9 +92,7 @@ export function MyKanbanCard({ order, onEditOrder }) {
 
   const handleEditClick = (e) => {
     e.stopPropagation();
-    if (onEditOrder) {
-      onEditOrder(order);
-    }
+    dispatch(orderActions.setEditOrderDialog({open : true , order : order}))
   };
 
   return (
@@ -118,8 +118,8 @@ export function MyKanbanCard({ order, onEditOrder }) {
                 size="sm"
                 variant="ghost"
                 className="h-8 w-8 p-0 hover:bg-gray-100"
-                onClick={handleEditClick}
-              >
+                onClick={(e)=>handleEditClick(e)}
+              >   
                 <Pencil className="h-4 w-4" />
               </Button>
               <Button
@@ -258,6 +258,7 @@ export function MyKanbanCard({ order, onEditOrder }) {
         </CardFooter>
       </Card>
 
+      <UpdateOrderModal/>
       <OrderDetailsDialog
         open={isDetailsOpen}
         onOpenChange={(open) => setIsDetailsOpen(open)}

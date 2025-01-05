@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { safeGet, formatPrice } from "@/lib/utils";
-import { Clock, MapPin, User, Building2, Receipt } from "lucide-react";
+import { Clock, MapPin, User, Building2, Receipt, Notebook } from "lucide-react";
 
 export function OrderDetailsDialog({
   open,
@@ -31,7 +31,7 @@ export function OrderDetailsDialog({
       </Dialog>
     );
   }
-
+  console.log("order details in in : ", orderDetails)
   const getStatusVariant = (status) => {
     switch (status) {
       case "pending":
@@ -116,6 +116,10 @@ export function OrderDetailsDialog({
               <h3 className="text-lg font-semibold flex items-center gap-2">
                 <Receipt className="h-4 w-4" /> Order Items
               </h3>
+              <div className="flex gap-2 align-middle">
+                <Notebook className="h-4 w-4 self-center" />
+                 {orderDetails?.note}
+              </div>
               <div className="mt-4 space-y-3">
                 {(orderDetails?.dishes || []).map((item, index) => (
                   <div

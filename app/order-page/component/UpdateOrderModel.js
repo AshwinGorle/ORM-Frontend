@@ -19,14 +19,15 @@ import { Clock, Utensils, User, MapPin, Receipt, PenSquare } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatPrice } from "@/lib/utils";
 
-export function UpdateOrderModal({ open, onOpenChange, orderToEdit }) {
+export function UpdateOrderModal() {
   const dispatch = useDispatch();
+  const {open, order} = useSelector((state)=> state.order.editOrderDialog);
   const [selectedDishes, setSelectedDishes] = useState([]);
   const { loading: updateLoading, handleUpdateOrder } = useUpdateOrder();
 
   useEffect(() => {
-    if (orderToEdit) {
-      const dishesInOrder = orderToEdit?.dishes || [];
+    if (order) {
+      const dishesInOrder = order?.dishes || [];
       const dishesInSelectedDishFormat = dishesInOrder.map((dish) => ({
         ...dish.dishId,
         orderQuantity: dish?.quantity || 0,
@@ -34,10 +35,10 @@ export function UpdateOrderModal({ open, onOpenChange, orderToEdit }) {
       }));
       setSelectedDishes(dishesInSelectedDishFormat);
     }
-  }, [orderToEdit]);
+  }, [order]);
 
   const handleSubmit = async () => {
-    if (!orderToEdit) return;
+    if (!order) return;
     
     const selectedDishesInApiFormat = selectedDishes.map((dish) => ({
       dishId: dish._id,
@@ -45,7 +46,7 @@ export function UpdateOrderModal({ open, onOpenChange, orderToEdit }) {
       note: dish.note || "",
     }));
 
-    await handleUpdateOrder(orderToEdit._id, { 
+    await handleUpdateOrder(order._id, { 
       dishes: selectedDishesInApiFormat 
     });
     
@@ -53,8 +54,7 @@ export function UpdateOrderModal({ open, onOpenChange, orderToEdit }) {
   };
 
   const handleClose = () => {
-    setSelectedDishes([]);
-    onOpenChange(false);
+      dispatch(orderActions.setEditOrderDialog({order : null, open :false}))
   };
 
   const totalAmount = selectedDishes.reduce(
@@ -62,7 +62,7 @@ export function UpdateOrderModal({ open, onOpenChange, orderToEdit }) {
     0
   );
 
-  if (!orderToEdit) return null;
+  if (!order) return null;
 
   return (
     <Dialog 
@@ -75,7 +75,7 @@ export function UpdateOrderModal({ open, onOpenChange, orderToEdit }) {
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
             <PenSquare className="h-6 w-6" />
-            Update Order #{orderToEdit._id.slice(-6)}
+            Update Order #{order._id.slice(-6)}
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[80vh]">
@@ -86,20 +86,20 @@ export function UpdateOrderModal({ open, onOpenChange, orderToEdit }) {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 text-gray-600">
                       <User className="h-4 w-4" />
-                      <span>{orderToEdit.customerId?.name || 'Guest'}</span>
+                      <span>{order.customerId?.name || 'Guest'}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">
                       <MapPin className="h-4 w-4" />
-                      <span>Table {orderToEdit.tableId?.sequence}</span>
+                      <span>Table {order.tableId?.sequence}</span>
                     </div>
                   </div>
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 text-gray-600">
                       <Clock className="h-4 w-4" />
-                      <span>{new Date(orderToEdit.createdAt).toLocaleString()}</span>
+                      <span>{new Date(order.createdAt).toLocaleString()}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">{orderToEdit.status}</Badge>
+                      <Badge variant="outline">{order.status}</Badge>
                     </div>
                   </div>
                 </div>

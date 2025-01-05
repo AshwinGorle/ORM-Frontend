@@ -66,11 +66,6 @@ export function MyKanbanBoard({ orders, type="global", tableId, hotelName }) {
         <MyKanbanColumn title="Preparing" orders={orders?.preparing} onEditOrder={handleEditOrder} />
         <MyKanbanCompletedColumn title="Completed" orders={orders?.completed} onEditOrder={handleEditOrder} />
         <CreateOrderModel open={openCreateOrderDialog} setOpen={setOpenCreateOrderDialog} />
-        <UpdateOrderModal 
-          open={isEditModalOpen}
-          onOpenChange={setIsEditModalOpen}
-          orderToEdit={selectedOrder}
-        />
         <DeleteOrderModal />
       </div>
     </div>

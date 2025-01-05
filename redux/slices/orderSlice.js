@@ -44,8 +44,10 @@ const initialOrder = {
     data: null,
   },
 
-  openEditOrderDialog: false,
-  selectedEditOrder: null,
+  editOrderDialog : {
+    open : false,
+    order : null
+  },
 
   openDeleteOrderDialog: false,
   selectedDeleteOrder: null,
@@ -55,6 +57,11 @@ const orderSlice = createSlice({
   name: "order",
   initialState: initialOrder,
   reducers: {
+     // edit order modal
+     setEditOrderDialog : (state , action) => {
+       state.editOrderDialog.open = action.payload.open;
+       state.editOrderDialog.order = action.payload.order;
+     },
     // createOrder
     createOrderRequest: (state) => {
       state.createOrder.status = "pending";
@@ -96,13 +103,13 @@ const orderSlice = createSlice({
     /////////////////////////////////////////////////////////////////
 
     //////////// fro edit and delete order dialogs///////////
-    setOpenEditOrder: (state, action) => {
-      state.openEditOrderDialog = action.payload;
-    },
+    // setOpenEditOrder: (state, action) => {
+    //   state.openEditOrderDialog = action.payload;
+    // },
 
-    setSelectedEditOrder: (state, action) => {
-      state.selectedEditOrder = action.payload;
-    },
+    // setSelectedEditOrder: (state, action) => {
+    //   state.selectedEditOrder = action.payload;
+    // },
 
     setOpenDeleteOrder: (state, action) => {
       state.openDeleteOrderDialog = action.payload;
