@@ -71,7 +71,7 @@ export default function BillsPage() {
         <div className="flex gap-2 justify-between">
       <DateFilter onFilterChange={handleFilterChange} />
       <Button  variant="default" onClick={() => setRefresh(true)}>
-          {refresh ? <Spinner className="animate-spin" /> : "Refresh"}
+          {refresh ? <Spinner className="animate-spin" /> : ""}
           <RotateCw/>
         </Button>
         </div>
