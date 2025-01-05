@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUpdateIngredient } from "@/hooks/ingredient/useUpdateIngredient";
 import { Spinner } from "../ui/spinner";
 import { EditableImage } from "../ImageInput";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 
 export function EditIngredientDialog({ open, onOpenChange, ingredient }) {
   const [name, setName] = useState("");
@@ -65,7 +66,9 @@ export function EditIngredientDialog({ open, onOpenChange, ingredient }) {
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">{loading? <Spinner/> : "Save Changes"}</Button>
+            <Button type="submit">
+              {loading? <WhiteLoadingSpinner/> : "Save Changes"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

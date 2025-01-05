@@ -15,6 +15,7 @@ import { defaultDishLogo, defaultProfileLogo } from "@/config/config";
 import { EditableImage } from "../ImageInput";
 import { Spinner } from "../ui/spinner";
 import { useDispatch } from "react-redux";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 
 export default function UserProfileSection({ owner }) {
   console.log(":::::::::::re rendeting after update:::::::::::::", owner)
@@ -136,7 +137,7 @@ export default function UserProfileSection({ owner }) {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <Button type="submit" className="flex-1 sm:flex-none">
-                      {updateOwnerLoading ? <Spinner/> : "Save Changes"}
+                      {updateOwnerLoading ? <WhiteLoadingSpinner/> : "Save Changes"}
                     </Button>
                     <Button
                       type="button"

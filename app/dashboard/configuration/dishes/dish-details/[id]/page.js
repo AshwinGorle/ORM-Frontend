@@ -12,6 +12,7 @@ import { useGetDish } from "@/hooks/dish/useGetDish";
 import SelectMultiple from "@/components/dishes/component/SectMultiple";
 import SelectOne from "@/components/dishes/component/SelectOne";
 import { Switch } from "@/components/ui/switch"; // Switch for toggle buttons
+import { WhiteLoadingSpinner } from "@/components/ui/WhiteLoadingSpinner";
 
 function DishDetails() {
   const { id } = useParams();
@@ -167,7 +168,7 @@ function DishDetails() {
             Go Back
           </Button>
           <Button type="submit">
-            {updateDishLoading ? <Spinner /> : "Save Changes"}
+            {updateDishLoading ? <WhiteLoadingSpinner /> : "Save Changes"}
           </Button>
         </div>
       </form>

@@ -14,6 +14,7 @@ import { useUpdateHotel } from "@/hooks/hotel/useUpdateHotel";
 import { Spinner } from "../ui/spinner";
 import { EditableImage } from "../ImageInput";
 import { formatDate } from "@/lib/utils";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 
 export default function HotelProfileSection({ hotel }) {
   const [formData, setFormData] = useState(hotel);
@@ -159,7 +160,7 @@ export default function HotelProfileSection({ hotel }) {
                   <EditableImage imageUrl={logo} setImageUrl={setLogo} element={hotel} />
                   <div className="flex flex-col sm:flex-row gap-2">
                     <Button type="submit" className="flex-1 sm:flex-none">
-                     {updateOwnerLoading ? <Spinner/> : 'Save Changes'}
+                     {updateOwnerLoading ? <WhiteLoadingSpinner/> : 'Save Changes'}
                     </Button>
                     <Button
                       type="button"

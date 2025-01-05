@@ -11,6 +11,7 @@ import { Spinner } from "../ui/spinner";
 import { EditableImage } from "../ImageInput";
 import { useDispatch, useSelector } from "react-redux";
 import { ingredientActions } from "@/redux/slices/ingredientsSlice";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 
 export function AddIngredientDialog({ open, setOpen, onAdd }) {
   const dispatch = useDispatch()
@@ -68,7 +69,9 @@ export function AddIngredientDialog({ open, setOpen, onAdd }) {
             <Button type="button" variant="outline" onClick={()=>handleClose()}>
               Cancel
             </Button>
-            <Button type="submit">{loading ? <Spinner size={"sm"}/> : "Add ingredient"} </Button>
+            <Button type="submit">
+              {loading ? <WhiteLoadingSpinner size={"sm"}/> : "Add ingredient"} 
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

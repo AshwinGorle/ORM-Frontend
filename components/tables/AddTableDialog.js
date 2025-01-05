@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateTable } from "@/hooks/table/useCreateTable";
 import { Spinner } from "../ui/spinner";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 // import QRCode from "qrcode";
 
 export function AddTableDialog({ open, onOpenChange }) {
@@ -125,7 +126,9 @@ export function AddTableDialog({ open, onOpenChange }) {
             <Button type="button" variant="outline" onClick={() => handleClose()}>
               Cancel
             </Button>
-            <Button type="submit">{createTableLoading ? <Spinner/> : "Add Table"}</Button>
+            <Button type="submit">
+              {createTableLoading ? <WhiteLoadingSpinner/> : "Add Table"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

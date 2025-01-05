@@ -13,6 +13,7 @@ import { useState } from "react";
 import { EditableImage } from "@/components/ImageInput";
 import SelectMultipleDishesForOffer from "./component/SelectMultipleDishesForOffer";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import { WhiteLoadingSpinner } from "@/components/ui/WhiteLoadingSpinner";
 
 function AddOfferPage() {
   const [showDishSelector, setShowDishSelector] = useState(false);
@@ -86,7 +87,7 @@ function AddOfferPage() {
                 Cancel
               </Button>
               <Button type="submit">
-                {loading ? <Spinner size={"sm"} /> : "Add Offer"}
+                {loading ? <WhiteLoadingSpinner size={"sm"} /> : "Add Offer"}
               </Button>
             </div>
           </form>

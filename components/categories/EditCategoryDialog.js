@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUpdateCategory } from "@/hooks/category/useUpdateCategory";
 import { Spinner } from "../ui/spinner";
 import { EditableImage } from "../ImageInput";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 
 export function EditCategoryDialog({ open, onOpenChange, category }) {
   const [name, setName] = useState("");
@@ -63,7 +64,9 @@ export function EditCategoryDialog({ open, onOpenChange, category }) {
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">{loading ? <Spinner size={"sm"}/> : "Save Changes"}</Button>
+            <Button type="submit">
+              {loading ? <WhiteLoadingSpinner size={"sm"}/> : "Save Changes"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

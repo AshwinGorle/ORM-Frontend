@@ -18,6 +18,7 @@ import SelectOne from "./component/SelectOne";
 import { EditableImage } from "../ImageInput";
 import { Switch } from "@/components/ui/switch"; // Import Switch for toggle buttons
 import { toast } from "@/hooks/use-toast";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 
 export function AddDishDialog({ open, onOpenChange }) {
   // Initial states
@@ -157,7 +158,7 @@ export function AddDishDialog({ open, onOpenChange }) {
                 Cancel
               </Button>
               <Button type="button" onClick={(e)=>handleSubmit(e)}>
-                {loading ? <Spinner /> : "Add Dish"}
+                {loading ? <WhiteLoadingSpinner /> : "Add Dish"}
               </Button>
             </DialogFooter>
           </form>

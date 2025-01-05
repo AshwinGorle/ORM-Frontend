@@ -11,6 +11,7 @@ import { Spinner } from "../ui/spinner";
 import { EditableImage } from "../ImageInput";
 import { categoryActions } from "@/redux/slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 
 export function AddCategoryDialog() {
   const dispatch = useDispatch();
@@ -66,7 +67,9 @@ export function AddCategoryDialog() {
             <Button type="button" variant="outline" onClick={()=>handleClose()}>
               Cancel
             </Button>
-            <Button type="submit">{loading ? <Spinner size={"sm"}/>:"Add Category"}</Button>
+            <Button type="submit">
+              {loading ? <WhiteLoadingSpinner size={"sm"}/>:"Add Category"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

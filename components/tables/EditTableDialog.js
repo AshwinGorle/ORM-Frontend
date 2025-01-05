@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { useUpdateTable } from "@/hooks/table/useUpdateTable";
 import { Spinner } from "../ui/spinner";
+import { WhiteLoadingSpinner } from "../ui/WhiteLoadingSpinner";
 
 export function EditTableDialog({ open, onOpenChange, table }) {
   const [sequence, setSequence] = useState("");
@@ -150,7 +151,7 @@ export function EditTableDialog({ open, onOpenChange, table }) {
               Cancel
             </Button>
             <Button type="submit">
-              {updateTableLoading ? <Spinner /> : "Save Changes"}
+              {updateTableLoading ? <WhiteLoadingSpinner /> : "Save Changes"}
             </Button>
           </DialogFooter>
         </form>

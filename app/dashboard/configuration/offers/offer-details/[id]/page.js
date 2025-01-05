@@ -14,6 +14,7 @@ import SelectMultipleDishesForOffer from "../../create-offer/component/SelectMul
 import { useParams } from "next/navigation";
 import { useGetOffer } from "@/hooks/offer/useGetOffer";
 import { useUpdateOffer } from "@/hooks/offer/useUpdateOffer";
+import { WhiteLoadingSpinner } from "@/components/ui/WhiteLoadingSpinner";
 
 function EditOfferPage() {
   const [logo, setLogo] = useState(null);
@@ -111,7 +112,7 @@ function EditOfferPage() {
                 Cancel
               </Button>
               <Button type="submit">
-                {false ? <Spinner size={"sm"} /> : "Update"}
+                {false ? <WhiteLoadingSpinner size={"sm"} /> : "Update"}
               </Button>
             </div>
           </form>
