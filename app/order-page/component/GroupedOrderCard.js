@@ -25,16 +25,24 @@ export function GroupedOrderCard({ orders, tableSequence, customerName, totalAmo
       <CardHeader className="pb-2 bg-gray-50/50">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+            <div className=" bg-primary/10 rounded-lg shrink-0">
               <Table className="h-5 w-5 text-primary" />
             </div>
-            <div className="min-w-0">
+            {/* <div className="min-w-0">
               <CardTitle className="text-lg font-bold truncate">Table {tableSequence}</CardTitle>
               <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1 min-w-0">
                 <User className="h-4 w-4 shrink-0" />
                 <span className="truncate">{customerName}</span>
               </div>
-            </div>
+            </div> */}
+
+            <div className="flex items-center gap-2 bg-gray-50/80 px-2.5 py-1.5 rounded-md">
+                            <User className="h-4 w-4 text-gray-500" />
+                            <span className="text-sm font-medium">
+                              Table{` ${tableSequence} : ${customerName}`}
+                            </span>
+                          </div>
+
           </div>
           <Badge variant="secondary" className="h-7 shrink-0">
             {orderCount} orders
@@ -46,7 +54,7 @@ export function GroupedOrderCard({ orders, tableSequence, customerName, totalAmo
             <div className="p-1.5 hidden lg:inline bg-primary/10 rounded-full ">
               <Utensils className="h-4 w-4 text-primary" />
             </div>
-            <span className="sm:text-xl font-bold">₹{totalAmount.toFixed(2)}</span>
+            <span className="text-lg font-bold">₹{totalAmount.toFixed(2)}</span>
           </div>
           <TooltipProvider>
       <Tooltip>

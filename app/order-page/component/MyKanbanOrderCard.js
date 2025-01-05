@@ -52,7 +52,7 @@ export function MyKanbanOrderCard({ order }) {
         </div>
         <div className="flex items-center gap-2">
           <DollarSign className="h-4 w-4" />
-          <span>₹{totalAmount.toFixed(2)}</span>
+          <span>₹{totalAmount.toFixed(2)} </span>
         </div>
         <Popover>
           <PopoverTrigger asChild>
