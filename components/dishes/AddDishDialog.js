@@ -97,7 +97,7 @@ export function AddDishDialog({ open, onOpenChange }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Add New Dish</DialogTitle>
+          <DialogTitle>Add New Dishes</DialogTitle>
         </DialogHeader>
 
         <div className="flex gap-5">

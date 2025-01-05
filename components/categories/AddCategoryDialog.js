@@ -9,11 +9,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCreateCategory } from "@/hooks/category/useCreateCategory";
 import { Spinner } from "../ui/spinner";
 import { EditableImage } from "../ImageInput";
+import { categoryActions } from "@/redux/slices/categorySlice";
+import { useDispatch, useSelector } from "react-redux";
 
-export function AddCategoryDialog({ open, onOpenChange, onAdd }) {
+export function AddCategoryDialog() {
+  const dispatch = useDispatch();
+  const openCreateCategoryPopup = useSelector((state)=>state.category.openCreateCategoryPopup)
+  console.log("inside pupup : ", openCreateCategoryPopup)
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const {loading, handleCreateCategory} = useCreateCategory(onOpenChange);
+  const {loading, handleCreateCategory} = useCreateCategory();
   const [logo , setLogo] = useState(null);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,8 +30,12 @@ export function AddCategoryDialog({ open, onOpenChange, onAdd }) {
     // setDescription("");
   };
 
+  const handleClose = ()=>{
+        dispatch(categoryActions.setCreateCategoryPopup(false))   
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={openCreateCategoryPopup} onOpenChange={()=>dispatch(categoryActions.setCreateCategoryPopup(false))}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Category</DialogTitle>
@@ -54,7 +63,7 @@ export function AddCategoryDialog({ open, onOpenChange, onAdd }) {
             />
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button type="button" variant="outline" onClick={()=>handleClose()}>
               Cancel
             </Button>
             <Button type="submit">{loading ? <Spinner size={"sm"}/>:"Add Category"}</Button>

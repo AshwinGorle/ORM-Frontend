@@ -9,12 +9,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCreateIngredient } from "@/hooks/ingredient/useCreateIngredient";
 import { Spinner } from "../ui/spinner";
 import { EditableImage } from "../ImageInput";
+import { useDispatch, useSelector } from "react-redux";
+import { ingredientActions } from "@/redux/slices/ingredientsSlice";
 
 export function AddIngredientDialog({ open, setOpen, onAdd }) {
+  const dispatch = useDispatch()
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const {loading, handleCreateIngredient} = useCreateIngredient(setOpen);
+  const {loading, handleCreateIngredient} = useCreateIngredient();
   const [logo, setLogo] = useState(null);
+  const openCreateIngredientPopup = useSelector((state)=>state.ingredient.openCreateIngredientPopup)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,8 +30,14 @@ export function AddIngredientDialog({ open, setOpen, onAdd }) {
     // setDescription("");
   };
 
+  const handleClose = ()=>{
+    dispatch(ingredientActions.setCreateIngredientPopup(false))
+  }
+
   return (
-    <Dialog open={open} setOpen={setOpen}>
+    <Dialog open={openCreateIngredientPopup} onOpenChange={(isOpen) => {
+      if (!isOpen) handleClose();
+    }}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Ingredient</DialogTitle>
@@ -55,7 +65,7 @@ export function AddIngredientDialog({ open, setOpen, onAdd }) {
             />
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button type="button" variant="outline" onClick={()=>handleClose()}>
               Cancel
             </Button>
             <Button type="submit">{loading ? <Spinner size={"sm"}/> : "Add ingredient"} </Button>

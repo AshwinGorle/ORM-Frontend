@@ -17,6 +17,8 @@ import { EditIngredientDialog } from "@/components/ingredients/EditIngredientDia
 import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
 import { useDeleteIngredient } from "@/hooks/ingredient/useDeleteIngredient";
 import { Spinner } from "@/components/ui/spinner";
+import { useDispatch } from "react-redux";
+import { ingredientActions } from "@/redux/slices/ingredientsSlice";
 
 export default function IngredientsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -26,7 +28,8 @@ export default function IngredientsPage() {
 
   const { ingredients, loading } = useGetAllIngredients();
   const { loading: deleteLoading, handleDeleteIngredient } = useDeleteIngredient(setIsDeleteDialogOpen);
-
+  
+  const dispatch = useDispatch();
 
   const handleDeleteIngredientLocal = () => {
     handleDeleteIngredient(selectedIngredient._id);
@@ -43,7 +46,7 @@ export default function IngredientsPage() {
           </p>
         </div>
         <Button
-          onClick={() => setIsAddDialogOpen(true)}
+          onClick={() => dispatch(ingredientActions.setCreateIngredientPopup(true))}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
@@ -108,10 +111,7 @@ export default function IngredientsPage() {
         </div>
       )}
 
-      <AddIngredientDialog
-        open={isAddDialogOpen}
-        setOpen={setIsAddDialogOpen}
-      />
+      <AddIngredientDialog/>
 
       <EditIngredientDialog
         open={isEditDialogOpen}

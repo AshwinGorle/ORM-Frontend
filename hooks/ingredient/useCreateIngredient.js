@@ -6,7 +6,7 @@ import { ownerActions } from "@/redux/slices/ownerSlice";
 import { createIngredient } from "@/redux/actions/ingredient";
 import { ingredientActions } from "@/redux/slices/ingredientsSlice";
 
-export const useCreateIngredient = (setOpen) => {
+export const useCreateIngredient = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { status, error, data } = useSelector((state) => state.ingredient.createIngredient);
@@ -23,7 +23,7 @@ export const useCreateIngredient = (setOpen) => {
                 variant: "success", // Optional, for success styling
             });
             dispatch(ingredientActions.clearCreateIngredientStats());
-            setOpen(false) // to close dialog
+            dispatch(ingredientActions.setCreateIngredientPopup(false));
         } else if (status === "failed") {
             setLoading(false);
             toast({
@@ -32,8 +32,7 @@ export const useCreateIngredient = (setOpen) => {
                 variant: "destructive", // Optional, for error styling
             });
             dispatch(ingredientActions.clearCreateIngredientStats());
-            setOpen(false) // to close dialog
-
+            dispatch(ingredientActions.setCreateIngredientPopup(false));
         }
     }, [status, error, dispatch, toast]);
 

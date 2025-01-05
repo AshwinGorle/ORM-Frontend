@@ -17,6 +17,8 @@ import { EditCategoryDialog } from "@/components/categories/EditCategoryDialog";
 import { useGetAllCategories } from "@/hooks/category/useGetAllCategories";
 import { useDeleteCategory } from "@/hooks/category/useDeleteCategory";
 import { Spinner } from "@/components/ui/spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { categoryActions } from "@/redux/slices/categorySlice";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
@@ -25,12 +27,11 @@ export default function CategoriesPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   
+  const dispatch = useDispatch();
+  
   const {categories : myCategories , loading} = useGetAllCategories();
   const {loading : deletionLoading , handleDeleteCategory} = useDeleteCategory(setIsDeleteDialogOpen);
 
-  const handleAddCategory = () => {
-    setIsAddDialogOpen(false);
-  };     
 
   const handleEditCategory = (updatedCategory) => {
     setIsEditDialogOpen(false);
@@ -51,7 +52,7 @@ export default function CategoriesPage() {
           </p>
         </div>
         <Button
-          onClick={() => setIsAddDialogOpen(true)}
+          onClick={() => dispatch(categoryActions.setCreateCategoryPopup(true))}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
@@ -71,7 +72,7 @@ export default function CategoriesPage() {
           </TableHeader>
           <TableBody>
             {myCategories?.map((category) => (
-              <TableRow key={category.id}>
+              <TableRow key={category._id}>
                 <TableCell className="font-medium">{category.name}</TableCell>
                 <TableCell>{category.description}</TableCell>
                 <TableCell>
@@ -111,11 +112,7 @@ export default function CategoriesPage() {
         </Table>
       </div>
 
-      <AddCategoryDialog
-        open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-        onAdd={handleAddCategory}
-      />
+      <AddCategoryDialog />
 
       <EditCategoryDialog   
         open={isEditDialogOpen}

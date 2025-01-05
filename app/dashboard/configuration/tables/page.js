@@ -68,12 +68,13 @@ export default function ManageTablesPage() {
             <Plus className="h-4 w-4" />
             Add Table
           </Button>
-          <Button variant="default" onClick={() => setRefresh(true)}>
+          {/* <Button variant="default" onClick={() => setRefresh(true)}>
             {refresh ? <Spinner className="animate-spin" /> : "Refresh"}
             <RotateCw/>
-          </Button>
+          </Button> */}
         </div>
       </div>
+
 
       {tableLoading ? (
         <Spinner />

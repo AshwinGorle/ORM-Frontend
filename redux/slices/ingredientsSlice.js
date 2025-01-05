@@ -24,12 +24,19 @@ const initialIngredient = {
         error: null,
         data: null,
     },
+
+    openCreateIngredientPopup : false
 };
 
 const ingredientSlice = createSlice({
     name: "ingredient",
     initialState: initialIngredient,
     reducers: {
+        // create ingredient popup
+        setCreateIngredientPopup : (state, action)=>{
+            console.log("set : ",state.createIngredientPopup)
+            state.openCreateIngredientPopup = action.payload;
+        },
         // createIngredient
         createIngredientRequest: (state) => {
             state.createIngredient.status = "pending";

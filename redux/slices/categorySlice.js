@@ -24,12 +24,19 @@ const initialCategory = {
         error: null,
         data: null,
     },
+
+    openCreateCategoryPopup : false
 };
 
 const categorySlice = createSlice({
     name: "category",
     initialState: initialCategory,
     reducers: {
+        // create category popup
+        setCreateCategoryPopup : (state, action) => {
+            console.log("set : ", state.openCreateCategoryPopup )
+            state.openCreateCategoryPopup = action.payload;
+        },
         // createCategory
         createCategoryRequest: (state) => {
             state.createCategory.status = "pending";

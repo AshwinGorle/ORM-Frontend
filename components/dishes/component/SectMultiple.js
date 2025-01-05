@@ -11,13 +11,17 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CommandList } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetAllIngredients } from "@/hooks/ingredient/useGetAllIngredient";
 import { useGetAllCategories } from "@/hooks/category/useGetAllCategories";
 import { useGetAllOffers } from "@/hooks/offer/useGetAllOffers";
 import { useGetAllDishes } from "@/hooks/dish/useGetAllDishes";
+import { AddIngredientDialog } from "@/components/ingredients/AddIngredientDialog";
+import { ingredientActions } from "@/redux/slices/ingredientsSlice";
+import { useDispatch } from "react-redux";
+import { Button } from "@/components/ui/button";
 const { useState, useEffect } = require("react");
 
 
@@ -30,6 +34,7 @@ const SelectMultiple = ({
 
   let inputs;
   let loading
+  const dispatch = useDispatch();
 
   const [filteredInputs, setFilteredInputs] = useState([]);
 
@@ -90,6 +95,7 @@ const SelectMultiple = ({
       <div>
       <ScrollArea className="h-[200px]  rounded-md border p-4">
         {loading && <Spinner></Spinner>}
+        {type == "ingredient" && <Button  variant="outline" type="button" onClick={()=> dispatch(ingredientActions.setCreateIngredientPopup(true))} className="absolute right-2 top-2 py-1 "><Plus color="gray" /></Button>}
         <Command>
           <CommandInput placeholder={`Type a ${type} or search...`} />
           <CommandList>
@@ -115,6 +121,7 @@ const SelectMultiple = ({
         </Command>
       </ScrollArea>
       </div>
+      <AddIngredientDialog/>
     </div>
   );
 };

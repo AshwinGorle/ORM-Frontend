@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast"; // Import ShadCN's toast hook
 import { createCategory } from "@/redux/actions/category";
 import { categoryActions } from "@/redux/slices/categorySlice";
 
-export const useCreateCategory = (setOpen) => {
+export const useCreateCategory = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { status, error, data } = useSelector((state) => state.category.createCategory);
@@ -21,7 +21,7 @@ export const useCreateCategory = (setOpen) => {
                 variant: "success", // Optional, for success styling
             });
             dispatch(categoryActions.clearCreateCategoryStats());
-            setOpen(false); // Close the dialog
+            dispatch(categoryActions.setCreateCategoryPopup(false));
         } else if (status === "failed") {
             setLoading(false);
             toast({
@@ -30,7 +30,8 @@ export const useCreateCategory = (setOpen) => {
                 variant: "destructive", // Optional, for error styling
             });
             dispatch(categoryActions.clearCreateCategoryStats());
-            setOpen(false); // Close the dialog
+            dispatch(categoryActions.setCreateCategoryPopup(false));
+
         }
     }, [status, error, dispatch, toast]);
 
