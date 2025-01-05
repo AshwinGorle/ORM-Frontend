@@ -20,7 +20,7 @@ export function TableStatusSidebar() {
         <div className="flex gap-4 justify-between">
         <h2 className="text-lg font-semibold">Table Status</h2>
         <Button size="sm" variant="default" onClick={() => setRefresh(true)}>
-          {refresh ? <Spinner className="animate-spin" /> : "Refresh"}
+          {refresh ? <Spinner className="animate-spin" /> : ""}
           <RotateCw/>
         </Button>
         </div>

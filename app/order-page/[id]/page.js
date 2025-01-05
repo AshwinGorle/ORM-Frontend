@@ -38,6 +38,7 @@ import {
   ChevronRight,
   PanelRightClose,
   PanelRightOpen,
+  RotateCw,
 } from "lucide-react";
 import { KanbanBoardShimmer } from "../component/KanbanShimmer";
 import { Alert } from "@/components/ui/alert";
@@ -216,8 +217,9 @@ export default function OrderPage() {
                   {refresh ? (
                     <Spinner className="animate-spin" />
                   ) : (
-                    "Refresh"
+                    ""
                   )}
+                  <RotateCw/>
                 </Button>
                 <Badge
                   variant={isSystemOnline ? "success" : "secondary"}
