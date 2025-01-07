@@ -50,7 +50,12 @@ export const useGetAllOwners = (params = {}) => {
   }, [status, data, error, dispatch, toast, setRefresh]);
 
   const transformedOwners = useMemo(() => {
-    return data?.hotelOwners
+    return [...(data?.hotelOwners || [])].sort((a, b) => {
+      // Ensure membershipExpires is parsed as a Date before comparing
+      const dateA = new Date(a.membershipExpires);
+      const dateB = new Date(b.membershipExpires);
+      return dateA - dateB; // Sort in ascending order
+    });
   }, [data]);
 
   return { owners: transformedOwners ?? [], loading };
