@@ -95,7 +95,7 @@ const SelectMultiple = ({
       <div>
       <ScrollArea className="h-[200px]  rounded-md border p-4">
         {loading && <Spinner></Spinner>}
-        {type == "ingredient" && <Button  variant="outline" type="button" onClick={()=> dispatch(ingredientActions.setCreateIngredientPopup(true))} className="absolute right-2 top-2 py-1 "><Plus color="gray" /></Button>}
+        {type == "ingredient" && <Button  variant="outline" type="button" onClick={()=> dispatch(ingredientActions.setCreateIngredientPopup(true))} className="absolute right-2 top-2 py-1 "><Plus color="black" /></Button>}
         <Command>
           <CommandInput placeholder={`Type a ${type} or search...`} />
           <CommandList>

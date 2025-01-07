@@ -97,8 +97,8 @@ const SelectOne = ({ setSelectedInput, selectedInput, type, offerType }) => {
       <div>
     
         <ScrollArea className="h-[200px] rounded-md border p-4">
-          {type == "offer" && <Button variant="outline" type="button" onClick={()=>router.push('/dashboard/configuration/offers/create-offer')} className="absolute right-2 top-2 py-1"><Plus color="gray" /></Button>}
-          {type == "category" && <Button variant="outline" type="button" onClick={()=> dispatch(categoryActions.setCreateCategoryPopup(true))} className="absolute right-2 top-2 py-1 "><Plus color="gray" /></Button>}
+          {type == "offer" && <Button variant="outline" type="button" onClick={()=>router.push('/dashboard/configuration/offers/create-offer')} className="absolute right-2 top-2 py-1"><Plus color="black" /></Button>}
+          {type == "category" && <Button variant="outline" type="button" onClick={()=> dispatch(categoryActions.setCreateCategoryPopup(true))} className="absolute right-2 top-2 py-1 "><Plus color="black" /></Button>}
           {loading && <Spinner />}
           <Command>
             <CommandInput placeholder={`Type a ${type} or search...`} />
