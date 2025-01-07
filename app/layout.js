@@ -5,6 +5,7 @@ import StoreProvider from "@/redux/AuthProvider";
 const inter = Inter({subsets:["latin"]});
 import { configDotenv } from "dotenv";
 import NavBar from "@/components/NavBar";
+import NavBarWrapper from "./NavBarWrapper";
 import Sidebar from "@/components/dashboard/Sidebar";
 configDotenv();
 
@@ -18,7 +19,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <StoreProvider>
-          <NavBar/>
+        <NavBarWrapper />
+          {/* <NavBar/> */}
           {children}
           <Toaster/>  
         </StoreProvider>
