@@ -15,7 +15,7 @@ export function TableStatusSidebar() {
   const { tables, loading } = useGetAllTables({ refresh, setRefresh });
 
   return (
-    <div className="h-full border-l">
+    <div className="h-full border-l mt-12 ">
       <div className="p-4 border-b bg-white space-y-4">
         <div className="flex gap-4 justify-between">
         <h2 className="text-lg font-semibold">Table Status</h2>
