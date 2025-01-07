@@ -62,6 +62,7 @@ export default function NavBar() {
   return (
     <div className="w-full">
       <Card className="fixed top-0 left-0 w-screen bg-white shadow-none z-50 rounded-none">
+        {user?.role == 'superadmin' ?  <div className="flex justify-center text-lg">Super Admin Controls</div> :
         <div className="flex items-center justify-between px-6 py-2">
           {/* Left Section */}
           <div className="flex items-center gap-4">
@@ -112,7 +113,7 @@ export default function NavBar() {
               <span className="text-md" >{isSystemOnline ? "Online" : "Offline"}</span>
             </Button>
           </div>
-        </div>
+        </div>}
       </Card>
 
       {/* Content below the navbar */}
