@@ -116,7 +116,7 @@ export default function NavBar() {
       </Card>
 
       {/* Content below the navbar */}
-      <div className="pt-[72px]">
+      <div className=" pt-[52px]">
         {connectionError && (
           <div className="p-4 bg-red-50 text-red-600">
             Connection Error: {connectionError}
