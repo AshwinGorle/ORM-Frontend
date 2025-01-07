@@ -67,7 +67,7 @@ export default function OrderPage() {
     setRefresh,
   });
   const { loading: userLoading, user } = useGetUser();
-  const { channel } = useAbly(id, isSystemOnline);
+  // const { channel } = useAbly(id, isSystemOnline);
 
   const [isTableSidebarOpen, setIsTableSidebarOpen] = useState(true);
 
@@ -95,180 +95,39 @@ export default function OrderPage() {
           isTableSidebarOpen ? "mr-[320px]" : "mr-0"
         )}
       >
-        <div className="h-full overflow-y-auto custom-scrollbar">
-          <div className="flex flex-col  p-6">
-            {/* Alert Messages */}
-            {connectionError && (
-              <Alert
-                variant="destructive"
-                className="animate-in fade-in duration-300"
-              >
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Connection Error</AlertTitle>
-                <AlertDescription>{connectionError}</AlertDescription>
-              </Alert>
-            )}
-
-            {/* <Card className="p-4 px-6 rounded-xl shadow-sm">
-              <div className="flex flex-row md:items-center justify-between gap-6">
-                <div className="flex flex-col gap-2">
-                  <h1 className=" lg:text-2xl font-bold text-gray-900">
-                    Order Management
-                  </h1>
-                  <div className="flex flex-row lg:flex-row items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-2 hover:bg-gray-100"
-                      onClick={() => router.push("/dashboard")}
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                      Back
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="default"
-                      onClick={() => setRefresh(true)}
-                    >
-                      {refresh ? (
-                        <Spinner className="animate-spin" />
-                      ) : (
-                        "Refresh"
-                      )}
-                    </Button>
-
-                    {user?.hotelName && (
-                      <div className="flex hidden lg:block items-center gap-2 text-gray-600">
-                        <Building2 className="h-4 w-4" />
-                        <span className="text-lg">{user.hotelName}</span>
-                        <Badge
-                          variant={isSystemOnline ? "success" : "secondary"}
-                          className={`text-sm ml-2 ${!isSystemOnline ? "bg-red-500 text-white" : ""}`}
-                        >
-                          {isSystemOnline ? "System Online" : "System Offline"}
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <Button
-                    onClick={handleSystemToggle}
-                    size="lg"
-                    variant={isSystemOnline ? "default" : "outline"}
-                    className={cn(
-                      "relative group transition-all duration-300",
-                      isSystemOnline
-                        ? "bg-green-500 hover:bg-green-600 text-white"
-                        : "hover:bg-gray-100"
-                    )}
-                  >
-                    <Power
-                      className={cn(
-                        "h-5 w-5 transition-all duration-300",
-                        isSystemOnline ? "scale-110" : "scale-100"
-                      )}
-                    />
-                    <span className="ml-2">
-                      {isSystemOnline ? "Online" : "Offline"}
-                    </span>
-                  </Button>
-                </div>
-              </div>
-            </Card> */}
-
-          {/* this is the new code for HEADER of kanban page */}
-
-          <Card className="p-6 rounded-xl shadow-sm">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center hover:bg-gray-100"
-                  onClick={() => router.push("/dashboard")}
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-                  Order Management
-                </h1>
-              </div>
-
-              <div className="flex items-center gap-2 text-gray-600">
-                {user?.hotelName && (
-                  <div className="flex items-center gap-2">
-                    <Building2 className="h-5 w-5" />
-                    <span className="text-base font-medium">{user.hotelName}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-between items-center">
-              <div className="flex items-center gap-4">
-                <Button
-                  size="sm"
-                  variant="default"
-                  onClick={() => setRefresh(true)}
-                  className="flex items-center gap-2"
-                >
-                  {refresh ? (
-                    <Spinner className="animate-spin" />
-                  ) : (
-                    ""
-                  )}
-                  <RotateCw/>
-                </Button>
-                <Badge
-                  variant={isSystemOnline ? "success" : "secondary"}
-                  className={`text-sm ${
-                    !isSystemOnline ? "bg-red-500 text-white" : ""
-                  }`}
-                >
-                  {isSystemOnline ? "System Online" : "System Offline"}
-                </Badge>
-              </div>
-
+        <div className="flex flex-col  p-2">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
               <Button
-                onClick={handleSystemToggle}
-                size="lg"
-                variant={isSystemOnline ? "default" : "outline"}
-                className={cn(
-                  "relative group transition-all duration-300",
-                  isSystemOnline
-                    ? "bg-green-500 hover:bg-green-600 text-white"
-                    : "hover:bg-gray-100"
-                )}
+                variant="outline"
+                size="sm"
+                className="flex items-center hover:bg-gray-100"
+                onClick={() => router.push("/dashboard")}
               >
-                <Power
-                  className={cn(
-                    "h-5 w-5 transition-all duration-300",
-                    isSystemOnline ? "scale-110" : "scale-100"
-                  )}
-                />
-                <span className="ml-2 font-medium">
-                  {isSystemOnline ? "Online" : "Offline"}
-                </span>
+                <ArrowLeft className="h-4 w-4" />
               </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setRefresh(true)}
+                className="flex items-center gap-2"
+              >
+                {refresh ? <Spinner className="animate-spin" /> : <RotateCw />}
+                Refresh
+              </Button>
+              <h1 className="text-xl md:text-xl font-bold text-gray-900">
+                Order Management
+              </h1>
             </div>
-          </Card>
+          </div>
+          {/* Main Content */}
 
-
-
-
-
-
-            {/* Main Content */}
-
-            <div className="bg-gray-50/50 rounded-xl">
-              {ordersLoading ? (
-                <KanbanBoardShimmer />
-              ) : (
-                <MyKanbanBoard orders={orders} hotelName={user?.hotelName} />
-              )}
-            </div>
+          <div className="bg-gray-50/50 px-10 rounded-xl">
+            {ordersLoading ? (
+              <KanbanBoardShimmer />
+            ) : (
+              <MyKanbanBoard orders={orders} hotelName={user?.hotelName} />
+            )}
           </div>
         </div>
       </div>

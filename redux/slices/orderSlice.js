@@ -44,24 +44,29 @@ const initialOrder = {
     data: null,
   },
 
-  editOrderDialog : {
-    open : false,
-    order : null
+  editOrderDialog: {
+    open: false,
+    order: null,
   },
 
   openDeleteOrderDialog: false,
   selectedDeleteOrder: null,
+
+  pendingOrderCount: 0,
 };
 
 const orderSlice = createSlice({
   name: "order",
   initialState: initialOrder,
   reducers: {
-     // edit order modal
-     setEditOrderDialog : (state , action) => {
-       state.editOrderDialog.open = action.payload.open;
-       state.editOrderDialog.order = action.payload.order;
-     },
+    selectPendingOrderCount: (state) => {
+      return state.pendingOrderCount;
+    },
+    // edit order modal
+    setEditOrderDialog: (state, action) => {
+      state.editOrderDialog.open = action.payload.open;
+      state.editOrderDialog.order = action.payload.order;
+    },
     // createOrder
     createOrderRequest: (state) => {
       state.createOrder.status = "pending";
@@ -71,6 +76,9 @@ const orderSlice = createSlice({
       state.createOrder.data = action.payload;
       const order = action.payload.order;
       state.getAllOrders.data[`${order.status}`].unshift(order);
+      if (state.getAllOrders?.data?.pending?.length > -1) {
+        state.pendingOrderCount = state.getAllOrders?.data?.pending?.length;
+      }
     },
     createOrderFailure: (state, action) => {
       state.createOrder.status = "failed";
@@ -148,6 +156,9 @@ const orderSlice = createSlice({
       state.getAllOrders.data.completed = allOrders
         .filter((order) => order.status == "completed")
         .reverse();
+      if (state.getAllOrders?.data?.pending?.length > -1) {
+        state.pendingOrderCount = state.getAllOrders?.data?.pending?.length;
+      }
     },
     getAllOrdersFailure: (state, action) => {
       state.getAllOrders.status = "failed";
@@ -183,6 +194,9 @@ const orderSlice = createSlice({
         state.getAllOrders.data.pending.unshift(newOrder);
         // state.getAllOrders.status = 'success';
       }
+      if (state.getAllOrders?.data?.pending?.length > -1) {
+        state.pendingOrderCount = state.getAllOrders?.data?.pending?.length;
+      }
     },
 
     syncOrders: (state, action) => {
@@ -212,6 +226,9 @@ const orderSlice = createSlice({
           (prevOrder) => prevOrder._id != order._id
         );
       state.getAllOrders.data[`${order.status}`].unshift(order);
+      if (state.getAllOrders?.data?.pending?.length > -1) {
+        state.pendingOrderCount = state.getAllOrders?.data?.pending?.length;
+      }
     },
 
     updateOrderStatusFailure: (state, action) => {
@@ -255,6 +272,9 @@ const orderSlice = createSlice({
 
       // Add the updated order to its status array
       state.getAllOrders.data[`${updatedOrder.status}`].unshift(updatedOrder);
+      if (state.getAllOrders?.data?.pending?.length > -1) {
+        state.pendingOrderCount = state.getAllOrders?.data?.pending?.length;
+      }
     },
     updateOrderFailure: (state, action) => {
       state.updateOrder.status = "failed";
@@ -299,17 +319,20 @@ const orderSlice = createSlice({
               prevOrder._id.toString() != deletedOrder._id.toString()
           );
       }
+      if (state.getAllOrders?.data?.pending?.length > -1) {
+        state.pendingOrderCount = state.getAllOrders?.data?.pending?.length;
+      }
     },
 
     deleteBilledOrders: (state, action) => {
       let deleteOrdersIds = action.payload;
       deleteOrdersIds = deleteOrdersIds.map((orderId) => orderId.toString());
-      console.log("delete order ids : ", deleteOrdersIds)
+      console.log("delete order ids : ", deleteOrdersIds);
       let orderStates = ["draft", "pending", "preparing", "completed"];
       orderStates.forEach((orderState) => {
-        state.getAllOrders.data[orderState] = state.getAllOrders.data[orderState].filter(
-          (order) => !deleteOrdersIds.includes(order._id.toString())
-        );
+        state.getAllOrders.data[orderState] = state.getAllOrders.data[
+          orderState
+        ].filter((order) => !deleteOrdersIds.includes(order._id.toString()));
       });
     },
 

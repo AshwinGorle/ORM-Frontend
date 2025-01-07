@@ -4,6 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import StoreProvider from "@/redux/AuthProvider";
 const inter = Inter({subsets:["latin"]});
 import { configDotenv } from "dotenv";
+import NavBar from "@/components/NavBar";
+import Sidebar from "@/components/dashboard/Sidebar";
 configDotenv();
 
 export const metadata = {
@@ -16,6 +18,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <StoreProvider>
+          <NavBar/>
           {children}
           <Toaster/>  
         </StoreProvider>

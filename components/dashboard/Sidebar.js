@@ -29,7 +29,7 @@ export default function Sidebar() {
   const sidebarContent = (
     <>
       {/* Sidebar Header */}
-      <div className="flex items-center h-16 px-4 border-b">
+      <div className=" mt-12 flex items-center h-16 px-4 border-b">
         <div className="flex items-center gap-3">
           <Building2 className="h-8 w-8 text-primary" />
           <span className="font-semibold text-xl">Admin Panel</span>
