@@ -45,7 +45,8 @@ export default function UserList() {
   };
  
   const handleExtendMembership = async () => {
-    if (!selectedUserId || !extendDays)  return;
+    console.log( "extend days : ", extendDays)
+    // if (extendDays != 0 || !selectedUserId || !extendDays)  return;
     handleExtendOwnerMembership(selectedUserId,extendDays);
     // setExtendDays(null);
   };
@@ -103,7 +104,7 @@ export default function UserList() {
                         <Input
                           type="number"
                           placeholder="Enter number of days"
-                          value={extendDays || ""}
+                          value={extendDays || 0}
                           onChange={(e) => setExtendDays(parseInt(e.target.value, 10))}
                         />
                       </div>
