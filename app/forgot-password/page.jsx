@@ -37,16 +37,29 @@ export default function ForgotPasswordPage() {
     },
   });
 
+  const route = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth`;
+
   const onSubmit = async (values) => {
     setIsLoading(true);
     setError("");
     try {
       console.log("Password reset request:", values);
       // api call to reset email
-      setSuccess(true);
-      setTimeout(() => {
-        router.push("/change-password");
-      }, 2000);
+      const res = await fetch(`${route}/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (res.ok) {
+        setSuccess(true);
+      }
+
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || "Failed to send reset email.");
+      }
+
     } catch (error) {
       setError("Failed to send reset email. Please try again.");
     } finally {
