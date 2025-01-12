@@ -110,13 +110,13 @@ const billSlice = createSlice({
             state.getTableBill.status = "success";
             state.getTableBill.data = action.payload;
             if(!state.getAllBills.data) state.getAllBills.data = {bills : []}
-            state.getAllBills.data.bills.unshift(action.payload.bill)
+            state.getAllBills.data.bills = state.getAllBills.data.bills.filter((bill)=>bill?._id?.toString() != action.payload?.bill?._id?.toString());
+            state.getAllBills.data.bills.unshift(action.payload.bill);
         },
         getTableBillFailure: (state, action) => {
             state.getTableBill.status = "failed";
             state.getTableBill.error = action.payload;
         },
-
         clearGetTableBillStatus : (state)=>{
             state.getTableBill.status = null;
         },
