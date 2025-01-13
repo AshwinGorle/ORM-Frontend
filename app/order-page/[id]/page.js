@@ -16,7 +16,7 @@
   import { MyKanbanBoard } from "../component/MykanbunBoard";
   import { useGetUser } from "@/hooks/auth";
   import useAbly from "@/hooks/ably/useAbly";
-  import { useState } from "react";
+  import { useEffect, useState } from "react";
 
   import {
     setSystemOnline,
@@ -69,7 +69,20 @@
     const { loading: userLoading, user } = useGetUser();
     // const { channel } = useAbly(id, isSystemOnline);
 
-    const [isTableSidebarOpen, setIsTableSidebarOpen] = useState(false);
+    // const [isTableSidebarOpen, setIsTableSidebarOpen] = useState(false);
+    const [isTableSidebarOpen, setIsTableSidebarOpen] = useState(() => {
+      if (typeof window !== "undefined") {
+        const storedState = localStorage.getItem("isTableSidebarOpen");
+        return storedState === "true";
+      }
+      return false;
+    });
+
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("isTableSidebarOpen", isTableSidebarOpen);
+      }
+    }, [isTableSidebarOpen]);
 
     console.log("user", user);
     console.log("hotelName", user?.hotelName);
