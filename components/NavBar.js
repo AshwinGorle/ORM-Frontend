@@ -91,7 +91,7 @@ export default function NavBar() {
               <div
                 className={cn(
                   "w-3 h-3 rounded-full",
-                  isBlinking ? "bg-red-500 animate-ping" : "bg-green-500"
+                  isBlinking ? "bg-red-500 animate-ping" : "bg-red-500"
                 )}
               />
               {/* Order Count */}
