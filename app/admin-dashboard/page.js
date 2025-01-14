@@ -22,6 +22,8 @@ import { useApproveOwner } from "@/hooks/owner/useApproveOwner";
 import { useExtendOwnerMembership } from "@/hooks/owner/useExtendOwnerMembership";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import getExpiryTimeInWords from "@/utils/getExpiryInWords";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
 
 export default function UserList() {
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -35,6 +37,8 @@ export default function UserList() {
   const {loading : extendOwnerMembershipLoading, handleExtendOwnerMembership} = useExtendOwnerMembership(setSelectedUserId);
 
   // const [extendOwnerMembershipLoading, setLoadingExtend] = useState(null);
+
+  const route = `${process.env.NEXT_PUBLIC_SERVER_URL}/users`;
 
    console.log("owners in the comp ", owners)
   
@@ -51,6 +55,50 @@ export default function UserList() {
     // setExtendDays(null);
   };
 
+  const sendMailHandler =  async (hotelOwnerId) => {
+    console.log("hotelOwnerId ", hotelOwnerId);
+    console.log("route ", route)
+    try{
+        const res = await axios.get(`${route}/send-email-membership-expired/${hotelOwnerId}`, 
+          {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        console.log("res ", res)
+        
+
+        if(res.data.status=="success"){
+          toast
+          ({
+            title: "Success",
+            description: "Email sent successfully.",
+            variant: "success",
+          });
+        }
+        else{
+          toast
+          ({
+            title: "Error",
+            description: "Failed to send email.",
+            variant: "destructive",
+          });
+        }
+    }
+    catch(error){
+      console.log("error ", error)
+      toast
+      ({
+        title: "Error",
+        description: "Failed to send email.",
+        variant: "destructive",
+      });
+    }
+  }
+
+ console.log("date now ", Date.now())
   return (
     <Table>
       <TableCaption>A list of user details and actions.</TableCaption>
@@ -79,7 +127,13 @@ export default function UserList() {
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
               <TableCell>{user.isApproved ? "Yes" : "No"}</TableCell>
-              <TableCell>{getExpiryTimeInWords(user.membershipExpires) || "N/A"}</TableCell>
+              <TableCell>
+                {
+                   (new Date(user.membershipExpires) > Date.now()) ? 
+                   getExpiryTimeInWords(user.membershipExpires) 
+                   : <Button variant="destructive" onClick={() => sendMailHandler(user._id)}>Expired - send mail</Button>
+                }
+                </TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button 
